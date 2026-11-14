@@ -4,6 +4,7 @@
 const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>';
 const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 
+const ICON_SPK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmt = (sec) => { sec = Math.max(0, Math.floor(+sec || 0)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); };
@@ -83,6 +84,22 @@ function matchAt(tokens, i, pat, p) {
   if (t.s !== pat[p] && t.n !== pat[p]) return -1;
   return matchAt(tokens, i + 1, pat, p + 1);
 }
+
+/* ---------------- pronunciation (browser text-to-speech, free) ---------------- */
+const spk = (text) => `<button class="spk" data-act="speak" data-text="${esc(text)}" aria-label="발음 듣기">${ICON_SPK}</button>`;
+function speak(text) {
+  if (!('speechSynthesis' in window)) { note('이 브라우저는 발음 듣기를 지원하지 않아요.'); return; }
+  const t = String(text).replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!t) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t);
+  u.lang = 'en-US'; u.rate = 0.9;
+  const vs = speechSynthesis.getVoices();
+  const pick = vs.find((v) => /en[-_]US/i.test(v.lang) && /Samantha|Google US|Aria|Jenny|Natural|Ava/i.test(v.name)) || vs.find((v) => /en[-_]US/i.test(v.lang)) || vs.find((v) => /^en/i.test(v.lang));
+  if (pick) u.voice = pick;
+  speechSynthesis.speak(u);
+}
+if ('speechSynthesis' in window) { try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); } catch (e) {} }
 
 /* ---------------- progress & sync ---------------- */
 const st = (id) => (S.prog.status[id] && S.prog.status[id].s) || null;
@@ -244,7 +261,7 @@ function goNext(auto) {
   if (!S.w) return;
   const list = playlist(); const i = list.findIndex((v) => v.vid === S.w.vid);
   const n = list[i + 1];
-  if (n) location.hash = ytAt(n.vid);
+  if (n) { S.autoplayNext = true; location.hash = ytAt(n.vid); }
   else note(auto ? '재생목록의 마지막 영상까지 다 봤어요.' : '재생목록의 마지막 영상이에요.');
 }
 const NOW_PH = '<span class="ph">재생하면 지금 나오는 문장이 여기에 크게 보여요.</span>';
@@ -255,7 +272,7 @@ async function openWatch(vid, startT) {
     return;
   }
   const short = v ? v.kind === 'short' : false;
-  if (S.w && S.w.player && S.w.player.loadVideoById && $('#subs')) {
+  if (S.w && S.w.player && S.w.player.loadVideoById && $('#subs') && (S.w.v ? S.w.v.kind : '') === (v ? v.kind : '')) {
     // keep the same player so the next video keeps playing (phones block autoplay in a new player)
     Object.assign(S.w, { vid, v, lines: [], active: -1, status: '자막을 불러오는 중…', tab: 'subs', sel: null });
     note('');
@@ -269,7 +286,7 @@ async function openWatch(vid, startT) {
     renderVWords();
     try { S.w.player.loadVideoById({ videoId: vid, startSeconds: Math.floor(startT || 0) }); } catch (e) {}
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    loadTranscript(vid);
+    startSubs(vid, v);
     return;
   }
   const listKind = S.kind;
@@ -302,18 +319,19 @@ async function openWatch(vid, startT) {
   const subsEl = $('#subs');
   const pauseFollow = () => { if (S.w) S.w.pauseFollowUntil = Date.now() + 4000; };
   ['wheel', 'touchmove'].forEach((ev) => { subsEl.addEventListener(ev, pauseFollow, { passive: true }); });
-  loadTranscript(vid);
+  startSubs(vid, v);
   const YT = await loadYT();
   if (!S.w || S.w.vid !== vid) return;
   if (!YT) { $('#yt').innerHTML = `<div class="ph">플레이어를 불러오지 못했어요.<br><a href="https://www.youtube.com/watch?v=${esc(vid)}" target="_blank" rel="noopener" style="color:#fff">YouTube에서 열기</a></div>`; return; }
   S.w.player = new YT.Player('yt', {
     videoId: vid,
-    playerVars: { playsinline: 1, rel: 0, modestbranding: 1, cc_load_policy: 0, start: Math.floor(startT || 0) },
+    playerVars: { playsinline: 1, rel: 0, modestbranding: 1, cc_load_policy: short ? 1 : 0, cc_lang_pref: 'en', hl: 'en', autoplay: S.autoplayNext ? 1 : 0, start: Math.floor(startT || 0) },
     events: {
       onReady: () => { if (S.w) { try { S.w.player.setPlaybackRate(S.w.rate); } catch (e) {} } },
       onStateChange: (e) => { if (e.data === 0 && S.w && !S.w.loop && S.autoNext) goNext(true); },
     },
   });
+  S.autoplayNext = false;
   S.w.timer = setInterval(tick, 200);
 }
 function curTime() { try { return S.w && S.w.player && S.w.player.getCurrentTime ? S.w.player.getCurrentTime() * 1000 : null; } catch (e) { return null; } }
@@ -360,6 +378,22 @@ function setActive(i) {
 }
 
 /* transcript loading */
+function setTab(tab) {
+  if (!S.w) return;
+  S.w.tab = tab;
+  $('#subs').hidden = tab !== 'subs'; $('#vwords').hidden = tab !== 'words';
+  $('#tabSubs').classList.toggle('on', tab === 'subs'); $('#tabWords').classList.toggle('on', tab === 'words');
+}
+function startSubs(vid, v) {
+  const isShort = v && v.kind === 'short';
+  const cached = LS.get('vp-tr-' + vid, null);
+  if (!isShort || (cached && cached.segs && Date.now() - cached.at < 14 * 864e5)) { loadTranscript(vid); return; }
+  // Shorts: free YouTube captions inside the player, no subtitle API call
+  S.w.status = 'short';
+  $('#subs').innerHTML = `<div class="status">쇼츠는 영상 안의 YouTube 자막(CC)으로 보여요. 자막 API를 쓰지 않아서 무료예요.<br>자막이 필요 없으면 플레이어의 CC 버튼으로 끄면 돼요.<br><br><button class="btn sm" data-act="fetch-subs">단어를 누를 수 있는 자막 불러오기 (자막 API 1회)</button></div>`;
+  $('#now').innerHTML = '<span class="ph">이 쇼츠의 핵심 표현은 "이 영상 표현" 탭에 있어요.</span>';
+  setTab('words');
+}
 function decodeEntities(s) { const t = document.createElement('textarea'); t.innerHTML = s; return t.value; }
 async function loadTranscript(vid) {
   const cacheKey = 'vp-tr-' + vid;
@@ -573,10 +607,10 @@ async function openWordSheet(li, k, span) {
   const sheet = $('#sheet');
   const naver = 'https://en.dict.naver.com/#/search?query=' + encodeURIComponent(raw);
   const papago = 'https://papago.naver.com/?sk=en&tk=ko&st=' + encodeURIComponent(sentence);
-  const vocabBlock = entry ? `<div class="def"><span class="pill p-review">단어장 표현</span> <b style="font-size:15px;color:var(--ink)">${esc(entry.expr)}</b><div style="margin-top:4px">${esc(entry.ko)}</div>${entry.ex ? `<div class="ex">${esc(entry.ex)}</div><div class="exko">${esc(entry.exKo || '')}</div>` : ''}${entry.note ? `<div class="wnote">${esc(entry.note)}</div>` : ''}</div>
+  const vocabBlock = entry ? `<div class="def"><span class="pill p-review">단어장 표현</span> <b style="font-size:15px;color:var(--ink)">${esc(entry.expr)}</b> ${spk(entry.expr)}<div style="margin-top:4px">${esc(entry.ko)}</div>${entry.ex ? `<div class="ex">${esc(entry.ex)}</div><div class="exko">${esc(entry.exKo || '')}</div>` : ''}${entry.note ? `<div class="wnote">${esc(entry.note)}</div>` : ''}</div>
     <div class="row"><button class="btn sm ${st(entry.id) === 'learned' ? 'on' : ''}" data-act="sheet-learn" data-id="${esc(entry.id)}">${st(entry.id) === 'learned' ? '외웠음 ✓' : '외웠음'}</button><button class="btn sm" data-act="sheet-known" data-id="${esc(entry.id)}">이미 앎</button></div>` : '';
   sheet.innerHTML = `<button class="x close" data-act="sheet-close" aria-label="닫기">✕</button>
-    <div class="sw">${esc(raw)}</div><div class="ctx">${esc(sentence)}</div>
+    <div class="sw">${esc(raw)} ${spk(raw)}</div><div class="ctx">${esc(sentence)}</div>
     ${vocabBlock}
     ${entry ? '' : '<div id="ko" class="def">한국어 뜻을 찾는 중…</div>'}
     <div id="dict" class="def small">영어 사전을 찾는 중…</div>
@@ -632,7 +666,7 @@ function wordRow(w, rev, inWatch) {
   const s = st(w.id);
   return `<div class="word ${s === 'known' ? 'known' : ''}">
     <button class="chk ${s === 'learned' ? 'on' : ''}" data-act="learn" data-id="${esc(w.id)}" aria-label="외웠음 표시">${s === 'learned' ? ICON_CHECK : ''}</button>
-    <div><div><span class="expr">${esc(w.expr)}</span><span class="pos">${esc(w.pos || '')}</span> ${rev[w.id] ? '<span class="pill p-review">복습</span>' : ''}</div>
+    <div><div><span class="expr">${esc(w.expr)}</span> ${spk(w.expr)}<span class="pos">${esc(w.pos || '')}</span> ${rev[w.id] ? '<span class="pill p-review">복습</span>' : ''}</div>
       <div>${esc(w.ko)}</div>
       ${w.ex ? `<div class="ex">${esc(w.ex)}</div><div class="exko">${esc(w.exKo || '')}</div>` : ''}
       ${w.note ? `<div class="wnote">${esc(w.note)}</div>` : ''}</div>
@@ -655,7 +689,7 @@ function renderWords() {
   html += `<div class="h2">자막에서 저장한 단어 ${sv.length}</div>`;
   html += sv.length ? `<div class="vsec">${sv.map((x) => `<div class="word">
       <button class="chk ${x.s === 'learned' ? 'on' : ''}" data-act="saved-learn" data-key="${esc(x.key)}" aria-label="외웠음 표시">${x.s === 'learned' ? ICON_CHECK : ''}</button>
-      <div><span class="expr">${esc(x.word)}</span>${x.ko ? `<div>${esc(x.ko)}</div>` : ''}${x.def ? `<div class="small" style="font-size:13px;color:var(--ink2)">${esc(x.def)}</div>` : ''}${x.ctx ? `<div class="ex">${esc(x.ctx)}</div>` : ''}</div>
+      <div><span class="expr">${esc(x.word)}</span> ${spk(x.word)}${x.ko ? `<div>${esc(x.ko)}</div>` : ''}${x.def ? `<div class="small" style="font-size:13px;color:var(--ink2)">${esc(x.def)}</div>` : ''}${x.ctx ? `<div class="ex">${esc(x.ctx)}</div>` : ''}</div>
       <div class="acts">${x.vid ? `<a class="ts" href="${ytAt(x.vid, x.t)}">${ICON_PLAY}${fmt(x.t)}</a>` : ''}<button class="btn sm" data-act="saved-del" data-key="${esc(x.key)}">삭제</button></div></div>`).join('')}</div>`
     : '<p class="small">영상 자막에서 단어를 눌러 "모르는 단어로 저장"하면 여기에 모여요.</p>';
   $('#view').innerHTML = html;
@@ -675,7 +709,7 @@ function renderCards() {
   const scope = `<div class="chips" style="justify-content:center">${[['all', '전체'], ['vocab', '단어장 표현'], ['saved', '저장한 단어']].map(([k, l]) => `<button class="btn sm ${S.fc.scope === k ? 'on' : ''}" data-act="fc-scope" data-k="${k}">${l}</button>`).join('')}</div>`;
   if (!c) { $('#view').innerHTML = `<div class="center">${scope}<p class="empty">${d.length ? '한 바퀴 다 돌았어요.' : '남은 카드가 없어요.'}</p><div class="btns"><button class="btn primary" data-act="fc-restart">다시 섞기</button></div></div>`; return; }
   $('#view').innerHTML = `<div class="center">${scope}<div class="counter">${S.fc.i + 1} / ${d.length}</div>
-    <div class="fc" data-act="fc-flip"><div class="big">${esc(c.front)}</div><div class="from">${esc(c.from)}</div>
+    <div class="fc" data-act="fc-flip"><div class="big">${esc(c.front)} ${spk(c.front)}</div><div class="from">${esc(c.from)}</div>
       ${S.fc.flip ? `<div class="ko">${esc(c.ko)}</div>${c.ex ? `<div class="ex" style="margin-top:10px">${esc(c.ex)}</div><div class="exko">${esc(c.exKo || '')}</div>` : ''}` : '<div class="hint">눌러서 뜻 보기</div>'}</div>
     <div class="btns">${c.vid ? `<a class="ts" href="${ytAt(c.vid, c.t)}">${ICON_PLAY}장면 ${fmt(c.t)}</a>` : ''}<button class="btn" data-act="fc-again">다음에 다시</button><button class="btn primary" data-act="fc-learn">외웠음</button></div></div>`;
 }
@@ -703,7 +737,7 @@ function renderQuiz() {
     <div class="small">${q.dir === 'en2ko' ? '이 표현의 뜻은?' : '이 뜻에 맞는 표현은?'}</div>
     <div class="q">${esc(q.dir === 'en2ko' ? q.w.expr : q.w.ko)}</div>
     ${q.opts.map((o, k) => { let c = ''; if (Q.ans !== null) { if (o.id === q.w.id) c = 'right'; else if (k === Q.ans) c = 'wrong'; } return `<button class="opt ${c}" data-act="q-ans" data-k="${k}" ${Q.ans !== null ? 'disabled' : ''}>${label(o)}</button>`; }).join('')}
-    ${Q.ans !== null ? `<div class="fb">${esc(q.w.expr)} — ${esc(q.w.ko)}<br><span class="ex">${esc(q.w.ex || '')}</span></div><div class="btns" style="justify-content:flex-start"><a class="ts" href="${ytAt(q.w.v.vid, q.w.t)}">${ICON_PLAY}장면 ${fmt(q.w.t)}</a><button class="btn primary" data-act="q-next">다음</button></div>` : ''}
+    ${Q.ans !== null ? `<div class="fb">${esc(q.w.expr)} ${spk(q.w.expr)} — ${esc(q.w.ko)}<br><span class="ex">${esc(q.w.ex || '')}</span></div><div class="btns" style="justify-content:flex-start"><a class="ts" href="${ytAt(q.w.v.vid, q.w.t)}">${ICON_PLAY}장면 ${fmt(q.w.t)}</a><button class="btn primary" data-act="q-next">다음</button></div>` : ''}
   </div></div>`;
 }
 
@@ -747,11 +781,9 @@ document.addEventListener('click', (e) => {
     case 'next': if (w) seekLine(Math.min(w.lines.length - 1, w.active + 1)); break;
     case 'replay': if (w) seekLine(Math.max(0, w.active)); break;
     case 'loop': if (w) { w.loop = !w.loop; b.textContent = w.loop ? '반복 켬' : '반복 끔'; b.classList.toggle('on', w.loop); } break;
-    case 'tab-subs': case 'tab-words':
-      if (!w) break; w.tab = a === 'tab-subs' ? 'subs' : 'words';
-      $('#subs').hidden = w.tab !== 'subs'; $('#vwords').hidden = w.tab !== 'words';
-      $('#tabSubs').classList.toggle('on', w.tab === 'subs'); $('#tabWords').classList.toggle('on', w.tab === 'words');
-      break;
+    case 'tab-subs': case 'tab-words': setTab(a === 'tab-subs' ? 'subs' : 'words'); break;
+    case 'fetch-subs': if (w) { setTab('subs'); $('#subs').innerHTML = '<div class="status">자막을 불러오는 중…</div>'; loadTranscript(w.vid); } break;
+    case 'speak': speak(b.dataset.text); e.stopPropagation(); break;
     case 'learn': setStatus(id, st(id) === 'learned' ? null : 'learned'); refresh(); break;
     case 'known': setStatus(id, st(id) === 'known' ? null : 'known'); refresh(); break;
     case 'sheet-learn': setStatus(id, st(id) === 'learned' ? null : 'learned'); closeSheet(); refresh(); break;

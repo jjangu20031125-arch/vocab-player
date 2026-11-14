@@ -166,3 +166,7 @@ select{font:inherit;font-size:14px;border:1px solid var(--line2);border-radius:9
   .qcard{padding:18px}
   .qcard .q{font-size:21px}
 }
+.spk{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;border:1px solid var(--line2);background:var(--card);color:var(--ink2);padding:0;vertical-align:middle;cursor:pointer}
+.spk:hover{color:var(--accent-ink);border-color:var(--accent)}
+.spk svg{width:15px;height:15px}
+.fc .spk{width:34px;height:34px;vertical-align:4px}
