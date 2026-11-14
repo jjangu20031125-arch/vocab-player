@@ -312,7 +312,7 @@ async function openWatch(vid, startT) {
         <div class="wtabs"><button class="btn sm on" data-act="tab-subs" id="tabSubs">자막</button><button class="btn sm" data-act="tab-words" id="tabWords">이 영상 표현 ${v ? (v.words || []).length : 0}</button></div>
         <div class="subs" id="subs"><div class="status">자막을 불러오는 중…</div></div>
         <div id="vwords" hidden></div>
-        <div class="legend"><span><i style="background:var(--hl-v)"></i>단어장 표현 (아직 안 외움)</span><span><i style="background:var(--hl-s)"></i>내가 저장한 단어</span></div>
+        <div class="legend"><span><i style="background:var(--hl-v)"></i>단어장 표현 (아직 안 외움)</span><span><i style="background:var(--hl-s)"></i>내가 저장한 단어</span><span>문장을 옆으로 밀면(PC는 '한' 버튼) 한국어 번역</span></div>
       </div>
     </div>`;
   renderVWords();
@@ -374,7 +374,7 @@ function setActive(i) {
     }
   }
   const now = $('#now');
-  if (now) now.innerHTML = i >= 0 && w.lines[i] ? lineHTML(w.lines[i], i, 'n') : NOW_PH;
+  if (now) now.innerHTML = i >= 0 && w.lines[i] ? lineHTML(w.lines[i], i, 'n') + krHTML(i) : NOW_PH;
 }
 
 /* transcript loading */
@@ -510,11 +510,85 @@ function lineHTML(L, i, where) {
     return `<span class="${cls}" data-l="${i}" data-k="${k}"${m && m.id ? ` data-vid="${esc(m.id)}"` : ''}>${esc(x.w)}</span>`;
   }).join(' ');
 }
+/* ---------------- Korean sentence on swipe ---------------- */
+const lineText = (L) => L.words.map((x) => x.w).join(' ');
+const papagoURL = (t) => 'https://papago.naver.com/?sk=en&tk=ko&st=' + encodeURIComponent(t);
+const krCache = {};
+let onDevice = null; // Chrome's built-in translator (free, on the device) when available
+async function translateKo(text) {
+  if (krCache[text]) return { ko: krCache[text] };
+  try {
+    const within = (p, ms) => Promise.race([p, new Promise((res) => setTimeout(() => res(null), ms))]);
+    if (onDevice === null && 'Translator' in self) {
+      // use it only when the language pack is already on the device (no waiting for downloads)
+      const av = await within(self.Translator.availability({ sourceLanguage: 'en', targetLanguage: 'ko' }), 2000);
+      onDevice = av === 'available' ? (await within(self.Translator.create({ sourceLanguage: 'en', targetLanguage: 'ko' }), 3000)) || false : false;
+    }
+    if (onDevice) { const ko = await within(onDevice.translate(text), 4000); if (ko) { krCache[text] = ko; return { ko }; } }
+  } catch (e) { onDevice = false; }
+  if (S.translator === 'none') return { none: true };
+  const r = await api('/api/translate', { method: 'POST', body: JSON.stringify({ text }) });
+  if (r.status === 503 && r.j.error === 'no_translator') { S.translator = 'none'; return { none: true }; }
+  if (r.ok && r.j.ko) { krCache[text] = r.j.ko; return { ko: r.j.ko }; }
+  return null;
+}
+function krHTML(i) {
+  const w = S.w; const k = w && w.kr && w.kr[i]; if (!k || !k.open) return '';
+  const L = w.lines[i];
+  if (k.state === 'loading') return '<div class="kr">번역 중…</div>';
+  if (k.state === 'ok') return `<div class="kr">${esc(k.text)}</div>`;
+  const why = k.state === 'none' ? '이 기기에서 문장 번역을 쓰려면 번역 키 설정이 필요해요.' : '번역을 가져오지 못했어요.';
+  return `<div class="kr">${why} <a href="${papagoURL(lineText(L))}" target="_blank" rel="noopener">파파고에서 보기</a></div>`;
+}
+function lineRowHTML(L, i) {
+  const w = S.w;
+  return `<div class="ln ${L.tag ? 'tag' : ''} ${i === w.active ? 'on' : ''} ${w.kr && w.kr[i] && w.kr[i].open ? 'kr-open' : ''}" data-i="${i}"><button class="lt" data-act="seek" data-i="${i}">${fmt(L.t / 1000)}</button><div><p>${lineHTML(L, i)}</p>${krHTML(i)}</div><button class="kbtn" data-act="kr" data-i="${i}" aria-label="한국어 번역 보기">한</button></div>`;
+}
+function refreshLine(i) {
+  const w = S.w; if (!w || !w.lines[i]) return;
+  const el = document.querySelector(`.ln[data-i="${i}"]`);
+  if (el) el.outerHTML = lineRowHTML(w.lines[i], i);
+  if (i === w.active) { const now = $('#now'); if (now) now.innerHTML = lineHTML(w.lines[i], i, 'n') + krHTML(i); }
+}
+async function toggleKr(i) {
+  const w = S.w; if (!w || !w.lines[i]) return;
+  w.kr = w.kr || {};
+  const k = w.kr[i];
+  if (k && k.open) { k.open = false; refreshLine(i); return; }
+  if (k && k.state === 'ok') { k.open = true; refreshLine(i); return; }
+  w.kr[i] = { open: true, state: 'loading' }; refreshLine(i);
+  const vid = w.vid;
+  const res = await translateKo(lineText(w.lines[i]));
+  if (!S.w || S.w.vid !== vid) return;
+  S.w.kr[i] = { open: S.w.kr[i] ? S.w.kr[i].open : true, state: res && res.ko ? 'ok' : res && res.none ? 'none' : 'fail', text: res && res.ko };
+  refreshLine(i);
+}
+// swipe a subtitle line (or the big current line) sideways to show / hide its Korean
+let sw = null;
+document.addEventListener('touchstart', (e) => {
+  const el = e.target.closest('.ln, #now'); if (!el || !S.w || e.touches.length !== 1) { sw = null; return; }
+  sw = { el, x: e.touches[0].clientX, y: e.touches[0].clientY, dx: 0, horiz: null };
+}, { passive: true });
+document.addEventListener('touchmove', (e) => {
+  if (!sw) return;
+  const dx = e.touches[0].clientX - sw.x, dy = e.touches[0].clientY - sw.y;
+  if (sw.horiz === null && (Math.abs(dx) > 10 || Math.abs(dy) > 10)) sw.horiz = Math.abs(dx) > Math.abs(dy);
+  if (sw.horiz) { sw.dx = dx; sw.el.style.transform = `translateX(${Math.max(-60, Math.min(60, dx * 0.5))}px)`; }
+}, { passive: true });
+document.addEventListener('touchend', () => {
+  if (!sw) return;
+  const { el, dx, horiz } = sw; sw = null;
+  el.style.transform = '';
+  if (!horiz || Math.abs(dx) < 50 || !S.w) return;
+  const i = el.id === 'now' ? S.w.active : +el.dataset.i;
+  if (i >= 0) toggleKr(i);
+}, { passive: true });
+
 function renderSubs() {
   const w = S.w; const el = $('#subs'); if (!w || !el) return;
   if (!w.lines.length) { el.innerHTML = `<div class="status">${esc(w.status || '자막이 없어요.')}</div>`; return; }
-  el.innerHTML = w.lines.map((L, i) => `<div class="ln ${L.tag ? 'tag' : ''} ${i === w.active ? 'on' : ''}" data-i="${i}"><button class="lt" data-act="seek" data-i="${i}">${fmt(L.t / 1000)}</button><p>${lineHTML(L, i)}</p></div>`).join('');
-  if (w.active >= 0) { const now = $('#now'); if (now && w.lines[w.active]) now.innerHTML = lineHTML(w.lines[w.active], w.active, 'n'); }
+  el.innerHTML = w.lines.map((L, i) => lineRowHTML(L, i)).join('');
+  if (w.active >= 0) { const now = $('#now'); if (now && w.lines[w.active]) now.innerHTML = lineHTML(w.lines[w.active], w.active, 'n') + krHTML(w.active); }
 }
 function renderVWords() {
   const w = S.w; const el = $('#vwords'); if (!w || !el || !w.v) return;
@@ -773,6 +847,7 @@ document.addEventListener('click', (e) => {
   const w = S.w;
   switch (a) {
     case 'seek': seekLine(+b.dataset.i); break;
+    case 'kr': toggleKr(+b.dataset.i); break;
     case 'play-all': { const list = S.videos.filter((v) => S.kind === 'all' || v.kind === S.kind).sort(homeOrder); const first = list.find((v) => (v.words || []).some((x) => !st(x.id))) || list[0]; if (first) location.hash = ytAt(first.vid); break; }
     case 'next-video': goNext(false); break;
     case 'auto': S.autoNext = !S.autoNext; LS.set('vp-auto', S.autoNext); b.textContent = '연속 재생 ' + (S.autoNext ? '켬' : '끔'); b.classList.toggle('on', S.autoNext); break;
