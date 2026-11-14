@@ -7,6 +7,7 @@ YouTube 영상을 보면서 영어 자막의 단어를 눌러 뜻을 보고, 단
 - `index.html`, `style.css`, `app.js` — 화면 (정적 파일)
 - `data/videos.json` — 영상 목록과 영상별 표현 (Claude가 "단어장 채워줘" 때 갱신)
 - `api/transcript.js` — 영상의 영어 자막을 Supadata API로 받아 옴 (서버에 저장하지 않음)
+- `vendor/ts-fsrs.min.mjs` — FSRS 간격 반복 라이브러리 (ts-fsrs, MIT) 번들
 - `data/dict/` — 단어를 눌렀을 때 보여주는 영→한 공개 사전 (cc-kedict·kengdic 기반, 라이선스는 `data/dict/LICENSE.md`)
 - `api/translate.js` — 밀어서 보는 자막 문장 한국어 번역 (PC 크롬은 기기 내장 번역을 먼저 시도)
 - `api/define.js` — 단어의 한국어 뜻 (Claude 또는 DeepL)
@@ -27,3 +28,7 @@ Upstash를 연결하지 않으면 진도는 각 기기 브라우저에만 저장
 ## 자막 캐시
 
 받아 온 자막은 보는 기기의 브라우저에만 14일 동안 보관해서 같은 영상을 다시 열 때 API 횟수를 아낀다.
+
+## 복습 (FSRS)
+
+'복습' 탭은 FSRS로 잊기 직전인 표현부터 하루 최대 20개(새 표현은 하루 10개까지)를 낸다. 문제는 뜻 고르기 → 유의어 비교 → 빈칸 쓰기 → 듣고 쓰기 순으로 어려워지고, 정답 여부와 걸린 시간으로 자동 채점해 다음 복습 날짜를 정한다. 문제 데이터는 `data/videos.json`의 각 표현 `drill` 필드에 있다. 단어장에서 '외웠음'을 체크하면 복습 일정에 들어간다.

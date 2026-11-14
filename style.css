@@ -178,3 +178,16 @@ select{font:inherit;font-size:14px;border:1px solid var(--line2);border-radius:9
 .ln:hover .kbtn,.ln.on .kbtn,.ln.kr-open .kbtn{opacity:1}
 .ln.kr-open .kbtn{background:var(--accent-bg);color:var(--accent-ink);border-color:var(--accent)}
 @media (hover:none){.kbtn{display:none}.ln{grid-template-columns:44px minmax(0,1fr)}}
+
+.nb{display:inline-block;min-width:18px;height:18px;line-height:18px;border-radius:999px;background:var(--accent);color:#fff;font-size:11px;text-align:center;padding:0 5px;margin-left:4px;vertical-align:1px}
+.rvhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.q.qs{font-family:"Noto Sans KR",system-ui,sans-serif;font-size:19px;line-height:1.6;font-weight:400}
+.blank{display:inline-block;min-width:70px;border-bottom:2px solid var(--accent);color:var(--accent-ink);font-weight:500;padding:0 4px;text-align:center}
+.rvin{width:100%;font:inherit;font-size:17px;padding:10px 14px;border:1px solid var(--line2);border-radius:10px;background:var(--bg);color:var(--ink);margin-bottom:4px}
+@media (max-width:820px){.nav a{padding:5px 8px}.q.qs{font-size:17px}}
+.nav a{white-space:nowrap}
+@media (max-width:520px){
+  .brand{display:none}
+  .nav{width:100%;justify-content:space-between}
+  .nav a{flex:1;text-align:center;padding:6px 4px;font-size:13px}
+}

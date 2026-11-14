@@ -110,6 +110,11 @@ function mergeState(a, b) {
   const tm = {};
   for (const t of [...(a.topics || []), ...(b.topics || [])]) if (t && t.id && (!tm[t.id] || (t.at || 0) > (tm[t.id].at || 0))) tm[t.id] = t;
   out.topics = Object.values(tm).sort((x, y) => (x.created || 0) - (y.created || 0));
+  out.fsrs = { ...(a.fsrs || {}) };
+  for (const [k, v] of Object.entries(b.fsrs || {})) if (!out.fsrs[k] || (v.at || 0) > (out.fsrs[k].at || 0)) out.fsrs[k] = v;
+  const da = a.daily || {}, db = b.daily || {};
+  if (da.date && da.date === db.date) out.daily = { date: da.date, ids: [...new Set([...(da.ids || []), ...(db.ids || [])])], newIds: [...new Set([...(da.newIds || []), ...(db.newIds || [])])] };
+  else out.daily = (da.date || '') >= (db.date || '') ? da : db;
   return out;
 }
 async function api(path, opts = {}) {
@@ -152,6 +157,8 @@ async function pull() {
 function setStatus(id, s) {
   S.prog.status[id] = { s: s || null, at: Date.now() };
   saveProg();
+  if (s === 'learned' && !(S.prog.fsrs || {})[id]) scheduleAs(id, 3).then(updateBadge); // counts as a first "good" review
+  else updateBadge();
 }
 function note(t) { const n = $('#note'); if (!t) { n.hidden = true; return; } n.textContent = t; n.hidden = false; }
 
@@ -170,12 +177,13 @@ function ytAt(vid, t) { return '#/v/' + encodeURIComponent(vid) + (t ? '?t=' + M
 /* ---------------- routing ---------------- */
 function route() {
   const h = location.hash || '#/';
-  const navKey = h.startsWith('#/words') ? 'words' : h.startsWith('#/cards') ? 'cards' : h.startsWith('#/quiz') ? 'quiz' : 'home';
+  const navKey = h.startsWith('#/review') ? 'review' : h.startsWith('#/words') ? 'words' : h.startsWith('#/cards') ? 'cards' : h.startsWith('#/quiz') ? 'quiz' : 'home';
   document.querySelectorAll('#nav a').forEach((a) => a.classList.toggle('on', a.dataset.nav === navKey && !h.startsWith('#/v/')));
   closeSheet();
   const m = h.match(/^#\/v\/([\w-]{11})(?:\?t=(\d+))?/);
   if (m) return openWatch(m[1], m[2] ? +m[2] : 0);
   leaveWatch();
+  if (navKey === 'review') { S.rv = null; return renderReview(); }
   if (navKey === 'words') return renderWords();
   if (navKey === 'cards') { S.fc.deck = null; return renderCards(); }
   if (navKey === 'quiz') { S.quiz.qs = null; return renderQuiz(); }
@@ -183,6 +191,7 @@ function route() {
 }
 function refresh() {
   const h = location.hash || '#/';
+  if (h.startsWith('#/review')) return;
   if (h.startsWith('#/v/')) { renderSubs(); renderVWords(); return; }
   if (h.startsWith('#/words')) return renderWords();
   if (h.startsWith('#/cards')) return renderCards();
@@ -743,7 +752,7 @@ function wordRow(w, rev, inWatch) {
     <div><div><span class="expr">${esc(w.expr)}</span> ${spk(w.expr)}<span class="pos">${esc(w.pos || '')}</span> ${rev[w.id] ? '<span class="pill p-review">복습</span>' : ''}</div>
       <div>${esc(w.ko)}</div>
       ${w.ex ? `<div class="ex">${esc(w.ex)}</div><div class="exko">${esc(w.exKo || '')}</div>` : ''}
-      ${w.note ? `<div class="wnote">${esc(w.note)}</div>` : ''}</div>
+      ${w.note ? `<div class="wnote">${esc(w.note)}</div>` : ''}${dueLabel(w.id)}</div>
     <div class="acts">${inWatch ? `<button class="ts" data-act="seek-t" data-t="${w.t}">${ICON_PLAY}${fmt(w.t)}</button>` : `<a class="ts" href="${ytAt(w.v.vid, w.t)}">${ICON_PLAY}${fmt(w.t)}</a>`}
       <button class="btn sm ${s === 'known' ? 'on' : ''}" data-act="known" data-id="${esc(w.id)}">${s === 'known' ? '앎 취소' : '이미 앎'}</button></div></div>`;
 }
@@ -911,7 +920,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft' && e.shiftKey) { seekLine(Math.max(0, S.w.active - 1)); e.preventDefault(); }
   if (e.key === 'ArrowRight' && e.shiftKey) { seekLine(Math.min(S.w.lines.length - 1, S.w.active + 1)); e.preventDefault(); }
 });
-document.addEventListener('visibilitychange', async () => { if (document.visibilityState === 'visible' && S.server === 'ok') { await pull(); if (!S.w) refresh(); } });
+document.addEventListener('visibilitychange', async () => { if (document.visibilityState === 'visible') { if (S.server === 'ok') { await pull(); if (!S.w) refresh(); } updateBadge(); } });
 window.addEventListener('hashchange', route);
 ['wheel', 'touchmove'].forEach((ev) => window.addEventListener(ev, () => { if (S.w) S.w.pauseFollowUntil = Date.now() + 4000; }, { passive: true }));
 
@@ -925,4 +934,203 @@ window.addEventListener('hashchange', route);
   } catch (e) { S.videos = []; note('영상 목록을 불러오지 못했어요.'); }
   await pull(); // shows the passcode screen itself when the server asks for one
   route();
+  updateBadge();
 })();
+
+
+/* ================= spaced review (FSRS) with auto-graded questions ================= */
+const DAILY_CAP = 20, NEW_PER_DAY = 10;
+let FS = null;
+async function fsrsLib() {
+  if (!FS) {
+    const m = await import('./vendor/ts-fsrs.min.mjs');
+    FS = { ...m, f: m.fsrs(m.generatorParameters({ enable_fuzz: true, request_retention: 0.9 })) };
+  }
+  return FS;
+}
+const dayKey = (t = Date.now()) => { const d = new Date(t - 4 * 3600e3); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+const toCard = (c) => ({ ...c, due: new Date(c.due), last_review: c.last_review ? new Date(c.last_review) : undefined });
+const cardOf = (id) => { const x = (S.prog.fsrs || {})[id]; return x && x.c ? toCard(x.c) : null; };
+function relTime(ms) {
+  const m = Math.round(ms / 60000);
+  if (m < 60) return Math.max(1, m) + '분 뒤';
+  const h = Math.round(m / 60); if (h < 24) return h + '시간 뒤';
+  const d = Math.round(h / 24); if (d < 31) return d + '일 뒤';
+  return Math.round(d / 30) + '개월 뒤';
+}
+function dueLabel(id) {
+  const c = cardOf(id); if (!c || st(id) === 'known') return '';
+  const ms = c.due - Date.now();
+  return `<div class="small" style="margin-top:4px">${ms <= 0 ? '오늘 복습할 차례' : '다음 복습 ' + relTime(ms)}</div>`;
+}
+function reviewItems() {
+  const items = [];
+  [...S.videos].sort((a, b) => (a.batchOrder || 0) - (b.batchOrder || 0) || (a.order || 0) - (b.order || 0)).forEach((v) => (v.words || []).forEach((w) => {
+    if (st(w.id) !== 'known') items.push({ id: w.id, kind: 'v', w: { ...w, v } });
+  }));
+  savedList().forEach((x) => { if (x.ko && x.s !== 'known') items.push({ id: 's:' + x.key, kind: 's', x }); });
+  return items;
+}
+function daily() {
+  const today = dayKey();
+  if (!S.prog.daily || S.prog.daily.date !== today) S.prog.daily = { date: today, ids: [], newIds: [] };
+  return S.prog.daily;
+}
+function buildQueue() {
+  const now = Date.now(), d = daily();
+  const items = reviewItems();
+  const due = [], fresh = [];
+  items.forEach((it) => { const c = cardOf(it.id); if (!c) fresh.push(it); else if (c.due.getTime() <= now) due.push({ it, due: c.due.getTime() }); });
+  due.sort((a, b) => a.due - b.due);
+  const doneSet = new Set(d.ids);
+  const again = due.filter((x) => doneSet.has(x.it.id)).map((x) => x.it); // failed earlier today, due again
+  const slots = Math.max(0, DAILY_CAP - d.ids.length);
+  const dueNew = due.filter((x) => !doneSet.has(x.it.id)).map((x) => x.it).slice(0, slots);
+  const newSlots = Math.max(0, Math.min(slots - dueNew.length, NEW_PER_DAY - (d.newIds || []).length));
+  return [...again, ...dueNew, ...fresh.slice(0, newSlots)];
+}
+function todayLeft() { try { return buildQueue().length; } catch (e) { return 0; } }
+function updateBadge() {
+  const n = todayLeft();
+  const el = $('#rvBadge'); if (el) { el.textContent = n ? String(n) : ''; el.hidden = !n; }
+  try { if (navigator.setAppBadge) { if (n) navigator.setAppBadge(n); else navigator.clearAppBadge(); } } catch (e) {}
+}
+async function scheduleAs(id, rating, isNew) {
+  const L = await fsrsLib();
+  const now = new Date();
+  const card = cardOf(id) || L.createEmptyCard(now);
+  const r = L.f.next(card, now, rating);
+  S.prog.fsrs = S.prog.fsrs || {};
+  S.prog.fsrs[id] = { c: JSON.parse(JSON.stringify(r.card)), at: Date.now() };
+  saveProg();
+  return r.card;
+}
+
+/* question building */
+const normAns = (s) => String(s || '').toLowerCase().replace(/[’‘]/g, "'").replace(/-/g, ' ').replace(/[^a-z0-9' ]/g, ' ').replace(/\s+/g, ' ').trim();
+function lev(a, b) {
+  const m = a.length, n = b.length; if (Math.abs(m - n) > 3) return 9;
+  let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) { const cur = [i]; for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = cur; }
+  return prev[n];
+}
+function grade(input, accepted) {
+  const x = normAns(input); if (!x) return 'wrong';
+  const acc = accepted.map(normAns);
+  if (acc.includes(x)) return 'right';
+  const xs = x.split(' ').map(stem).join(' ');
+  if (acc.some((a) => a.split(' ').map(stem).join(' ') === xs)) return 'near';
+  if (acc.some((a) => lev(a, x) <= (a.length >= 12 ? 2 : 1))) return 'near';
+  return 'wrong';
+}
+const cleanExpr = (e) => String(e).replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
+function pickType(it) {
+  const c = cardOf(it.id), reps = c ? c.reps : 0;
+  if (it.kind === 's') return 'mcq';
+  const dr = it.w.drill || {};
+  const has = { mcq: true, vs: !!dr.vs, cloze: !!(dr.cloze && dr.cloze.length), listen: !/\(/.test(it.w.expr) && it.w.expr.length <= 32 };
+  const order = reps === 0 ? ['mcq'] : reps === 1 ? ['vs', 'cloze', 'mcq'] : reps === 2 ? ['cloze', 'vs', 'mcq'] : [['cloze', 'vs', 'listen', 'cloze', 'mcq'][reps % 5], 'cloze', 'vs', 'mcq'];
+  return order.find((t) => has[t]) || 'mcq';
+}
+function makeQuestion(it) {
+  const type = pickType(it), c = cardOf(it.id), reps = c ? c.reps : 0;
+  const expr = it.kind === 'v' ? it.w.expr : it.x.word, ko = it.kind === 'v' ? it.w.ko : it.x.ko;
+  const q = { it, type, expr, ko, t0: Date.now(), hint: false };
+  if (type === 'mcq') {
+    const pool = reviewItems().filter((o) => o.id !== it.id).map((o) => (o.kind === 'v' ? o.w.ko : o.x.ko)).filter(Boolean);
+    const used = new Set([ko]); const others = shuffle(pool).filter((k) => !used.has(k) && used.add(k)).slice(0, 3);
+    q.opts = shuffle([ko, ...others]); q.answer = ko;
+  } else if (type === 'vs') {
+    const v = it.w.drill.vs; q.s = v.s; q.opts = shuffle([...v.opts]); q.answer = v.a; q.why = v.why;
+  } else if (type === 'cloze') {
+    const cl = it.w.drill.cloze[reps % it.w.drill.cloze.length]; q.s = cl.s; q.accept = cl.a;
+  } else { q.accept = [cleanExpr(expr)]; }
+  return q;
+}
+function ratingFor(q, result) {
+  const sec = (Date.now() - q.t0) / 1000, typed = q.type === 'cloze' || q.type === 'listen';
+  if (result === 'wrong') return 1;
+  if (result === 'near' || q.hint) return 2;
+  if (typed) return sec > 30 ? 2 : sec < 8 && cardOf(q.it.id) ? 4 : 3;
+  return sec > 15 ? 2 : sec < 4 && cardOf(q.it.id) ? 4 : 3;
+}
+
+/* review screen */
+function renderReview() {
+  if (!S.rv) S.rv = { queue: buildQueue(), done: 0, q: null, res: null };
+  const R = S.rv, d = daily();
+  const total = d.ids.length + R.queue.length;
+  const head = `<div class="rvhead"><div><b>오늘의 복습</b> <span class="small">하루 최대 ${DAILY_CAP}개 · 잊기 직전인 것부터</span></div><div class="small">${d.ids.length} / ${Math.max(total, d.ids.length)}</div></div><div class="bar" style="margin-bottom:14px"><i style="width:${total ? Math.round(d.ids.length / total * 100) : 100}%"></i></div>`;
+  if (!R.q) {
+    const next = R.queue[0];
+    if (!next) {
+      const tomorrow = reviewItems().filter((it) => { const c = cardOf(it.id); return c && c.due.getTime() <= Date.now() + 864e5; }).length;
+      $('#view').innerHTML = `<div class="center">${head}<div class="qcard" style="text-align:center"><div class="q">오늘 복습 끝</div><p class="fb">${d.ids.length ? `오늘 ${d.ids.length}개를 복습했어요.` : '오늘 복습할 표현이 없어요.'} 내일 복습할 표현은 약 ${tomorrow}개예요.</p></div></div>`;
+      updateBadge(); return;
+    }
+    R.q = makeQuestion(next); R.res = null;
+  }
+  const q = R.q, answered = R.res !== null;
+  const blank = (s) => esc(s).replace('___', '<span class="blank">' + (answered && q.type !== 'mcq' ? esc(q.answer || q.accept[0]) : '_____') + '</span>');
+  let body = '';
+  if (q.type === 'mcq') body = `<div class="small">이 표현의 뜻은?</div><div class="q">${esc(q.expr)} ${spk(q.expr)}</div>`;
+  if (q.type === 'vs') body = `<div class="small">빈칸에 가장 알맞은 것은?</div><div class="q qs">${blank(q.s)}</div>`;
+  if (q.type === 'cloze') body = `<div class="small">빈칸에 들어갈 표현을 써 보세요</div><div class="q qs">${blank(q.s)}</div><div class="small" style="margin:-6px 0 10px">뜻: ${esc(q.ko)}${q.hint ? ` · 힌트: ${esc(q.accept[0].split(' ').map((x) => x[0] + '…').join(' '))}` : ''}</div>`;
+  if (q.type === 'listen') body = `<div class="small">듣고 그대로 써 보세요</div><div class="q"><button class="btn" data-act="rv-play">${ICON_SPK} 듣기</button></div>`;
+  let input = '';
+  if (q.type === 'mcq' || q.type === 'vs') {
+    input = q.opts.map((o, k) => { let c = ''; if (answered) { if (o === q.answer) c = 'right'; else if (k === R.pick) c = 'wrong'; } return `<button class="opt ${c}" data-act="rv-pick" data-k="${k}" ${answered ? 'disabled' : ''}>${esc(o)}</button>`; }).join('');
+  } else {
+    input = `<input id="rvIn" class="rvin" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="영어로 입력" ${answered ? 'disabled' : ''} value="${esc(R.typed || '')}">
+      ${answered ? '' : `<div class="btns" style="justify-content:flex-start"><button class="btn" data-act="rv-hint">힌트</button><button class="btn" data-act="rv-giveup">모르겠어요</button><button class="btn primary" data-act="rv-check">확인</button></div><div class="err" id="rvErr"></div>`}`;
+  }
+  let fb = '';
+  if (answered) {
+    const it = q.it, w = it.kind === 'v' ? it.w : null;
+    const verdict = R.res === 'right' ? '<b style="color:var(--green)">정답</b>' : R.res === 'near' ? '<b style="color:var(--amber)">거의 맞았어요</b>' : '<b style="color:var(--accent)">아쉬워요</b>';
+    fb = `<div class="fb">${verdict} · ${esc(q.expr)} ${spk(q.expr)} — ${esc(q.ko)}
+      ${q.why ? `<div class="wnote">${esc(q.why)}</div>` : ''}
+      ${w && w.ex && q.type !== 'mcq' ? `<div class="ex">${esc(w.ex)}</div>` : ''}
+      <div class="small" style="margin-top:6px">다음 복습: ${esc(R.nextIn || '')}</div></div>
+      <div class="btns" style="justify-content:flex-start">${w ? `<a class="ts" href="${ytAt(w.v.vid, w.t)}">${ICON_PLAY}장면 ${fmt(w.t)}</a>` : ''}<button class="btn primary" data-act="rv-next">다음</button></div>`;
+  }
+  $('#view').innerHTML = `<div class="center">${head}<div class="qcard">${body}${input}${fb}</div></div>`;
+  const inp = $('#rvIn'); if (inp && !answered) inp.focus({ preventScroll: true });
+  updateBadge();
+}
+async function finishQuestion(result) {
+  const R = S.rv, q = R.q; if (!q || R.res !== null) return;
+  R.res = result;
+  const rating = ratingFor(q, result);
+  const isNew = !cardOf(q.it.id);
+  const card = await scheduleAs(q.it.id, rating);
+  const d = daily();
+  if (!d.ids.includes(q.it.id)) d.ids.push(q.it.id);
+  if (isNew) { d.newIds = d.newIds || []; if (!d.newIds.includes(q.it.id)) d.newIds.push(q.it.id); }
+  saveProg();
+  R.nextIn = relTime(card.due - Date.now());
+  R.queue.shift();
+  if (rating === 1) R.queue.push(q.it); // comes back later in this session
+  renderReview();
+}
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-act^="rv-"]'); if (!b || !S.rv) return;
+  const R = S.rv, q = R.q; if (!q) return;
+  const a = b.dataset.act;
+  if (a === 'rv-pick') { R.pick = +b.dataset.k; finishQuestion(q.opts[R.pick] === q.answer ? 'right' : 'wrong'); }
+  if (a === 'rv-play') speak(cleanExpr(q.expr));
+  if (a === 'rv-hint') { q.hint = true; R.typed = ($('#rvIn') || {}).value || ''; renderReview(); }
+  if (a === 'rv-giveup') { R.typed = ($('#rvIn') || {}).value || ''; finishQuestion('wrong'); }
+  if (a === 'rv-check') {
+    const v = ($('#rvIn') || {}).value || '';
+    if (!v.trim()) { $('#rvErr').textContent = '답을 먼저 입력해 주세요.'; return; }
+    R.typed = v; finishQuestion(grade(v, q.accept));
+  }
+  if (a === 'rv-next') { R.q = null; R.res = null; R.pick = null; R.typed = ''; renderReview(); }
+});
+document.addEventListener('keydown', (e) => {
+  if (!S.rv || !(location.hash || '').startsWith('#/review') || e.key !== 'Enter') return;
+  if (S.rv.res !== null) { e.preventDefault(); S.rv.q = null; S.rv.res = null; S.rv.pick = null; S.rv.typed = ''; renderReview(); }
+  else if (e.target.id === 'rvIn') { e.preventDefault(); const b = document.querySelector('[data-act="rv-check"]'); if (b) b.click(); }
+});
+document.addEventListener('input', (e) => { if (e.target.id === 'rvIn') { const er = $('#rvErr'); if (er) er.textContent = ''; } });
