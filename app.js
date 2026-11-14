@@ -509,6 +509,45 @@ async function lookup(word) {
   dictCache[n] = null;
   return null;
 }
+const dictShards = {};
+async function shard(ch) {
+  if (!/^[a-z]$/.test(ch)) return {};
+  if (!dictShards[ch]) dictShards[ch] = fetch('data/dict/' + ch + '.json').then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
+  return dictShards[ch];
+}
+function lemmas(n) {
+  const out = [n];
+  const add = (x) => { if (x && x.length > 1 && !out.includes(x)) out.push(x); };
+  add(IRREG[n]);
+  const undouble = (x) => (/([b-df-hj-np-tv-z])\1$/.test(x) ? x.slice(0, -1) : x);
+  if (n.endsWith('ies')) add(n.slice(0, -3) + 'y');
+  if (n.endsWith('ied')) add(n.slice(0, -3) + 'y');
+  if (n.endsWith('ier')) add(n.slice(0, -3) + 'y');
+  if (n.endsWith('iest')) add(n.slice(0, -4) + 'y');
+  if (n.endsWith('ily')) add(n.slice(0, -3) + 'y');
+  for (const suf of ['ing', 'ed', 'est', 'er']) {
+    if (n.endsWith(suf) && n.length > suf.length + 2) { const b = n.slice(0, -suf.length); add(b); add(b + 'e'); add(undouble(b)); }
+  }
+  if (n.endsWith('es')) add(n.slice(0, -2));
+  if (n.endsWith('s') && !n.endsWith('ss')) add(n.slice(0, -1));
+  if (n.endsWith('ly') && n.length > 4) add(n.slice(0, -2));
+  return out;
+}
+// Korean meanings from the bundled open dictionary: the word itself, plus a phrase it may start or end.
+async function dictKo(words, k) {
+  const tok = (i) => (words[i] ? norm(words[i].w).replace(/'$/, '') : '');
+  const look = async (q) => { const d = await shard(q[0]); const h = d[q]; return h && h.length > 1 ? { lemma: q, pos: h[0], ko: h.slice(1) } : null; };
+  const w0 = tok(k), w1 = tok(k + 1), wm = tok(k - 1), w2 = tok(k + 2);
+  let single = null;
+  for (const l of lemmas(w0)) { single = await look(l); if (single) break; }
+  const phraseTries = [];
+  if (w1 && w2) phraseTries.push([w0, w1, w2].join(' '));
+  if (w1) lemmas(w0).forEach((l) => phraseTries.push(l + ' ' + w1));
+  if (wm) phraseTries.push(wm + ' ' + w0);
+  let phrase = null;
+  for (const q of phraseTries) { phrase = await look(q); if (phrase) break; }
+  return single || phrase ? { single, phrase } : null;
+}
 const koCache = {};
 async function define(word, sentence) {
   if (S.translator === 'none') return { none: true };
@@ -550,17 +589,26 @@ async function openWordSheet(li, k, span) {
   sheet.hidden = false;
   const seq = ++S.sheetSeq;
   delete sheet.dataset.ko; delete sheet.dataset.def;
-  if (!entry) define(raw, sentence).then((kr) => {
+  if (!entry) (async () => {
+    const dk = await dictKo(L.words, k);
     const kb = $('#ko'); if (!kb || seq !== S.sheetSeq) return;
-    if (kr && kr.ko) {
-      kb.innerHTML = `${kr.pos ? `<b>${esc(kr.pos)}</b>` : ''}<span style="font-size:17px">${esc(kr.ko)}</span>${kr.lemma && norm(kr.lemma) !== norm(raw) ? ` <span class="small">(기본형 ${esc(kr.lemma)})</span>` : ''}${kr.other ? `<div class="small" style="margin-top:2px">다른 뜻: ${esc(kr.other)}</div>` : ''}`;
-      sheet.dataset.ko = kr.ko;
-    } else if (kr && kr.none) {
-      kb.innerHTML = '<span class="small">한국어 뜻은 번역 API 키(ANTHROPIC_API_KEY 또는 DEEPL_API_KEY)를 설정하면 보여요.</span>';
-    } else {
-      kb.innerHTML = '<span class="small">한국어 뜻을 가져오지 못했어요. 네이버 사전 버튼으로 확인해 보세요.</span>';
+    if (dk) {
+      const one = dk.single, ph = dk.phrase;
+      kb.innerHTML = `${one ? `${norm(one.lemma) !== norm(raw) ? `<div class="small">기본형 <b style="color:var(--ink);font-size:13px">${esc(one.lemma)}</b></div>` : ''}${one.pos ? `<b>${esc(one.pos)}</b>` : ''}<span style="font-size:17px">${one.ko.map(esc).join(' · ')}</span>` : ''}
+        ${ph ? `<div style="margin-top:${one ? 6 : 0}px"><span class="small">${one ? '혹시 표현이라면' : '표현'}</span> <b style="color:var(--ink);font-size:13px">${esc(ph.lemma)}</b> ${ph.ko.map(esc).join(' · ')}</div>` : ''}
+        <div class="small" style="margin-top:2px">공개 사전 기준 · 문장 속 뜻과 다를 수 있어요</div>`;
+      sheet.dataset.ko = (one || ph).ko.slice(0, 2).join(', ');
+      return;
     }
-  });
+    const kr = await define(raw, sentence);
+    if (!$('#ko') || seq !== S.sheetSeq) return;
+    if (kr && kr.ko) {
+      kb.innerHTML = `${kr.pos ? `<b>${esc(kr.pos)}</b>` : ''}<span style="font-size:17px">${esc(kr.ko)}</span>${kr.other ? `<div class="small" style="margin-top:2px">다른 뜻: ${esc(kr.other)}</div>` : ''}`;
+      sheet.dataset.ko = kr.ko;
+    } else {
+      kb.innerHTML = '<span class="small">공개 사전에 없는 단어예요. 아래 영어 뜻이나 네이버 사전 버튼으로 확인해 보세요.</span>';
+    }
+  })();
   const d = await lookup(raw);
   const box = $('#dict'); if (!box || sheet.hidden || seq !== S.sheetSeq) return;
   if (d && d.defs.length) {
