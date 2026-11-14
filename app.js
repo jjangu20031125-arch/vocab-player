@@ -20,6 +20,9 @@ const S = {
   server: 'unknown', // unknown | ok | local (no sync store) | none (static hosting)
   kind: 'all',
   hideDone: false,
+  autoNext: LS.get('vp-auto', true),
+  translator: 'unknown',
+  sheetSeq: 0,
   w: null, // watch state
   fc: { deck: null, i: 0, flip: false, scope: 'all' },
   quiz: { qs: null, i: 0, score: 0, ans: null },
@@ -144,6 +147,7 @@ function reviewSet() {
     .forEach((v) => (v.words || []).forEach((w) => { const k = pattern(w.expr).join(' '); if (seen[k]) rev[w.id] = true; else seen[k] = 1; }));
   return rev;
 }
+const homeOrder = (a, b) => (b.batchOrder || 0) - (a.batchOrder || 0) || (a.order || 0) - (b.order || 0);
 function ytAt(vid, t) { return '#/v/' + encodeURIComponent(vid) + (t ? '?t=' + Math.floor(t) : ''); }
 
 /* ---------------- routing ---------------- */
@@ -171,9 +175,10 @@ function refresh() {
 
 /* ---------------- home ---------------- */
 function renderHome() {
-  const vs = S.videos.filter((v) => S.kind === 'all' || v.kind === S.kind)
-    .sort((a, b) => (b.batchOrder || 0) - (a.batchOrder || 0) || (a.order || 0) - (b.order || 0));
-  let html = `<div class="chips">${[['all', '전체'], ['long', '긴 영상'], ['short', '쇼츠']].map(([k, l]) => `<button class="btn ${S.kind === k ? 'on' : ''}" data-kind="${k}">${l}</button>`).join('')}</div>`;
+  const vs = S.videos.filter((v) => S.kind === 'all' || v.kind === S.kind).sort(homeOrder);
+  const playLabel = S.kind === 'short' ? '쇼츠' : S.kind === 'long' ? '긴 영상' : '전체';
+  let html = `<div class="chips">${[['all', '전체'], ['long', '긴 영상'], ['short', '쇼츠']].map(([k, l]) => `<button class="btn ${S.kind === k ? 'on' : ''}" data-kind="${k}">${l}</button>`).join('')}
+    ${vs.length ? `<button class="btn primary" data-act="play-all">${ICON_PLAY}${playLabel} 연속 재생</button>` : ''}</div>`;
   let last = null, open = false;
   vs.forEach((v) => {
     if (v.batch !== last) { if (open) html += '</div>'; html += `<div class="batch">${esc(v.batch || '')}</div><div class="grid">`; open = true; last = v.batch; }
@@ -220,20 +225,58 @@ function leaveWatch() {
   try { S.w.player && S.w.player.destroy(); } catch (e) {}
   S.w = null;
 }
+function wheadHTML(v, vid) {
+  const short = v ? v.kind === 'short' : false;
+  return `${v ? `<span class="pill ${short ? 'p-short' : 'p-long'}">${short ? '쇼츠' : '영상'}</span> <span class="pill p-cat">${esc(v.category || '')}</span>` : ''}
+      <h1>${esc(v ? v.title : vid)}</h1>
+      <div class="sub">${v ? `${esc(v.channel || '')} · ${fmt(v.lengthSec)} ${v.captions === 'manual' ? '<span class="pill p-cc">사람이 만든 자막</span>' : v.captions === 'auto' ? '<span class="pill p-auto">자동 자막</span>' : ''}` : ''}${listPosHTML(vid)}</div>
+      ${v && v.summary ? `<p class="small sum" style="margin:6px 0 0;font-size:13px;color:var(--ink2)">${esc(v.summary)}</p>` : ''}`;
+}
+function playlist() {
+  const k = S.w ? S.w.listKind : S.kind;
+  return S.videos.filter((v) => k === 'all' || v.kind === k).sort(homeOrder);
+}
+function listPosHTML(vid) {
+  const list = playlist(); const i = list.findIndex((v) => v.vid === vid);
+  return i >= 0 && list.length > 1 ? ` <span class="small">· 재생목록 ${i + 1}/${list.length}</span>` : '';
+}
+function goNext(auto) {
+  if (!S.w) return;
+  const list = playlist(); const i = list.findIndex((v) => v.vid === S.w.vid);
+  const n = list[i + 1];
+  if (n) location.hash = ytAt(n.vid);
+  else note(auto ? '재생목록의 마지막 영상까지 다 봤어요.' : '재생목록의 마지막 영상이에요.');
+}
+const NOW_PH = '<span class="ph">재생하면 지금 나오는 문장이 여기에 크게 보여요.</span>';
 async function openWatch(vid, startT) {
   const v = S.videos.find((x) => x.vid === vid);
   if (S.w && S.w.vid === vid) { // same video: just seek
     if (startT && S.w.player && S.w.player.seekTo) { S.w.player.seekTo(startT, true); S.w.player.playVideo && S.w.player.playVideo(); }
     return;
   }
-  leaveWatch();
-  S.w = { vid, v, lines: [], active: -1, loop: false, rate: 1, follow: true, pauseFollowUntil: 0, player: null, timer: null, tab: 'subs', status: '자막을 불러오는 중…', sel: null };
   const short = v ? v.kind === 'short' : false;
+  if (S.w && S.w.player && S.w.player.loadVideoById && $('#subs')) {
+    // keep the same player so the next video keeps playing (phones block autoplay in a new player)
+    Object.assign(S.w, { vid, v, lines: [], active: -1, status: '자막을 불러오는 중…', tab: 'subs', sel: null });
+    note('');
+    $('#whead').innerHTML = wheadHTML(v, vid);
+    $('.pwrap').classList.toggle('short', short);
+    $('#tabWords').textContent = '이 영상 표현 ' + (v ? (v.words || []).length : 0);
+    $('#subs').hidden = false; $('#vwords').hidden = true;
+    $('#tabSubs').classList.add('on'); $('#tabWords').classList.remove('on');
+    $('#subs').innerHTML = '<div class="status">자막을 불러오는 중…</div>';
+    $('#now').innerHTML = NOW_PH;
+    renderVWords();
+    try { S.w.player.loadVideoById({ videoId: vid, startSeconds: Math.floor(startT || 0) }); } catch (e) {}
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    loadTranscript(vid);
+    return;
+  }
+  const listKind = S.kind;
+  leaveWatch();
+  S.w = { vid, v, lines: [], active: -1, loop: false, rate: 1, follow: true, pauseFollowUntil: 0, player: null, timer: null, tab: 'subs', status: '자막을 불러오는 중…', sel: null, listKind };
   $('#view').innerHTML = `
-    <div class="whead">${v ? `<span class="pill ${short ? 'p-short' : 'p-long'}">${short ? '쇼츠' : '영상'}</span> <span class="pill p-cat">${esc(v.category || '')}</span>` : ''}
-      <h1>${esc(v ? v.title : vid)}</h1>
-      <div class="sub">${v ? `${esc(v.channel || '')} · ${fmt(v.lengthSec)} ${v.captions === 'manual' ? '<span class="pill p-cc">사람이 만든 자막</span>' : v.captions === 'auto' ? '<span class="pill p-auto">자동 자막</span>' : ''}` : ''}</div>
-      ${v && v.summary ? `<p class="small sum" style="margin:6px 0 0;font-size:13px;color:var(--ink2)">${esc(v.summary)}</p>` : ''}</div>
+    <div class="whead" id="whead">${wheadHTML(v, vid)}</div>
     <div class="watch">
       <div class="wleft">
         <div class="pwrap ${short ? 'short' : ''}"><div id="yt"><div class="ph">플레이어를 불러오는 중…</div></div></div>
@@ -243,8 +286,10 @@ async function openWatch(vid, startT) {
           <button class="btn sm" data-act="loop" id="loopBtn">반복 끔</button>
           <button class="btn sm" data-act="next" aria-label="다음 문장">다음 ▶</button>
           <select id="rate" aria-label="재생 속도"><option value="0.75">0.75x</option><option value="1" selected>1x</option><option value="1.25">1.25x</option></select>
+          <button class="btn sm" data-act="next-video">다음 영상 ⏭</button>
+          <button class="btn sm ${S.autoNext ? 'on' : ''}" data-act="auto" id="autoBtn">연속 재생 ${S.autoNext ? '켬' : '끔'}</button>
         </div>
-        <div class="now" id="now"><span class="ph">재생하면 지금 나오는 문장이 여기에 크게 보여요.</span></div>
+        <div class="now" id="now">${NOW_PH}</div>
       </div>
       <div class="wright">
         <div class="wtabs"><button class="btn sm on" data-act="tab-subs" id="tabSubs">자막</button><button class="btn sm" data-act="tab-words" id="tabWords">이 영상 표현 ${v ? (v.words || []).length : 0}</button></div>
@@ -256,7 +301,7 @@ async function openWatch(vid, startT) {
   renderVWords();
   const subsEl = $('#subs');
   const pauseFollow = () => { if (S.w) S.w.pauseFollowUntil = Date.now() + 4000; };
-  ['wheel', 'touchmove'].forEach((ev) => { subsEl.addEventListener(ev, pauseFollow, { passive: true }); window.addEventListener(ev, pauseFollow, { passive: true }); });
+  ['wheel', 'touchmove'].forEach((ev) => { subsEl.addEventListener(ev, pauseFollow, { passive: true }); });
   loadTranscript(vid);
   const YT = await loadYT();
   if (!S.w || S.w.vid !== vid) return;
@@ -266,6 +311,7 @@ async function openWatch(vid, startT) {
     playerVars: { playsinline: 1, rel: 0, modestbranding: 1, cc_load_policy: 0, start: Math.floor(startT || 0) },
     events: {
       onReady: () => { if (S.w) { try { S.w.player.setPlaybackRate(S.w.rate); } catch (e) {} } },
+      onStateChange: (e) => { if (e.data === 0 && S.w && !S.w.loop && S.autoNext) goNext(true); },
     },
   });
   S.w.timer = setInterval(tick, 200);
@@ -310,7 +356,7 @@ function setActive(i) {
     }
   }
   const now = $('#now');
-  if (now) now.innerHTML = i >= 0 && w.lines[i] ? lineHTML(w.lines[i], i, 'n') : '<span class="ph">재생하면 지금 나오는 문장이 여기에 크게 보여요.</span>';
+  if (now) now.innerHTML = i >= 0 && w.lines[i] ? lineHTML(w.lines[i], i, 'n') : NOW_PH;
 }
 
 /* transcript loading */
@@ -463,6 +509,16 @@ async function lookup(word) {
   dictCache[n] = null;
   return null;
 }
+const koCache = {};
+async function define(word, sentence) {
+  if (S.translator === 'none') return { none: true };
+  const key = norm(word) + '|' + sentence;
+  if (koCache[key]) return koCache[key];
+  const r = await api('/api/define', { method: 'POST', body: JSON.stringify({ word, sentence }) });
+  if (r.status === 503 && r.j.error === 'no_translator') { S.translator = 'none'; return { none: true }; }
+  if (r.ok && r.j.ko) { koCache[key] = r.j; return r.j; }
+  return null;
+}
 function closeSheet() { const s = $('#sheet'); s.hidden = true; s.innerHTML = ''; document.querySelectorAll('.w.sel').forEach((x) => x.classList.remove('sel')); }
 async function openWordSheet(li, k, span) {
   const w = S.w; if (!w || !w.lines[li]) return;
@@ -483,7 +539,8 @@ async function openWordSheet(li, k, span) {
   sheet.innerHTML = `<button class="x close" data-act="sheet-close" aria-label="닫기">✕</button>
     <div class="sw">${esc(raw)}</div><div class="ctx">${esc(sentence)}</div>
     ${vocabBlock}
-    <div id="dict" class="def small">사전을 찾는 중…</div>
+    ${entry ? '' : '<div id="ko" class="def">한국어 뜻을 찾는 중…</div>'}
+    <div id="dict" class="def small">영어 사전을 찾는 중…</div>
     <div class="row">
       <button class="btn sm ${saved ? 'on' : ''}" data-act="save-word" data-key="${esc(key)}" data-word="${esc(raw)}" data-l="${li}">${saved ? '저장됨 · 취소' : '모르는 단어로 저장'}</button>
       <a class="btn sm" href="${naver}" target="_blank" rel="noopener">네이버 사전</a>
@@ -491,8 +548,21 @@ async function openWordSheet(li, k, span) {
       <button class="btn sm" data-act="seek" data-i="${li}">이 문장 듣기</button>
     </div>`;
   sheet.hidden = false;
+  const seq = ++S.sheetSeq;
+  delete sheet.dataset.ko; delete sheet.dataset.def;
+  if (!entry) define(raw, sentence).then((kr) => {
+    const kb = $('#ko'); if (!kb || seq !== S.sheetSeq) return;
+    if (kr && kr.ko) {
+      kb.innerHTML = `${kr.pos ? `<b>${esc(kr.pos)}</b>` : ''}<span style="font-size:17px">${esc(kr.ko)}</span>${kr.lemma && norm(kr.lemma) !== norm(raw) ? ` <span class="small">(기본형 ${esc(kr.lemma)})</span>` : ''}${kr.other ? `<div class="small" style="margin-top:2px">다른 뜻: ${esc(kr.other)}</div>` : ''}`;
+      sheet.dataset.ko = kr.ko;
+    } else if (kr && kr.none) {
+      kb.innerHTML = '<span class="small">한국어 뜻은 번역 API 키(ANTHROPIC_API_KEY 또는 DEEPL_API_KEY)를 설정하면 보여요.</span>';
+    } else {
+      kb.innerHTML = '<span class="small">한국어 뜻을 가져오지 못했어요. 네이버 사전 버튼으로 확인해 보세요.</span>';
+    }
+  });
   const d = await lookup(raw);
-  const box = $('#dict'); if (!box || sheet.hidden) return;
+  const box = $('#dict'); if (!box || sheet.hidden || seq !== S.sheetSeq) return;
   if (d && d.defs.length) {
     box.className = 'def';
     box.innerHTML = `${d.phon ? `<div class="small">${esc(d.phon)}</div>` : ''}${d.defs.map((x) => `<div><b>${esc(x.pos)}</b>${esc(x.def)}</div>`).join('')}`;
@@ -537,7 +607,7 @@ function renderWords() {
   html += `<div class="h2">자막에서 저장한 단어 ${sv.length}</div>`;
   html += sv.length ? `<div class="vsec">${sv.map((x) => `<div class="word">
       <button class="chk ${x.s === 'learned' ? 'on' : ''}" data-act="saved-learn" data-key="${esc(x.key)}" aria-label="외웠음 표시">${x.s === 'learned' ? ICON_CHECK : ''}</button>
-      <div><span class="expr">${esc(x.word)}</span>${x.def ? `<div class="small" style="font-size:13px;color:var(--ink2)">${esc(x.def)}</div>` : ''}${x.ctx ? `<div class="ex">${esc(x.ctx)}</div>` : ''}</div>
+      <div><span class="expr">${esc(x.word)}</span>${x.ko ? `<div>${esc(x.ko)}</div>` : ''}${x.def ? `<div class="small" style="font-size:13px;color:var(--ink2)">${esc(x.def)}</div>` : ''}${x.ctx ? `<div class="ex">${esc(x.ctx)}</div>` : ''}</div>
       <div class="acts">${x.vid ? `<a class="ts" href="${ytAt(x.vid, x.t)}">${ICON_PLAY}${fmt(x.t)}</a>` : ''}<button class="btn sm" data-act="saved-del" data-key="${esc(x.key)}">삭제</button></div></div>`).join('')}</div>`
     : '<p class="small">영상 자막에서 단어를 눌러 "모르는 단어로 저장"하면 여기에 모여요.</p>';
   $('#view').innerHTML = html;
@@ -547,7 +617,7 @@ function renderWords() {
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function buildDeck() {
   const ws = vocab().filter((w) => !st(w.id)).map((w) => ({ kind: 'v', id: w.id, front: w.expr, ko: w.ko, ex: w.ex, exKo: w.exKo, from: w.v.title, vid: w.v.vid, t: w.t }));
-  const sv = savedList().filter((x) => x.s !== 'learned').map((x) => ({ kind: 's', key: x.key, front: x.word, ko: x.def || '', ex: x.ctx || '', from: '저장한 단어', vid: x.vid, t: x.t }));
+  const sv = savedList().filter((x) => x.s !== 'learned').map((x) => ({ kind: 's', key: x.key, front: x.word, ko: x.ko || x.def || '', ex: x.ctx || '', from: '저장한 단어', vid: x.vid, t: x.t }));
   S.fc.deck = shuffle(S.fc.scope === 'saved' ? sv : S.fc.scope === 'vocab' ? ws : [...ws, ...sv]);
   S.fc.i = 0; S.fc.flip = false;
 }
@@ -621,6 +691,9 @@ document.addEventListener('click', (e) => {
   const w = S.w;
   switch (a) {
     case 'seek': seekLine(+b.dataset.i); break;
+    case 'play-all': { const list = S.videos.filter((v) => S.kind === 'all' || v.kind === S.kind).sort(homeOrder); const first = list.find((v) => (v.words || []).some((x) => !st(x.id))) || list[0]; if (first) location.hash = ytAt(first.vid); break; }
+    case 'next-video': goNext(false); break;
+    case 'auto': S.autoNext = !S.autoNext; LS.set('vp-auto', S.autoNext); b.textContent = '연속 재생 ' + (S.autoNext ? '켬' : '끔'); b.classList.toggle('on', S.autoNext); break;
     case 'seek-t': if (w && w.player && w.player.seekTo) { w.player.seekTo(+b.dataset.t, true); w.player.playVideo(); } break;
     case 'prev': if (w) seekLine(Math.max(0, w.active - 1)); break;
     case 'next': if (w) seekLine(Math.min(w.lines.length - 1, w.active + 1)); break;
@@ -642,7 +715,7 @@ document.addEventListener('click', (e) => {
       if (cur && !cur.del) S.prog.saved[key] = { ...cur, del: true, at: Date.now() };
       else {
         const L = w && w.lines[+b.dataset.l];
-        S.prog.saved[key] = { word: b.dataset.word, def: $('#sheet').dataset.def || '', ctx: L ? L.words.map((x) => x.w).join(' ').slice(0, 140) : '', vid: w ? w.vid : null, t: L ? Math.floor(L.t / 1000) : 0, at: Date.now(), del: false, s: null };
+        S.prog.saved[key] = { word: b.dataset.word, ko: $('#sheet').dataset.ko || '', def: $('#sheet').dataset.def || '', ctx: L ? L.words.map((x) => x.w).join(' ').slice(0, 140) : '', vid: w ? w.vid : null, t: L ? Math.floor(L.t / 1000) : 0, at: Date.now(), del: false, s: null };
       }
       saveProg(); closeSheet(); refresh();
       break;
@@ -685,6 +758,7 @@ document.addEventListener('keydown', (e) => {
 });
 document.addEventListener('visibilitychange', async () => { if (document.visibilityState === 'visible' && S.server === 'ok') { await pull(); if (!S.w) refresh(); } });
 window.addEventListener('hashchange', route);
+['wheel', 'touchmove'].forEach((ev) => window.addEventListener(ev, () => { if (S.w) S.w.pauseFollowUntil = Date.now() + 4000; }, { passive: true }));
 
 /* ---------------- start ---------------- */
 (async function init() {

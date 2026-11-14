@@ -152,7 +152,7 @@ select{font:inherit;font-size:14px;border:1px solid var(--line2);border-radius:9
   .watch{grid-template-columns:minmax(0,1fr);gap:10px}
   .wleft{position:sticky;top:49px;z-index:10;background:var(--bg);padding-bottom:8px}
   .pwrap{border-radius:10px}
-  .pwrap.short{max-height:42vh}
+  .pwrap.short{max-height:34vh}
   .now{font-size:16px;min-height:0;padding:8px 12px;margin-top:8px}
   .ctrl{margin-top:8px}
   .ctrl .btn{padding:5px 10px;font-size:13px}
