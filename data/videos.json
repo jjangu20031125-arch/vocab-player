@@ -1,0 +1,79 @@
+{
+  "updated": "2026-11-14",
+  "videos": [
+    {
+      "vid": "KmDYXaaT9sA", "title": "Conan O'Brien's 2011 Dartmouth College Commencement Address", "channel": "Team Coco",
+      "kind": "long", "category": "코미디 · 인생 성찰", "lengthSec": 1425, "captions": "auto",
+      "batch": "1회차 · 코미디 & 인생 성찰 (11월 14일)", "batchOrder": 1, "order": 1,
+      "summary": "앞 절반은 다트머스를 놀리는 농담, 뒤 절반은 토크쇼에서 밀려난 뒤 겪은 실망이 오히려 새 출발의 계기가 됐다는 진지한 이야기예요.",
+      "words": [
+        {"id": "KmDYXaaT9sA-01", "expr": "impart wisdom", "pos": "동사구", "ko": "(지혜·지식을) 전하다, 나눠 주다", "t": 31, "ex": "My grandfather loved to impart wisdom over dinner.", "exKo": "할아버지는 저녁 식사 때 지혜를 나눠 주시는 걸 좋아하셨다.", "note": "impart는 격식 있는 말이에요. 일상 대화에서는 share를 더 많이 써요."},
+        {"id": "KmDYXaaT9sA-02", "expr": "a crushing advantage", "pos": "명사구", "ko": "압도적인 우위", "t": 86, "ex": "Speaking three languages gave her a crushing advantage in the job market.", "exKo": "3개 국어를 하는 게 취업 시장에서 그녀에게 압도적인 우위를 줬다.", "note": "영상에서는 '대졸자는 빌 게이츠 같은 중퇴자보다 압도적으로 유리하다'는 반어적 농담으로 써요."},
+        {"id": "KmDYXaaT9sA-03", "expr": "compensate for", "pos": "동사구", "ko": "(부족한 것을) 만회하려 하다, 메우다", "t": 204, "ex": "He works late to compensate for the time he lost last week.", "exKo": "그는 지난주에 날린 시간을 만회하려고 늦게까지 일한다.", "note": "\"What are you compensating for?\"는 '뭘 감추려고 그렇게 과하게 해?'라는 농담조 질문이에요."},
+        {"id": "KmDYXaaT9sA-04", "expr": "go to great lengths", "pos": "동사구", "ko": "무슨 수든 쓰다, 크게 애쓰다", "t": 329, "ex": "She went to great lengths to keep the surprise party a secret.", "exKo": "그녀는 깜짝 파티를 비밀로 하려고 갖은 애를 썼다."},
+        {"id": "KmDYXaaT9sA-05", "expr": "inferiority complex", "pos": "명사", "ko": "열등감", "t": 410, "ex": "Growing up with a genius brother gave him a bit of an inferiority complex.", "exKo": "천재 형과 함께 자라면서 그는 약간의 열등감이 생겼다."},
+        {"id": "KmDYXaaT9sA-06", "expr": "sting", "pos": "동사", "ko": "(마음을) 쓰리게 하다, 아프게 하다", "t": 1028, "ex": "Getting rejected still stings, even years later.", "exKo": "거절당한 일은 몇 년이 지나도 여전히 쓰리다.", "note": "영상에서는 disappointment stings(실망은 쓰라리다)로 나와요."},
+        {"id": "KmDYXaaT9sA-07", "expr": "off the grid", "pos": "부사구", "ko": "세상과 연락을 끊고, 주류에서 벗어나", "t": 1061, "ex": "After the breakup, he went completely off the grid for a month.", "exKo": "이별 후 그는 한 달 동안 연락을 완전히 끊고 지냈다.", "note": "원래는 전력망(grid)에 연결되지 않은 생활을 뜻해요. 코난은 이 비유를 일부러 엉망으로 늘려서 웃겨요."},
+        {"id": "KmDYXaaT9sA-08", "expr": "have your worst fear realized", "pos": "동사구", "ko": "가장 두려워하던 일이 현실이 되다", "t": 1149, "ex": "I had my worst fear realized when my laptop died the night before the deadline.", "exKo": "마감 전날 노트북이 꺼지면서 가장 두려워하던 일이 현실이 됐다.", "note": "코난은 이게 오히려 가장 해방감 있는(liberating) 경험이라고 말해요."},
+        {"id": "KmDYXaaT9sA-09", "expr": "emulate", "pos": "동사", "ko": "(존경하는 사람을) 본받다, 따라 하다", "t": 1214, "ex": "Young players often emulate the style of their favorite athletes.", "exKo": "어린 선수들은 좋아하는 선수의 스타일을 따라 하곤 한다."},
+        {"id": "KmDYXaaT9sA-10", "expr": "a catalyst for (something)", "pos": "명사구", "ko": "~의 촉매, 계기", "t": 1261, "ex": "Losing his job became a catalyst for starting his own business.", "exKo": "실직이 그가 창업하는 계기가 됐다.", "note": "영상에서는 a catalyst for profound reinvention(완전히 새로 거듭나는 계기)으로 나와요."}
+      ]
+    },
+    {
+      "vid": "V80-gPkpH6M", "title": "Jim Carrey at MIU: Commencement Address at the 2014 Graduation", "channel": "Maharishi International University",
+      "kind": "long", "category": "코미디 · 인생 성찰", "lengthSec": 1568, "captions": "manual",
+      "batch": "1회차 · 코미디 & 인생 성찰 (11월 14일)", "batchOrder": 1, "order": 2,
+      "summary": "두려움 대신 사랑을 선택하라는 짐 캐리의 졸업 축사예요. 안정적인 직장을 택했다가 해고된 아버지 이야기와 자아에 대한 성찰이 코미디와 섞여 있어요.",
+      "words": [
+        {"id": "V80-gPkpH6M-01", "expr": "milk it", "pos": "동사구", "ko": "(상황·관심을) 최대한 우려먹다", "t": 57, "ex": "He scored one goal and milked it for the rest of the season.", "exKo": "그는 골 하나 넣고 시즌 내내 그걸 우려먹었다.", "note": "영상에서는 기립박수를 더 길게 우려먹으려 했다는 농담이에요."},
+        {"id": "V80-gPkpH6M-02", "expr": "elated", "pos": "형용사", "ko": "몹시 기쁜, 들뜬", "t": 363, "ex": "We were elated when our team's paper got accepted.", "exKo": "우리 팀 논문이 채택됐을 때 우리는 뛸 듯이 기뻤다."},
+        {"id": "V80-gPkpH6M-03", "expr": "slack off", "pos": "동사구", "ko": "게으름 피우다, 농땡이 치다", "t": 403, "ex": "Don't slack off just because the boss is on vacation.", "exKo": "상사가 휴가 갔다고 농땡이 치지 마."},
+        {"id": "V80-gPkpH6M-04", "expr": "fight-or-flight response", "pos": "명사구", "ko": "투쟁-도피 반응 (위협 앞에서 몸이 긴장하는 상태)", "t": 458, "ex": "Public speaking still puts me in fight-or-flight mode.", "exKo": "사람들 앞에서 말하면 나는 아직도 극도로 긴장한다.", "note": "머릿속 상상과 실제 위험을 구분하지 못하면 평생 이 상태로 산다는 맥락이에요."},
+        {"id": "V80-gPkpH6M-05", "expr": "the vanguard (of)", "pos": "명사", "ko": "선두, 선봉", "t": 561, "ex": "Small startups are often in the vanguard of new technology.", "exKo": "작은 스타트업이 신기술의 선두에 서는 경우가 많다."},
+        {"id": "V80-gPkpH6M-06", "expr": "disguised as", "pos": "형용사구", "ko": "~로 위장한, ~인 척하는", "t": 631, "ex": "A lot of procrastination is just fear disguised as perfectionism.", "exKo": "미루는 습관의 상당수는 완벽주의로 위장한 두려움일 뿐이다.", "note": "영상의 핵심 표현: fear disguised as practicality(현실적인 척하는 두려움)."},
+        {"id": "V80-gPkpH6M-07", "expr": "take a chance on", "pos": "동사구", "ko": "(위험을 감수하고) ~에 걸어 보다", "t": 700, "ex": "The company took a chance on a fresh graduate, and it paid off.", "exKo": "그 회사는 신입 졸업생에게 기회를 걸었고, 결과가 좋았다."},
+        {"id": "V80-gPkpH6M-08", "expr": "defy (someone's) expectations", "pos": "동사구", "ko": "(남의) 기대·예상을 깨다", "t": 899, "ex": "The small team defied everyone's expectations and won the contest.", "exKo": "작은 팀이 모두의 예상을 깨고 대회에서 우승했다."},
+        {"id": "V80-gPkpH6M-09", "expr": "an indelible mark", "pos": "명사구", "ko": "지워지지 않는 흔적, 족적", "t": 1307, "ex": "Her first mentor left an indelible mark on her career.", "exKo": "첫 멘토는 그녀의 커리어에 지워지지 않는 흔적을 남겼다."},
+        {"id": "V80-gPkpH6M-10", "expr": "miss your cue", "pos": "동사구", "ko": "타이밍·신호를 놓치다", "t": 1430, "ex": "I missed my cue to speak, and the meeting moved on.", "exKo": "말할 타이밍을 놓쳤고, 회의는 다음 안건으로 넘어갔다.", "note": "원래 연극에서 배우가 등장 신호(cue)를 놓치는 걸 말해요."}
+      ]
+    },
+    {
+      "vid": "Tg2By5YoVdM", "title": "The time I hit rock bottom | Ryan Erwin Stand-Up Comedy", "channel": "Dry Bar Comedy",
+      "kind": "short", "category": "코미디", "lengthSec": 112, "captions": "auto",
+      "batch": "1회차 · 코미디 & 인생 성찰 (11월 14일)", "batchOrder": 1, "order": 3,
+      "summary": "계산대, 영화관, 패스트푸드 아르바이트를 전전한 이야기로 '인생의 바닥'을 웃기게 풀어낸 스탠드업이에요.",
+      "words": [
+        {"id": "Tg2By5YoVdM-01", "expr": "quick thinking", "pos": "명사구", "ko": "순발력, 재빠른 판단", "t": 15, "ex": "Thanks to her quick thinking, nobody got hurt.", "exKo": "그녀의 순발력 덕분에 아무도 다치지 않았다."},
+        {"id": "Tg2By5YoVdM-02", "expr": "the workforce", "pos": "명사", "ko": "(사회의) 노동 인구, 일터", "t": 40, "ex": "She re-entered the workforce after five years at home.", "exKo": "그녀는 5년간 집에 있다가 다시 일터로 돌아갔다."},
+        {"id": "Tg2By5YoVdM-03", "expr": "hit rock bottom", "pos": "동사구", "ko": "바닥을 치다, 최악에 이르다", "t": 58, "ex": "When I hit rock bottom, my friends were the ones who pulled me up.", "exKo": "내가 바닥을 쳤을 때 날 끌어올려 준 건 친구들이었다."},
+        {"id": "Tg2By5YoVdM-04", "expr": "bring shame to", "pos": "동사구", "ko": "~에 망신을 주다, 먹칠하다", "t": 73, "ex": "Cheating on the exam would bring shame to the whole team.", "exKo": "시험 부정행위는 팀 전체에 먹칠을 하는 일이다."},
+        {"id": "Tg2By5YoVdM-05", "expr": "slay", "pos": "동사 (구어)", "ko": "완벽하게 해내다, 찢다", "t": 96, "ex": "You absolutely slayed that presentation.", "exKo": "너 그 발표 완전 찢었어.", "note": "원래 뜻은 '죽이다'예요. 영상에서는 이 두 뜻으로 말장난을 해요."},
+        {"id": "Tg2By5YoVdM-06", "expr": "the operative word", "pos": "명사구", "ko": "(말에서) 핵심이 되는 단어, 방점", "t": 98, "ex": "It's a temporary fix, with 'temporary' being the operative word.", "exKo": "이건 임시 해결책이야. 방점은 '임시'에 있어."}
+      ]
+    },
+    {
+      "vid": "ANEokonLIPg", "title": "Success is not a comfortable procedure - Steve Harvey", "channel": "Motivation Valley",
+      "kind": "short", "category": "동기부여", "lengthSec": 18, "captions": "auto",
+      "batch": "1회차 · 코미디 & 인생 성찰 (11월 14일)", "batchOrder": 1, "order": 4,
+      "summary": "편안한 곳에 머물면 거기서 실패한다, 불편함에 익숙해지라는 스티브 하비의 18초짜리 한마디예요.",
+      "words": [
+        {"id": "ANEokonLIPg-01", "expr": "comfort zone", "pos": "명사구", "ko": "안전지대, 익숙하고 편한 범위", "t": 0, "ex": "Moving abroad pushed me out of my comfort zone.", "exKo": "해외로 이사한 게 나를 안전지대 밖으로 밀어냈다."},
+        {"id": "ANEokonLIPg-02", "expr": "procedure", "pos": "명사", "ko": "절차, 과정", "t": 5, "ex": "Applying for a visa is a long procedure.", "exKo": "비자 신청은 긴 절차다.", "note": "보통 의료·행정 절차에 쓰는 딱딱한 말이라, '성공은 편안한 절차가 아니다'가 더 인상적으로 들려요."},
+        {"id": "ANEokonLIPg-03", "expr": "get comfortable being uncomfortable", "pos": "관용 표현", "ko": "불편함에 익숙해지다", "t": 8, "ex": "If you want to grow, you have to get comfortable being uncomfortable.", "exKo": "성장하고 싶다면 불편함에 익숙해져야 한다."}
+      ]
+    },
+    {
+      "vid": "Xmd2vX-LdoE", "title": "More kindness, less embarrassment. #TedLasso", "channel": "Apple TV",
+      "kind": "short", "category": "드라마", "lengthSec": 59, "captions": "manual",
+      "batch": "1회차 · 코미디 & 인생 성찰 (11월 14일)", "batchOrder": 1, "order": 5,
+      "summary": "창피함이 우리를 작게 만든다는 테드 래소의 장면이에요. 봉오리로 웅크린 채 있는 게 피어나는 것보다 더 아파지는 순간에 관한 이야기예요.",
+      "words": [
+        {"id": "Xmd2vX-LdoE-01", "expr": "keep (someone) small", "pos": "동사구", "ko": "(사람을) 위축되게 하다, 작아지게 만들다", "t": 10, "ex": "Fear of judgment can keep you small.", "exKo": "남의 평가에 대한 두려움은 사람을 위축시킨다."},
+        {"id": "Xmd2vX-LdoE-02", "expr": "bust out of", "pos": "동사구 (구어)", "ko": "~을 박차고 나오다, 벗어나다", "t": 12, "ex": "She finally busted out of her shell in college.", "exKo": "그녀는 대학에서 드디어 껍데기를 깨고 나왔다."},
+        {"id": "Xmd2vX-LdoE-03", "expr": "remain tight in a bud", "pos": "표현", "ko": "꽃봉오리 상태로 머무르다 → 자신을 드러내지 못하고 웅크리다", "t": 29, "ex": "For years he remained tight in a bud, too afraid to share his ideas.", "exKo": "그는 생각을 말하기가 두려워 수년간 웅크리고만 있었다.", "note": "흔히 작가 아나이스 닌의 말로 알려진 문장에서 나온 표현이에요."},
+        {"id": "Xmd2vX-LdoE-04", "expr": "blossom", "pos": "동사", "ko": "꽃피다, (재능·사람이) 피어나다", "t": 33, "ex": "She really blossomed after joining the debate club.", "exKo": "토론 동아리에 들어간 뒤 그녀는 정말 피어났다."},
+        {"id": "Xmd2vX-LdoE-05", "expr": "I'd rather (do)", "pos": "표현", "ko": "차라리 ~하겠다, ~하는 편이 낫다", "t": 52, "ex": "I'd rather fail trying than never try at all.", "exKo": "아예 안 해보느니 시도하다 실패하는 게 낫다."}
+      ]
+    }
+  ]
+}

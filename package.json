@@ -1,0 +1,6 @@
+{
+  "name": "vocab-player",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=18" }
+}
