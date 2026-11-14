@@ -1244,6 +1244,1366 @@
      "note": "waver(흔들리다, 망설이다)의 반대예요. 감사 메일에서 unwavering support로 자주 쓰여요."
     }
    ]
+  },
+  {
+   "id": "fansler",
+   "title": "Filipino Popular Tales",
+   "author": "Dean S. Fansler",
+   "year": 1921,
+   "source": "Project Gutenberg 전사본 (미국 퍼블릭 도메인) · 이야기 본문만 싣고 학술 주석은 뺐어요",
+   "chapters": [
+    {
+     "n": 1,
+     "title": "Suan’s Good Luck",
+     "paras": 14
+    },
+    {
+     "n": 2,
+     "title": "Suan Eket",
+     "paras": 55
+    },
+    {
+     "n": 3,
+     "title": "The Charcoal-maker Who Became King",
+     "paras": 25
+    },
+    {
+     "n": 4,
+     "title": "The Story of Carancal",
+     "paras": 46
+    },
+    {
+     "n": 5,
+     "title": "Suac and His Adventures",
+     "paras": 13
+    },
+    {
+     "n": 6,
+     "title": "The Three Friends,—The Monkey, the Dog, and the Carabao",
+     "paras": 16
+    },
+    {
+     "n": 7,
+     "title": "How Suan Became Rich",
+     "paras": 38
+    },
+    {
+     "n": 8,
+     "title": "The King’s Decisions",
+     "paras": 13
+    },
+    {
+     "n": 9,
+     "title": "The Four Blind Brothers",
+     "paras": 20
+    },
+    {
+     "n": 10,
+     "title": "Juan the Blind Man",
+     "paras": 43
+    },
+    {
+     "n": 11,
+     "title": "Teofilo the Hunchback, and the Giant",
+     "paras": 8
+    },
+    {
+     "n": 12,
+     "title": "Juan and the Buringcantada",
+     "paras": 15
+    },
+    {
+     "n": 13,
+     "title": "The Manglalabas",
+     "paras": 9
+    },
+    {
+     "n": 14,
+     "title": "Sagacious Marcela",
+     "paras": 11
+    },
+    {
+     "n": 15,
+     "title": "King Tasio",
+     "paras": 14
+    },
+    {
+     "n": 16,
+     "title": "The Story of Zaragoza",
+     "paras": 29
+    },
+    {
+     "n": 17,
+     "title": "Juan the Peerless Robber",
+     "paras": 17
+    },
+    {
+     "n": 18,
+     "title": "The Seven Crazy Fellows",
+     "paras": 15
+    },
+    {
+     "n": 19,
+     "title": "Juan Manalaksan",
+     "paras": 16
+    },
+    {
+     "n": 20,
+     "title": "Juan the Poor, Who became Juan the King",
+     "paras": 35
+    },
+    {
+     "n": 21,
+     "title": "Lucas The Strong",
+     "paras": 26
+    },
+    {
+     "n": 22,
+     "title": "Juan and His Six Companions",
+     "paras": 43
+    },
+    {
+     "n": 23,
+     "title": "The Story of King Palmarin",
+     "paras": 132
+    },
+    {
+     "n": 24,
+     "title": "The Three Brothers",
+     "paras": 8
+    },
+    {
+     "n": 25,
+     "title": "Three Brothers of Fortune",
+     "paras": 13
+    },
+    {
+     "n": 26,
+     "title": "Pablo and the Princess",
+     "paras": 10
+    },
+    {
+     "n": 27,
+     "title": "Legend of Prince Oswaldo",
+     "paras": 38
+    },
+    {
+     "n": 28,
+     "title": "The Rich and the Poor",
+     "paras": 26
+    },
+    {
+     "n": 29,
+     "title": "Lucas the Rope-maker",
+     "paras": 22
+    },
+    {
+     "n": 30,
+     "title": "The King and the Dervish",
+     "paras": 5
+    },
+    {
+     "n": 31,
+     "title": "The Mysterious Book",
+     "paras": 17
+    },
+    {
+     "n": 32,
+     "title": "The Miraculous Cow",
+     "paras": 8
+    },
+    {
+     "n": 33,
+     "title": "The Clever Husband and Wife",
+     "paras": 16
+    },
+    {
+     "n": 34,
+     "title": "The Three Brothers",
+     "paras": 56
+    },
+    {
+     "n": 35,
+     "title": "Juan and His Adventures",
+     "paras": 25
+    },
+    {
+     "n": 36,
+     "title": "Juan Wearing a Monkey’s Skin",
+     "paras": 27
+    },
+    {
+     "n": 37,
+     "title": "How Salaksak Became Rich",
+     "paras": 16
+    },
+    {
+     "n": 38,
+     "title": "Clever Juan and Envious Diego",
+     "paras": 9
+    },
+    {
+     "n": 39,
+     "title": "Ruined because of Invidiousness",
+     "paras": 16
+    },
+    {
+     "n": 40,
+     "title": "The Two Friends",
+     "paras": 9
+    },
+    {
+     "n": 41,
+     "title": "Juan the Orphan",
+     "paras": 24
+    },
+    {
+     "n": 42,
+     "title": "Is He the Crafty Ulysses?",
+     "paras": 28
+    },
+    {
+     "n": 43,
+     "title": "The Reward of Kindness",
+     "paras": 17
+    },
+    {
+     "n": 44,
+     "title": "Pedro and Satan",
+     "paras": 7
+    },
+    {
+     "n": 45,
+     "title": "The Devil and the Guachinango",
+     "paras": 20
+    },
+    {
+     "n": 46,
+     "title": "Juan Sadut",
+     "paras": 16
+    },
+    {
+     "n": 47,
+     "title": "An Act of Kindness",
+     "paras": 15
+    },
+    {
+     "n": 48,
+     "title": "The Indolent Husband",
+     "paras": 26
+    },
+    {
+     "n": 49,
+     "title": "Cecilio, the Servant of Emilio",
+     "paras": 25
+    },
+    {
+     "n": 50,
+     "title": "Chonguita",
+     "paras": 14
+    },
+    {
+     "n": 51,
+     "title": "The Golden Lock",
+     "paras": 21
+    },
+    {
+     "n": 52,
+     "title": "Who is the Nearest Relative?",
+     "paras": 26
+    },
+    {
+     "n": 53,
+     "title": "With One Centavo Juan Marries a Princess",
+     "paras": 8
+    },
+    {
+     "n": 54,
+     "title": "The Three Humpbacks",
+     "paras": 9
+    },
+    {
+     "n": 55,
+     "title": "The Seven Humpbacks",
+     "paras": 4
+    },
+    {
+     "n": 56,
+     "title": "Respect Old Age",
+     "paras": 2
+    },
+    {
+     "n": 57,
+     "title": "The Golden Rule",
+     "paras": 4
+    },
+    {
+     "n": 58,
+     "title": "Cochinango",
+     "paras": 9
+    },
+    {
+     "n": 59,
+     "title": "Pedro and the Witch",
+     "paras": 3
+    },
+    {
+     "n": 60,
+     "title": "The Woman and her Coles Plant",
+     "paras": 4
+    },
+    {
+     "n": 61,
+     "title": "A Negrito Slave",
+     "paras": 12
+    },
+    {
+     "n": 62,
+     "title": "Alberto and the Monsters",
+     "paras": 10
+    },
+    {
+     "n": 63,
+     "title": "Juan and Maria",
+     "paras": 7
+    },
+    {
+     "n": 64,
+     "title": "The Enchanted Prince",
+     "paras": 4
+    },
+    {
+     "n": 65,
+     "title": "The Prince’s Dream",
+     "paras": 15
+    },
+    {
+     "n": 66,
+     "title": "The Wicked Woman’s Reward",
+     "paras": 5
+    },
+    {
+     "n": 67,
+     "title": "The Magic Ring (“Ang Singsing Nga Tantanan”)",
+     "paras": 24
+    },
+    {
+     "n": 68,
+     "title": "Maria and the Golden Slipper",
+     "paras": 8
+    },
+    {
+     "n": 69,
+     "title": "Abadeja",
+     "paras": 7
+    },
+    {
+     "n": 70,
+     "title": "Juan the Poor",
+     "paras": 8
+    },
+    {
+     "n": 71,
+     "title": "The Fate of an Envious Woman",
+     "paras": 4
+    },
+    {
+     "n": 72,
+     "title": "The Monkey and Juan Pusong Tambi-tambi",
+     "paras": 47
+    },
+    {
+     "n": 73,
+     "title": "Andres the Trapper",
+     "paras": 25
+    },
+    {
+     "n": 74,
+     "title": "Juan the Fool",
+     "paras": 37
+    },
+    {
+     "n": 75,
+     "title": "Juan and his Painted Hat",
+     "paras": 11
+    },
+    {
+     "n": 76,
+     "title": "Juan and Clotilde",
+     "paras": 13
+    },
+    {
+     "n": 77,
+     "title": "The Poor Man and his Three Sons",
+     "paras": 5
+    },
+    {
+     "n": 78,
+     "title": "The Denied Mother",
+     "paras": 7
+    },
+    {
+     "n": 79,
+     "title": "Tomarind and the Wicked Datu",
+     "paras": 6
+    },
+    {
+     "n": 80,
+     "title": "The Turtle and the Monkey",
+     "paras": 16
+    },
+    {
+     "n": 81,
+     "title": "The Monkey and the Turtle",
+     "paras": 14
+    },
+    {
+     "n": 82,
+     "title": "The Monkey and the Turtle",
+     "paras": 17
+    },
+    {
+     "n": 83,
+     "title": "Tagalog Version",
+     "paras": 4
+    },
+    {
+     "n": 84,
+     "title": "Zambal Version",
+     "paras": 7
+    },
+    {
+     "n": 85,
+     "title": "The Monkeys and the Dragon-Flies",
+     "paras": 11
+    },
+    {
+     "n": 86,
+     "title": "The Monkey, the Turtle, and the Crocodile",
+     "paras": 12
+    },
+    {
+     "n": 87,
+     "title": "The Iguana and the Turtle",
+     "paras": 10
+    },
+    {
+     "n": 88,
+     "title": "The Trial among the Animals",
+     "paras": 8
+    },
+    {
+     "n": 89,
+     "title": "The Pugu’s Case",
+     "paras": 12
+    },
+    {
+     "n": 90,
+     "title": "Why Mosquitoes Hum and Try to get into the Holes of our Ears",
+     "paras": 8
+    },
+    {
+     "n": 91,
+     "title": "A Tyrant",
+     "paras": 8
+    },
+    {
+     "n": 92,
+     "title": "The Greedy Crow",
+     "paras": 5
+    },
+    {
+     "n": 93,
+     "title": "The Humming-bird and the Carabao",
+     "paras": 13
+    },
+    {
+     "n": 94,
+     "title": "The Camanchile and the Passion",
+     "paras": 7
+    },
+    {
+     "n": 95,
+     "title": "Auac and Lamiran",
+     "paras": 2
+    },
+    {
+     "n": 96,
+     "title": "Why the Ant is not so Venomous as the Snake",
+     "paras": 5
+    },
+    {
+     "n": 97,
+     "title": "Why Locusts Are Harmful",
+     "paras": 2
+    },
+    {
+     "n": 98,
+     "title": "How Lansones Became Edible",
+     "paras": 1
+    },
+    {
+     "n": 99,
+     "title": "Why Cocks Fight One Another",
+     "paras": 4
+    },
+    {
+     "n": 100,
+     "title": "Why Bats Fly at Night",
+     "paras": 2
+    },
+    {
+     "n": 101,
+     "title": "Why the Sun Shines more Brightly than the Moon",
+     "paras": 3
+    },
+    {
+     "n": 102,
+     "title": "Why the Culing has a Tonsure",
+     "paras": 3
+    },
+    {
+     "n": 103,
+     "title": "The Culeto and the Crow",
+     "paras": 11
+    },
+    {
+     "n": 104,
+     "title": "The Hawk and the Coling",
+     "paras": 12
+    },
+    {
+     "n": 105,
+     "title": "Why the Cow’s Skin is Loose on the Neck",
+     "paras": 8
+    },
+    {
+     "n": 106,
+     "title": "The First Loose-Skinned Cow and the First Tight-Skinned Carabao",
+     "paras": 2
+    },
+    {
+     "n": 107,
+     "title": "Why the Monkey is Wise",
+     "paras": 3
+    },
+    {
+     "n": 108,
+     "title": "The Lost Necklace",
+     "paras": 6
+    },
+    {
+     "n": 109,
+     "title": "The Cock and the Sparrow-Hawk",
+     "paras": 5
+    },
+    {
+     "n": 110,
+     "title": "The Story of our Fingers",
+     "paras": 11
+    },
+    {
+     "n": 111,
+     "title": "Why Snails Climb up Grass",
+     "paras": 5
+    },
+    {
+     "n": 112,
+     "title": "Why the Cuttle-Fish and Squids Produce a Black Liquid",
+     "paras": 2
+    },
+    {
+     "n": 113,
+     "title": "Why Cocks have Combs on their Heads",
+     "paras": 1
+    },
+    {
+     "n": 114,
+     "title": "How the Crow became Black",
+     "paras": 4
+    },
+    {
+     "n": 115,
+     "title": "Why the Crow is Black",
+     "paras": 4
+    },
+    {
+     "n": 116,
+     "title": "The Dove and the Crow",
+     "paras": 4
+    },
+    {
+     "n": 117,
+     "title": "Why the Ocean is Salty",
+     "paras": 4
+    },
+    {
+     "n": 118,
+     "title": "Why the Sky is Curved",
+     "paras": 2
+    },
+    {
+     "n": 119,
+     "title": "Why the Sky is High",
+     "paras": 2
+    },
+    {
+     "n": 120,
+     "title": "An Unequal Match; Or, Why the Carabao’s Hoof is Split",
+     "paras": 6
+    }
+   ],
+   "words": [
+    {
+     "id": "fansler-1-01",
+     "ch": 1,
+     "p": 0,
+     "expr": "sharp-witted",
+     "pos": "형용사",
+     "ko": "눈치 빠른, 머리 회전이 빠른",
+     "ex": "Our new team lead is sharp-witted and catches mistakes instantly.",
+     "exKo": "새 팀장은 눈치가 빨라서 실수를 바로 잡아낸다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The ___ boy found a way out of the trouble.",
+        "a": [
+         "sharp-witted"
+        ]
+       },
+       {
+        "s": "You need to be ___ to win a debate.",
+        "a": [
+         "sharp-witted"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Suan was a clever, ___-witted boy.",
+       "opts": [
+        "sharp",
+        "dull",
+        "slow"
+       ],
+       "a": "sharp",
+       "why": "sharp-witted: 머리가 빠른 / dull-witted, slow-witted: 둔한"
+      }
+     },
+     "note": "sharp(날카로운) + wit(재치). quick-witted도 거의 같은 뜻이에요."
+    },
+    {
+     "id": "fansler-1-02",
+     "ch": 1,
+     "p": 1,
+     "expr": "in vain",
+     "pos": "부사구",
+     "ko": "헛되이, 보람 없이",
+     "ex": "I tried to call him all morning, but in vain.",
+     "exKo": "아침 내내 그에게 전화했지만 소용없었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "They searched for the key, but ___.",
+        "a": [
+         "in vain"
+        ]
+       },
+       {
+        "s": "All our efforts were ___.",
+        "a": [
+         "in vain"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "She waited for an answer, but ___ vain.",
+       "opts": [
+        "in",
+        "on",
+        "at"
+       ],
+       "a": "in",
+       "why": "in vain: 헛되이 / 다른 전치사는 쓰지 않아요"
+      }
+     },
+     "note": "이야기책에서 '애썼지만 실패했다'를 짧게 말할 때 자주 나와요. 문장 끝에 but in vain으로 붙는 형태가 흔해요."
+    },
+    {
+     "id": "fansler-1-03",
+     "ch": 1,
+     "p": 1,
+     "expr": "call for (something)",
+     "pos": "동사구",
+     "ko": "~을 요청하다, 공개적으로 구하다",
+     "ex": "The city called for volunteers to clean up the river.",
+     "exKo": "시는 강 청소 자원봉사자를 모집했다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The union ___ higher wages.",
+        "a": [
+         "called for"
+        ]
+       },
+       {
+        "s": "This situation ___ quick action.",
+        "a": [
+         "calls for"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The king ___ for volunteers to find the ring.",
+       "opts": [
+        "called",
+        "asked",
+        "looked"
+       ],
+       "a": "called",
+       "why": "call for: 공개적으로 요청하다 / ask for: (개인적으로) 부탁하다 / look for: 찾다"
+      }
+     },
+     "note": "'(상황이) ~을 필요로 하다'라는 뜻도 있어요. This calls for a celebration!(이건 축하할 일이야!)"
+    },
+    {
+     "id": "fansler-1-04",
+     "ch": 1,
+     "p": 5,
+     "expr": "it so happened that",
+     "pos": "구",
+     "ko": "마침 ~하게 되었다, 우연히 ~했다",
+     "ex": "It so happened that my professor was on the same train.",
+     "exKo": "마침 교수님이 같은 기차에 타고 계셨다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "___ the store was closed that day.",
+        "a": [
+         "It so happened that"
+        ]
+       },
+       {
+        "s": "___ we both chose the same topic.",
+        "a": [
+         "It so happened that"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "It so ___ that I met her at the airport.",
+       "opts": [
+        "happened",
+        "appeared",
+        "seemed"
+       ],
+       "a": "happened",
+       "why": "it so happened that: 우연히 그렇게 되었다 / appear, seem은 '~처럼 보이다'"
+      }
+     },
+     "note": "이야기에서 우연한 사건을 꺼낼 때 쓰는 말이에요. As it happened, …도 같은 뜻이에요."
+    },
+    {
+     "id": "fansler-1-05",
+     "ch": 1,
+     "p": 6,
+     "expr": "in search of (something)",
+     "pos": "전치사구",
+     "ko": "~을 찾아서",
+     "ex": "Many young Filipinos move abroad in search of better jobs.",
+     "exKo": "많은 필리핀 청년들이 더 나은 일자리를 찾아 해외로 간다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "He left home ___ adventure.",
+        "a": [
+         "in search of"
+        ]
+       },
+       {
+        "s": "They walked from village to village ___ water.",
+        "a": [
+         "in search of"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "They travelled the world ___ search of the truth.",
+       "opts": [
+        "in",
+        "on",
+        "for"
+       ],
+       "a": "in",
+       "why": "in search of: ~을 찾아서 / search for(동사)와 헷갈리지 마세요"
+      }
+     },
+     "note": "명사 search 앞에 in을 붙여 '찾는 중'이라는 상태를 나타내요."
+    },
+    {
+     "id": "fansler-2-01",
+     "ch": 2,
+     "p": 16,
+     "expr": "at last",
+     "pos": "부사구",
+     "ko": "마침내, 드디어",
+     "ex": "At last, the results of the experiment came out.",
+     "exKo": "드디어 실험 결과가 나왔다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "After hours of waiting, the bus ___ arrived.",
+        "a": [
+         "at last"
+        ]
+       },
+       {
+        "s": "___ he understood what she meant.",
+        "a": [
+         "At last"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "We waited for weeks, and ___ last the visa came.",
+       "opts": [
+        "at",
+        "in",
+        "on"
+       ],
+       "a": "at",
+       "why": "at last: 마침내 / finally와 비슷하지만 '오래 기다렸다'는 느낌이 더 강해요"
+      }
+     },
+     "note": "기다림이나 고생 끝에 일이 이뤄질 때 써요. 감탄처럼 'At last!'만 따로 쓰기도 해요."
+    },
+    {
+     "id": "fansler-3-01",
+     "ch": 3,
+     "p": 7,
+     "expr": "get possession of (something)",
+     "pos": "동사구",
+     "ko": "~을 손에 넣다, 차지하다",
+     "ex": "The company finally got possession of the building last month.",
+     "exKo": "그 회사는 지난달 마침내 그 건물을 손에 넣었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The thief tried to ___ the map.",
+        "a": [
+         "get possession of"
+        ]
+       },
+       {
+        "s": "She ___ the old house after a long legal fight.",
+        "a": [
+         "got possession of"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The princess played tricks to ___ possession of the purse.",
+       "opts": [
+        "get",
+        "take",
+        "make"
+       ],
+       "a": "get",
+       "why": "get(gain) possession of: 손에 넣다 / take possession of도 쓰지만 '공식적으로 넘겨받다'에 가까워요"
+      }
+     },
+     "note": "possession(소유)을 써서 '가진 상태가 되다'를 격식 있게 말해요. gain possession of도 같은 뜻이에요."
+    },
+    {
+     "id": "fansler-3-02",
+     "ch": 3,
+     "p": 8,
+     "expr": "be doomed to (do)",
+     "pos": "동사구",
+     "ko": "(나쁜 결과를) 맞을 운명이다, ~할 수밖에 없다",
+     "ex": "Without a clear plan, the project was doomed to fail.",
+     "exKo": "명확한 계획 없이 그 프로젝트는 실패할 수밖에 없었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "They knew the old bridge was ___ collapse.",
+        "a": [
+         "doomed to"
+        ]
+       },
+       {
+        "s": "Without water, the plants were ___ die.",
+        "a": [
+         "doomed to"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Without customers, the shop was ___ to close.",
+       "opts": [
+        "doomed",
+        "destined",
+        "designed"
+       ],
+       "a": "doomed",
+       "why": "doomed to: 나쁜 운명 / destined to: 좋거나 중립적인 운명 / designed to: ~하도록 설계된"
+      }
+     },
+     "note": "doom은 '파멸, 비운'이에요. destined와 달리 거의 항상 나쁜 결과에 써요."
+    },
+    {
+     "id": "fansler-3-03",
+     "ch": 3,
+     "p": 9,
+     "expr": "try one's best",
+     "pos": "동사구",
+     "ko": "최선을 다하다",
+     "ex": "I'll try my best to finish the report by Friday.",
+     "exKo": "금요일까지 보고서를 끝내도록 최선을 다할게요.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "He ___ to pull the horns off, but he couldn't.",
+        "a": [
+         "tried his best"
+        ]
+       },
+       {
+        "s": "Just ___ and don't worry about the result.",
+        "a": [
+         "try your best",
+         "do your best"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "She ___ her best to stay calm.",
+       "opts": [
+        "tried",
+        "made",
+        "took"
+       ],
+       "a": "tried",
+       "why": "try/do one's best: 최선을 다하다 / make, take와는 쓰지 않아요"
+      }
+     },
+     "note": "do one's best와 같은 뜻이에요. try one's best to + 동사원형 형태로 많이 써요."
+    },
+    {
+     "id": "fansler-3-04",
+     "ch": 3,
+     "p": 14,
+     "expr": "set out",
+     "pos": "동사구",
+     "ko": "(여정·일을) 시작하다, 길을 나서다",
+     "ex": "We set out early to avoid the traffic.",
+     "exKo": "차 막히는 걸 피하려고 일찍 출발했다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The cook ___ immediately to find a doctor.",
+        "a": [
+         "set out"
+        ]
+       },
+       {
+        "s": "They ___ to build a better app.",
+        "a": [
+         "set out"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "They ___ out on a long journey to the north.",
+       "opts": [
+        "set",
+        "put",
+        "took"
+       ],
+       "a": "set",
+       "why": "set out: 출발하다, 착수하다 / put out: (불을) 끄다 / take out: 꺼내다"
+      }
+     },
+     "note": "set out to + 동사원형은 '~하려고 작정하다'라는 뜻이에요. 자기소개서에서 I set out to …로 쓰기 좋아요."
+    }
+   ]
+  },
+  {
+   "id": "barrows",
+   "title": "A History of the Philippines",
+   "author": "David P. Barrows",
+   "year": 1905,
+   "source": "Project Gutenberg 전사본 (미국 퍼블릭 도메인) · 1905년 미국 식민 정부 교과서라 당시 시각이 그대로 담겨 있어요",
+   "cover": "data/books/barrows/cover.jpg",
+   "coverCredit": "표지: 1905년 초판 표지 사진 (퍼블릭 도메인)",
+   "chapters": [
+    {
+     "n": 1,
+     "title": "The Philippines as a Subject for Historical Study",
+     "paras": 46
+    },
+    {
+     "n": 2,
+     "title": "The Peoples of the Philippines",
+     "paras": 36
+    },
+    {
+     "n": 3,
+     "title": "Europe and the Far East about 1400 A.D",
+     "paras": 45
+    },
+    {
+     "n": 4,
+     "title": "The Great Geographical Discoveries",
+     "paras": 65
+    },
+    {
+     "n": 5,
+     "title": "The Filipino People Before the Arrival of the Spaniards",
+     "paras": 53
+    },
+    {
+     "n": 6,
+     "title": "The Spanish Soldier and the Spanish Missionary",
+     "paras": 43
+    },
+    {
+     "n": 7,
+     "title": "Period of Conquest and Settlement, 1565–1600",
+     "paras": 87
+    },
+    {
+     "n": 8,
+     "title": "The Philippines Three Hundred Years Ago",
+     "paras": 84
+    },
+    {
+     "n": 9,
+     "title": "The Dutch and Moro Wars. 1600–1663",
+     "paras": 74
+    },
+    {
+     "n": 10,
+     "title": "A Century of Obscurity and Decline. 1663–1762",
+     "paras": 57
+    },
+    {
+     "n": 11,
+     "title": "The Philippines During the Period of European Revolution. 1762–1837",
+     "paras": 73
+    },
+    {
+     "n": 12,
+     "title": "Progress and Revolution. 1837–1897",
+     "paras": 75
+    },
+    {
+     "n": 13,
+     "title": "America and the Philippines",
+     "paras": 79
+    }
+   ],
+   "words": [
+    {
+     "id": "barrows-1-01",
+     "ch": 1,
+     "p": 1,
+     "expr": "play an important part (in)",
+     "pos": "동사구",
+     "ko": "(~에서) 중요한 역할을 하다",
+     "ex": "Semiconductors play an important part in the Korean economy.",
+     "exKo": "반도체는 한국 경제에서 중요한 역할을 한다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Teamwork ___ in our success.",
+        "a": [
+         "played an important part",
+         "plays an important part"
+        ]
+       },
+       {
+        "s": "Data will ___ in the final decision.",
+        "a": [
+         "play an important part"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Trade played an important ___ in the city's growth.",
+       "opts": [
+        "part",
+        "piece",
+        "place"
+       ],
+       "a": "part",
+       "why": "play a part/role: 역할을 하다 / piece, place는 쓰지 않아요"
+      }
+     },
+     "note": "play an important role in과 같은 뜻이에요. 발표나 보고서에서 아주 자주 써요."
+    },
+    {
+     "id": "barrows-1-02",
+     "ch": 1,
+     "p": 1,
+     "expr": "more or less",
+     "pos": "부사구",
+     "ko": "대체로, 거의",
+     "ex": "The project is more or less finished.",
+     "exKo": "프로젝트는 거의 끝났다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The two plans are ___ the same.",
+        "a": [
+         "more or less"
+        ]
+       },
+       {
+        "s": "I ___ agree with you.",
+        "a": [
+         "more or less"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The meeting went ___ as planned.",
+       "opts": [
+        "more or less",
+        "less or more",
+        "no more"
+       ],
+       "a": "more or less",
+       "why": "more or less: 대체로 / 순서를 바꿔 less or more로 쓰지 않아요"
+      }
+     },
+     "note": "정확하진 않지만 대략 맞다는 뜻이에요. 회화에서 '얼추'라는 느낌으로 많이 써요."
+    },
+    {
+     "id": "barrows-1-03",
+     "ch": 1,
+     "p": 1,
+     "expr": "in the lead",
+     "pos": "전치사구",
+     "ko": "앞서 있는, 선두에 선",
+     "ex": "After the first round, our team was in the lead.",
+     "exKo": "첫 라운드 뒤 우리 팀이 앞서 있었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Japan was far ___ at that time.",
+        "a": [
+         "in the lead"
+        ]
+       },
+       {
+        "s": "Which company is ___ in AI chips?",
+        "a": [
+         "in the lead"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Korea is ___ the lead in memory chips.",
+       "opts": [
+        "in",
+        "on",
+        "at"
+       ],
+       "a": "in",
+       "why": "in the lead: 앞서 있는 / take the lead: 앞장서다"
+      }
+     },
+     "note": "far in the lead처럼 far로 차이를 강조할 수 있어요."
+    },
+    {
+     "id": "barrows-1-04",
+     "ch": 1,
+     "p": 1,
+     "expr": "by reason of (something)",
+     "pos": "전치사구",
+     "ko": "~ 때문에, ~의 이유로 (격식)",
+     "ex": "He was excused from the exam by reason of illness.",
+     "exKo": "그는 병 때문에 시험을 면제받았다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The event was cancelled ___ bad weather.",
+        "a": [
+         "by reason of"
+        ]
+       },
+       {
+        "s": "She was chosen ___ her experience.",
+        "a": [
+         "by reason of"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Japan led ___ reason of its larger population.",
+       "opts": [
+        "by",
+        "for",
+        "with"
+       ],
+       "a": "by",
+       "why": "by reason of: ~ 때문에 / because of보다 훨씬 격식 있는 말이에요"
+      }
+     },
+     "note": "법률·공문서 말투예요. 일상에서는 because of나 due to를 쓰면 돼요."
+    },
+    {
+     "id": "barrows-1-05",
+     "ch": 1,
+     "p": 1,
+     "expr": "resemble",
+     "pos": "동사",
+     "ko": "~와 닮다, 비슷하다",
+     "ex": "The new design closely resembles last year's model.",
+     "exKo": "새 디자인은 작년 모델과 아주 비슷하다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "She ___ her mother.",
+        "a": [
+         "resembles"
+        ]
+       },
+       {
+        "s": "The process ___ a chemical reaction.",
+        "a": [
+         "resembles"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The two countries ___ each other in many ways.",
+       "opts": [
+        "resemble",
+        "resemble with",
+        "resemble to"
+       ],
+       "a": "resemble",
+       "why": "resemble은 타동사라 with, to 없이 바로 목적어가 와요"
+      }
+     },
+     "note": "resemble with / resemble to는 흔한 실수예요. be similar to와 뜻은 같아요."
+    },
+    {
+     "id": "barrows-1-06",
+     "ch": 1,
+     "p": 2,
+     "expr": "in the course of (something)",
+     "pos": "전치사구",
+     "ko": "~하는 동안에, ~ 과정에서",
+     "ex": "In the course of the interview, I mentioned my lab project.",
+     "exKo": "면접 중에 연구실 프로젝트 이야기를 했다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "___ my research, I found an error in the data.",
+        "a": [
+         "In the course of"
+        ]
+       },
+       {
+        "s": "Prices will rise ___ the next few years.",
+        "a": [
+         "in the course of"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Many things changed ___ the course of the war.",
+       "opts": [
+        "in",
+        "on",
+        "at"
+       ],
+       "a": "in",
+       "why": "in the course of: ~ 동안 / of course(물론)와 헷갈리지 마세요"
+      }
+     },
+     "note": "during과 비슷하지만 '과정을 거치며'라는 느낌이 더 있어요."
+    },
+    {
+     "id": "barrows-1-07",
+     "ch": 1,
+     "p": 2,
+     "expr": "in one's favor",
+     "pos": "전치사구",
+     "ko": "~에게 유리하게",
+     "ex": "The court ruled in our favor.",
+     "exKo": "법원은 우리에게 유리한 판결을 내렸다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The odds are ___ this time.",
+        "a": [
+         "in our favor",
+         "in your favor"
+        ]
+       },
+       {
+        "s": "The vote went ___.",
+        "a": [
+         "in her favor",
+         "in his favor",
+         "in their favor"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The new rules work in ___ favor.",
+       "opts": [
+        "our",
+        "us",
+        "ours"
+       ],
+       "a": "our",
+       "why": "in + 소유격(my, your, our…) + favor"
+      }
+     },
+     "note": "미국식 철자는 favor, 영국식은 favour예요."
+    },
+    {
+     "id": "barrows-1-08",
+     "ch": 1,
+     "p": 6,
+     "expr": "in turn",
+     "pos": "부사구",
+     "ko": "이번에는 (그쪽이), 차례로, 결과적으로",
+     "ex": "Good teachers inspire students, who in turn inspire others.",
+     "exKo": "좋은 선생님은 학생에게 영감을 주고, 그 학생들이 이번엔 다른 사람에게 영감을 준다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "We help our customers, and they ___ recommend us.",
+        "a": [
+         "in turn"
+        ]
+       },
+       {
+        "s": "Each student spoke ___.",
+        "a": [
+         "in turn"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Lower costs lead to lower prices, which ___ turn increase sales.",
+       "opts": [
+        "in",
+        "by",
+        "on"
+       ],
+       "a": "in",
+       "why": "in turn: 결과적으로, 이번엔 / by turns: 번갈아"
+      }
+     },
+     "note": "원인 → 결과가 이어지는 연쇄를 설명할 때 쓰기 좋아요. 보고서 문장에 유용해요."
+    }
+   ]
   }
  ]
 }

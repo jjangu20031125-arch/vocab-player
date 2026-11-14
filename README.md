@@ -38,7 +38,7 @@ Upstash를 연결하지 않으면 진도는 각 기기 브라우저에만 저장
 
 ## 책
 
-'책' 탭: 기본 책(The Great Gatsby, Siddhartha — 둘 다 Standard Ebooks의 퍼블릭 도메인·CC0 본문, Siddhartha는 2001년 퍼블릭 도메인으로 공개된 Gunther Olesch 외 영역본)과 사용자가 불러온 DRM 없는 EPUB을 페이지 넘김으로 읽는다. 단어 탭 → 뜻·발음·저장, 문장 번역, 단어장 표현 색 표시, 소리 내어 읽기(브라우저 음성, 문장 강조·자동 페이지 넘김), 읽던 위치 동기화. 불러온 EPUB은 기기 브라우저(IndexedDB)에 저장되고, 같은 비밀번호로 잠긴 Upstash 저장소에도 장별로 올라간다(`api/books.js`: 목록 키 `vocab-player:books`, 본문 키 `vocab-player:book:<id>:<장>`). 다른 기기는 서재에서 목록을 보고, 처음 열 때 본문을 받아 IndexedDB에 저장한다. 삭제는 두 번 눌러 확인하며 모든 기기에서 지워진다. 예전에 불러와 한 기기에만 있는 책은 서재의 '모든 기기에 올리기'로 올린다.
+'책' 탭: 기본 책(The Great Gatsby, Siddhartha — Standard Ebooks의 퍼블릭 도메인·CC0 본문, Siddhartha는 2001년 퍼블릭 도메인으로 공개된 Gunther Olesch 외 영역본 / Filipino Popular Tales(1921), A History of the Philippines(1905) — Project Gutenberg 전사본(GITenberg 미러)에서 라이선스 머리말·꼬리말을 빼고 본문만 사용, 민담집은 학술 주석 제외)과 사용자가 불러온 DRM 없는 EPUB을 페이지 넘김으로 읽는다. 단어 탭 → 뜻·발음·저장, 문장 번역, 단어장 표현 색 표시, 소리 내어 읽기(브라우저 음성, 문장 강조·자동 페이지 넘김), 읽던 위치 동기화. 불러온 EPUB은 기기 브라우저(IndexedDB)에 저장되고, 같은 비밀번호로 잠긴 Upstash 저장소에도 장별로 올라간다(`api/books.js`: 목록 키 `vocab-player:books`, 본문 키 `vocab-player:book:<id>:<장>`). 다른 기기는 서재에서 목록을 보고, 처음 열 때 본문을 받아 IndexedDB에 저장한다. 삭제는 두 번 눌러 확인하며 모든 기기에서 지워진다. 예전에 불러와 한 기기에만 있는 책은 서재의 '모든 기기에 올리기'로 올린다.
 
 ## 읽은 위치와 학습 달력
 
