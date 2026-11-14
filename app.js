@@ -102,6 +102,33 @@ function speak(text) {
 }
 if ('speechSynthesis' in window) { try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); } catch (e) {} }
 
+/* ---------------- activity log (what was read / watched / reviewed each day) ---------------- */
+const DEV = (() => { let d = LS.get('vp-dev', ''); if (!d) { d = 'd' + Math.random().toString(36).slice(2, 8); LS.set('vp-dev', d); } return d; })();
+let lastLogPush = 0;
+function logAdd(field, amount, extra = {}) {
+  const day = dayKeyLocal();
+  S.prog.log = S.prog.log || {};
+  const d = (S.prog.log[day] = S.prog.log[day] || {});
+  const r = (d[DEV] = d[DEV] || { read: 0, watch: 0, rv: 0, books: [], vids: [] });
+  r[field] = (r[field] || 0) + amount;
+  if (extra.book && !r.books.includes(extra.book)) r.books.push(extra.book);
+  if (extra.vid && !r.vids.includes(extra.vid)) r.vids.push(extra.vid);
+  r.at = Date.now();
+  if (Date.now() - lastLogPush > 60000) { lastLogPush = Date.now(); saveProg(); } else LS.set('vp-prog', S.prog);
+}
+function dayKeyLocal(t = Date.now()) { const d = new Date(t - 4 * 3600e3); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function dayTotals(day) {
+  const out = { read: 0, watch: 0, rv: 0, books: new Set(), vids: new Set() };
+  Object.values((S.prog.log || {})[day] || {}).forEach((r) => { out.read += r.read || 0; out.watch += r.watch || 0; out.rv += r.rv || 0; (r.books || []).forEach((x) => out.books.add(x)); (r.vids || []).forEach((x) => out.vids.add(x)); });
+  return out;
+}
+setInterval(() => {
+  if (document.visibilityState !== 'visible') return;
+  if (S.rd && (S.rd.reading || Date.now() - (S.rd.lastAct || 0) < 120000)) logAdd('read', 15, { book: S.rd.book.id });
+  try { if (S.w && S.w.player && S.w.player.getPlayerState && S.w.player.getPlayerState() === 1) logAdd('watch', 15, { vid: S.w.vid }); } catch (e) {}
+}, 15000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') { lastLogPush = Date.now(); saveProg(); } });
+
 /* ---------------- progress & sync ---------------- */
 const st = (id) => (S.prog.status[id] && S.prog.status[id].s) || null;
 function mergeState(a, b) {
@@ -112,7 +139,17 @@ function mergeState(a, b) {
   for (const t of [...(a.topics || []), ...(b.topics || [])]) if (t && t.id && (!tm[t.id] || (t.at || 0) > (tm[t.id].at || 0))) tm[t.id] = t;
   out.topics = Object.values(tm).sort((x, y) => (x.created || 0) - (y.created || 0));
   out.books = { ...(a.books || {}) };
-  for (const [k, v] of Object.entries(b.books || {})) if (!out.books[k] || (v.at || 0) > (out.books[k].at || 0)) out.books[k] = v;
+  for (const [k, v] of Object.entries(b.books || {})) {
+    const o = out.books[k];
+    if (!o) { out.books[k] = v; continue; }
+    const newer = (v.at || 0) > (o.at || 0) ? v : o, far = (v.maxPct || 0) > (o.maxPct || 0) ? v : o;
+    out.books[k] = { ...newer, maxCh: far.maxCh, maxP: far.maxP, maxPct: far.maxPct };
+  }
+  out.log = JSON.parse(JSON.stringify(a.log || {}));
+  for (const [day, devs] of Object.entries(b.log || {})) {
+    out.log[day] = out.log[day] || {};
+    for (const [dev, rec] of Object.entries(devs || {})) if (!out.log[day][dev] || (rec.at || 0) > (out.log[day][dev].at || 0)) out.log[day][dev] = rec;
+  }
   out.fsrs = { ...(a.fsrs || {}) };
   for (const [k, v] of Object.entries(b.fsrs || {})) if (!out.fsrs[k] || (v.at || 0) > (out.fsrs[k].at || 0)) out.fsrs[k] = v;
   const da = a.daily || {}, db = b.daily || {};
@@ -197,7 +234,7 @@ function srcA(vid, t, prefix = '') {
 /* ---------------- routing ---------------- */
 function route() {
   const h = location.hash || '#/';
-  const navKey = h.startsWith('#/review') ? 'review' : h.startsWith('#/book') ? 'books' : h.startsWith('#/words') ? 'words' : h.startsWith('#/cards') || h.startsWith('#/quiz') ? 'practice' : 'home';
+  const navKey = h.startsWith('#/review') || h.startsWith('#/log') ? 'review' : h.startsWith('#/book') ? 'books' : h.startsWith('#/words') ? 'words' : h.startsWith('#/cards') || h.startsWith('#/quiz') ? 'practice' : 'home';
   document.querySelectorAll('#nav a').forEach((a) => a.classList.toggle('on', a.dataset.nav === navKey && !h.startsWith('#/v/')));
   closeSheet();
   const m = h.match(/^#\/v\/([\w-]{11})(?:\?t=(\d+))?/);
@@ -207,6 +244,7 @@ function route() {
   if (bm) { const q = new URLSearchParams(bm[2] || ''); return openBook(bm[1], q.get('ch'), q.get('p')); }
   leaveReader();
   if (navKey === 'books') return renderLibrary();
+  if (h.startsWith('#/log')) return renderLog();
   if (navKey === 'review') { S.rv = null; return renderReview(); }
   if (navKey === 'words') return renderWords();
   if (h.startsWith('#/cards')) { S.fc.deck = null; return renderCards(); }
@@ -728,6 +766,7 @@ async function openWordSheet(li, k, span) {
   document.querySelectorAll('.w.sel').forEach((x) => x.classList.remove('sel'));
   if (span) span.classList.add('sel');
   const L = lines[li], tok = L.words[k];
+  if (inBook) rdTouch();
   S.sheetCtx = inBook ? { L, k, vid: `book:${S.rd.book.id}:${S.rd.ch}`, t: L.p, book: true } : { L, k, vid: S.w.vid, t: Math.floor(L.t / 1000) };
   const raw = tok.w.replace(/^[^A-Za-z0-9']+|[^A-Za-z0-9']+$/g, '');
   const vocabId = span && span.dataset.vid;
@@ -830,6 +869,7 @@ function renderWords() {
 }
 
 /* ---------------- flashcards ---------------- */
+const reviewTabs = (on) => `<div class="ptabs"><a href="#/review" class="${on === 'review' ? 'on' : ''}">오늘 복습</a><a href="#/log" class="${on === 'log' ? 'on' : ''}">학습 달력</a></div>`;
 const practiceTabs = (on) => `<div class="ptabs"><a href="#/cards" class="${on === 'cards' ? 'on' : ''}">플래시카드</a><a href="#/quiz" class="${on === 'quiz' ? 'on' : ''}">퀴즈</a></div>`;
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function buildDeck() {
@@ -1164,7 +1204,7 @@ function renderReview() {
     const next = R.queue[0];
     if (!next) {
       const tomorrow = reviewItems().filter((it) => { const c = cardOf(it.id); return c && c.due.getTime() <= Date.now() + 864e5; }).length;
-      $('#view').innerHTML = `<div class="center">${head}<div class="qcard" style="text-align:center"><div class="q">오늘 복습 끝</div><p class="fb">${d.ids.length ? `오늘 ${d.ids.length}개를 복습했어요.` : '오늘 복습할 표현이 없어요.'} 내일 복습할 표현은 약 ${tomorrow}개예요.</p></div></div>`;
+      $('#view').innerHTML = `<div class="center">${reviewTabs('review')}${head}<div class="qcard" style="text-align:center"><div class="q">오늘 복습 끝</div><p class="fb">${d.ids.length ? `오늘 ${d.ids.length}개를 복습했어요.` : '오늘 복습할 표현이 없어요.'} 내일 복습할 표현은 약 ${tomorrow}개예요.</p></div></div>`;
       updateBadge(); return;
     }
     R.q = makeQuestion(next); R.res = null;
@@ -1193,7 +1233,7 @@ function renderReview() {
       <div class="small" style="margin-top:6px">다음 복습: ${esc(R.nextIn || '')}</div></div>
       <div class="btns" style="justify-content:flex-start">${w ? srcA(w.v.vid, w.t, '장면 ') : ''}<button class="btn primary" data-act="rv-next">다음</button></div>`;
   }
-  $('#view').innerHTML = `<div class="center">${head}<div class="qcard">${body}${input}${fb}</div></div>`;
+  $('#view').innerHTML = `<div class="center">${reviewTabs('review')}${head}<div class="qcard">${body}${input}${fb}</div></div>`;
   const inp = $('#rvIn'); if (inp && !answered) inp.focus({ preventScroll: true });
   updateBadge();
 }
@@ -1209,6 +1249,7 @@ async function finishQuestion(result) {
   saveProg();
   R.nextIn = relTime(card.due - Date.now());
   R.queue.shift();
+  logAdd('rv', 1);
   if (rating === 1) R.queue.push(q.it); // comes back later in this session
   renderReview();
 }
@@ -1256,8 +1297,15 @@ const IDB = {
 const builtIn = (id) => (S.books || []).find((b) => b.id === id);
 const userBookMeta = {}; // id -> {title, author, chapters:[{title}]}
 async function loadUserBooks() {
-  try { const all = await IDB.all(); all.forEach((b) => { userBookMeta[b.id] = { id: b.id, title: b.title, author: b.author, chapters: b.chapters.map((c, i) => ({ n: i + 1, title: c.title })), user: true }; }); return all.map((b) => userBookMeta[b.id]); }
+  try { const all = await IDB.all(); all.forEach((b) => { userBookMeta[b.id] = { id: b.id, title: b.title, author: b.author, cover: b.cover || null, chapters: b.chapters.map((c, i) => ({ n: i + 1, title: c.title, paras: c.paras.length })), user: true }; }); return all.map((b) => userBookMeta[b.id]); }
   catch (e) { return []; }
+}
+// cover: the book's own cover image when there is one, otherwise a typeset cover with title and author
+function coverHTML(b) {
+  if (b.cover) return `<div class="bk-cover img" style="background-image:url('${String(b.cover).replace(/'/g, '%27')}')" role="img" aria-label="${esc(b.title)} 표지"></div>`;
+  const hues = [12, 28, 160, 200, 220, 260, 330, 95];
+  const h = hues[Math.abs([...(b.title || '')].reduce((a, c) => (a * 31 + c.charCodeAt(0)) | 0, 3)) % hues.length];
+  return `<div class="bk-cover gen" style="--h:${h}"><span class="gt">${esc(b.title || '')}</span><span class="ga">${esc(b.author || '')}</span></div>`;
 }
 async function renderLibrary() {
   const users = await loadUserBooks();
@@ -1266,13 +1314,15 @@ async function renderLibrary() {
   const card = (b, extra) => {
     const at = pos[b.id], n = (b.chapters || []).length;
     return `<div class="bk"><a class="bk-main" href="#/book/${esc(b.id)}${at ? `?ch=${at.ch}&p=${at.p}` : ''}">
-      <div class="bk-cover">${esc((b.title || '?').split(' ').map((w) => w[0]).slice(0, 2).join(''))}</div>
+      ${coverHTML(b)}
       <div><div class="bk-t">${esc(b.title)}</div><div class="small">${esc(b.author || '')}${b.year ? ' · ' + b.year : ''}</div>
-      <div class="small" style="margin-top:4px">${at ? `${at.ch}장 읽는 중` : '처음부터'} · 전체 ${n}장${b.words ? ` · 장별 표현 ${b.words.length}개` : ''}</div></div></a>${extra || ''}</div>`;
+      <div class="small" style="margin-top:4px">${at ? `${at.ch}장 읽는 중 · 전체 ${pctTxt((at.pct || 0) * 100)}%` : '아직 안 읽음'} · ${n}장${b.words ? ` · 장별 표현 ${b.words.length}개` : ''}</div>
+      ${at ? `<div class="bar" style="max-width:220px"><i style="width:${Math.round((at.pct || 0) * 100)}%"></i></div><div class="small" style="margin-top:3px">${at.at ? '마지막으로 읽은 날 ' + new Date(at.at).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' }) : ''}${at.maxCh && (at.maxCh !== at.ch || (at.maxPct || 0) > (at.pct || 0) + 0.01) ? ` · 가장 멀리 읽은 곳 ${at.maxCh}장` : ''}</div>` : ''}
+      <div style="margin-top:6px"><span class="btn sm primary">${at ? '이어 읽기' : '읽기 시작'}</span></div></div></a>${extra || ''}</div>`;
   };
   $('#view').innerHTML = `
     <div class="h2" style="margin-top:4px">기본 책</div>
-    ${(S.books || []).map((b) => card(b, `<div class="small bk-src">${esc(b.source || '')}</div>`)).join('') || '<p class="small">없음</p>'}
+    ${(S.books || []).map((b) => card(b, `<div class="small bk-src">${esc(b.source || '')}${b.coverCredit ? '<br>' + esc(b.coverCredit) : ''}</div>`)).join('') || '<p class="small">없음</p>'}
     <div class="h2">내가 불러온 책 <span class="small">이 기기에만 저장돼요</span></div>
     ${users.map((b) => card(b, `<button class="btn sm" data-act="bk-del" data-id="${esc(b.id)}">이 기기에서 삭제</button>`)).join('') || '<p class="small">아직 없어요.</p>'}
     <div class="panel" style="margin-top:12px">
@@ -1301,7 +1351,7 @@ async function chapterText(book, n) {
   if (book.user) { const b = await IDB.get(book.id); return b ? b.chapters[n - 1] : null; }
   const r = await fetch(`data/books/${book.id}/${n}.json`); return r.ok ? r.json() : null;
 }
-function leaveReader() { rdStopReading(); if (S.rd) { window.removeEventListener('resize', rdResize); S.rd = null; } }
+function leaveReader() { rdStopReading(); rdHideKr(); document.documentElement.classList.remove('reading'); if (S.rd) { window.removeEventListener('resize', rdResize); if (window.visualViewport) visualViewport.removeEventListener('resize', rdResize); S.rd = null; } }
 async function openBook(id, ch, p) {
   let book = builtIn(id) || userBookMeta[id];
   if (!book) { await loadUserBooks(); book = userBookMeta[id]; }
@@ -1319,20 +1369,30 @@ async function openBook(id, ch, p) {
   const chWords = (book.words || []).filter((w) => w.ch === ch);
   $('#view').innerHTML = `<div class="rd">
     <div class="rd-top"><a href="#/books" class="btn sm">← 서재</a>
-      <select id="rdCh" aria-label="장 선택">${book.chapters.map((c) => `<option value="${c.n}" ${c.n === ch ? 'selected' : ''}>${esc(c.title || c.n + '장')}</option>`).join('')}</select>
+      <select id="rdCh" aria-label="장 선택">${book.chapters.map((c) => { const far = (S.prog.books || {})[id]; const done = far && (far.maxCh > c.n || (far.maxCh === c.n && far.maxP >= (c.paras || 1) - 1)); return `<option value="${c.n}" ${c.n === ch ? 'selected' : ''}>${done ? '✓ ' : ''}${esc(c.title || c.n + '장')}</option>`; }).join('')}</select>
       ${chWords.length ? `<button class="btn sm" data-act="rd-words">이 장 표현 ${chWords.length}</button>` : ''}
     </div>
+    <div class="rd-progress" title="책 전체 진행률 (점: 가장 멀리 읽은 곳)"><i id="rdProg"></i><b id="rdFar"></b></div>
     <div class="rd-view" id="rdView"><div class="rd-flow" id="reader"></div>
       <button class="rd-tap rd-l" data-act="rd-prev" aria-label="이전 쪽"></button><button class="rd-tap rd-r" data-act="rd-next" aria-label="다음 쪽"></button></div>
     <div class="rd-bar">
       <button class="btn sm" data-act="rd-prev" aria-label="이전 쪽">◀</button><span id="rdPage" class="small"></span><button class="btn sm" data-act="rd-next" aria-label="다음 쪽">▶</button>
       <button class="btn sm" data-act="rd-read" id="rdReadBtn">${ICON_SPK} 읽어주기</button>
-      <select id="rdRate" aria-label="읽기 속도">${[0.8, 1, 1.2].map((r) => `<option value="${r}" ${r === S.rd.rate ? 'selected' : ''}>${r}x</option>`).join('')}</select>
-      <button class="btn sm" data-act="rd-font" data-d="-1" aria-label="글자 작게">가-</button><button class="btn sm" data-act="rd-font" data-d="1" aria-label="글자 크게">가+</button>
-    </div></div>`;
+      <button class="btn sm" data-act="rd-opts" aria-label="글자 크기와 읽기 속도">Aa</button>
+      <div class="rd-opts" id="rdOpts" hidden>
+        <button class="btn sm" data-act="rd-font" data-d="-1" aria-label="글자 작게">가-</button><button class="btn sm" data-act="rd-font" data-d="1" aria-label="글자 크게">가+</button>
+        <select id="rdRate" aria-label="읽기 속도">${[0.8, 1, 1.2].map((r) => `<option value="${r}" ${r === S.rd.rate ? 'selected' : ''}>${r}x</option>`).join('')}</select>
+      </div>
+    </div>
+    ${LS.get('vp-rdhint', 0) ? '' : '<div class="rd-hint small" id="rdHint">문장을 옆으로 밀면 한국어 번역 · 위아래로 밀거나 양옆 끝을 누르면 페이지 넘김 <button class="x" data-act="rd-hint-x" aria-label="닫기">✕</button></div>'}
+    </div>`;
+  document.documentElement.classList.add('reading');
+  window.scrollTo(0, 0);
+  S.rd.lastAct = Date.now();
   rdRender();
   window.removeEventListener('resize', rdResize);
   window.addEventListener('resize', rdResize);
+  if (window.visualViewport) { visualViewport.removeEventListener('resize', rdResize); visualViewport.addEventListener('resize', rdResize); }
   if (document.fonts && document.fonts.ready) await document.fonts.ready; // page breaks depend on the font
   if (!S.rd || S.rd.ch !== ch) return;
   rdLayout();
@@ -1353,8 +1413,9 @@ function rdRender() {
 function rdRepaintWords() { if (!S.rd) return; const p = rdCurrentPara(); rdRender(); rdGotoPara(p); }
 function rdLayout() {
   const R = S.rd, view = $('#rdView'), flow = $('#reader'); if (!R || !view || !flow) return;
-  const top = view.getBoundingClientRect().top, bar = document.querySelector('.rd-bar');
-  const h = Math.max(260, window.innerHeight - top - (bar ? bar.offsetHeight : 50) - 14);
+  const top = view.getBoundingClientRect().top, bar = document.querySelector('.rd-bar'), hint = $('#rdHint');
+  const vh = window.visualViewport ? visualViewport.height : window.innerHeight;
+  const h = Math.max(220, vh - top - (bar ? bar.offsetHeight : 44) - (hint ? hint.offsetHeight + 6 : 0) - 12);
   view.style.height = h + 'px';
   const W = view.clientWidth - 2 * RD_PAD;
   R.W = W;
@@ -1368,7 +1429,10 @@ function rdShow() {
   R.page = Math.max(0, Math.min(R.page, R.pages - 1));
   const view = $('#rdView'); if (view) view.scrollLeft = 0;
   flow.style.transform = `translateX(${-R.page * (R.W + RD_GAP)}px)`;
-  const pg = $('#rdPage'); if (pg) pg.textContent = `${R.page + 1} / ${R.pages}쪽 · ${R.ch}/${R.book.chapters.length}장`;
+  const pos = (S.prog.books || {})[R.book.id];
+  const pctRaw = bookPct(R.book, R.ch, rdCurrentPara()) * 100, pct = pctTxt(pctRaw);
+  const pg = $('#rdPage'); if (pg) pg.textContent = `${R.page + 1}/${R.pages}쪽 · ${R.ch}장 · 전체 ${pct}%`;
+  const fill = $('#rdProg'); if (fill) { fill.style.width = pctRaw + '%'; const far = pos && pos.maxPct ? pos.maxPct * 100 : pctRaw; const m = $('#rdFar'); if (m) m.style.left = far + '%'; }
 }
 function rdPageOf(el) {
   const R = S.rd, flow = $('#reader'); if (!el || !flow) return 0;
@@ -1388,13 +1452,31 @@ function rdGotoPara(p) {
   rdShow(); rdSavePos();
 }
 let rdPosTimer = null;
+const pctTxt = (x) => (x > 0 && x < 10 ? x.toFixed(1) : String(Math.round(x)));
+function bookPct(book, ch, p) {
+  const counts = (book.chapters || []).map((c) => c.paras || 0), total = counts.reduce((a, b) => a + b, 0);
+  if (!total) return (ch - 1) / Math.max(1, (book.chapters || []).length);
+  const before = counts.slice(0, ch - 1).reduce((a, b) => a + b, 0);
+  return Math.min(1, (before + Math.min(p + 1, counts[ch - 1] || 0)) / total);
+}
 function rdSavePos() {
   clearTimeout(rdPosTimer);
-  rdPosTimer = setTimeout(() => { const R = S.rd; if (!R) return; S.prog.books = S.prog.books || {}; S.prog.books[R.book.id] = { ch: R.ch, p: rdCurrentPara(), at: Date.now() }; saveProg(); }, 600);
+  rdPosTimer = setTimeout(() => {
+    const R = S.rd; if (!R) return;
+    S.prog.books = S.prog.books || {};
+    const old = S.prog.books[R.book.id] || {};
+    const atEnd = R.page >= R.pages - 1;
+    const p = atEnd ? Math.max(0, (R.data.paras || []).length - 1) : rdCurrentPara();
+    const pct = bookPct(R.book, R.ch, p);
+    const far = (old.maxPct || 0) >= pct ? { maxCh: old.maxCh, maxP: old.maxP, maxPct: old.maxPct } : { maxCh: R.ch, maxP: p, maxPct: pct };
+    S.prog.books[R.book.id] = { ch: R.ch, p, pct, at: Date.now(), ...far };
+    rdShow(true);
+    saveProg();
+  }, 600);
 }
 function rdTurn(d) {
   const R = S.rd; if (!R) return;
-  closeSheet();
+  closeSheet(); rdHideKr(); rdTouch();
   if (R.page + d >= R.pages) { if (R.ch < R.book.chapters.length) location.hash = `#/book/${R.book.id}?ch=${R.ch + 1}&p=0`; return; }
   if (R.page + d < 0) { if (R.ch > 1) location.hash = `#/book/${R.book.id}?ch=${R.ch - 1}&p=99999`; return; }
   R.page += d; rdShow(); rdSavePos();
@@ -1445,6 +1527,14 @@ function loadJSZip() {
   if (!jszipP) jszipP = new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'vendor/jszip.min.js'; s.onload = () => res(window.JSZip); s.onerror = rej; document.head.appendChild(s); });
   return jszipP;
 }
+function shrinkImage(blob) {
+  return new Promise((res) => {
+    const url = URL.createObjectURL(blob), img = new Image();
+    img.onload = () => { const sc = Math.min(1, 360 / img.width); const c = document.createElement('canvas'); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg', 0.8)); };
+    img.onerror = () => { URL.revokeObjectURL(url); res(null); };
+    img.src = url;
+  });
+}
 async function importEpub(file) {
   const JSZip = await loadJSZip();
   const zip = await JSZip.loadAsync(file);
@@ -1462,7 +1552,16 @@ async function importEpub(file) {
   const title = (opf.getElementsByTagName('dc:title')[0] || {}).textContent || file.name.replace(/\.epub$/i, '');
   const author = (opf.getElementsByTagName('dc:creator')[0] || {}).textContent || '';
   const manifest = {};
-  [...opf.getElementsByTagName('item')].forEach((it) => { manifest[it.getAttribute('id')] = it.getAttribute('href'); });
+  let coverHref = null;
+  const coverMeta = [...opf.getElementsByTagName('meta')].find((m) => m.getAttribute('name') === 'cover');
+  const coverId = coverMeta ? coverMeta.getAttribute('content') : null;
+  [...opf.getElementsByTagName('item')].forEach((it) => {
+    manifest[it.getAttribute('id')] = it.getAttribute('href');
+    const props = it.getAttribute('properties') || '', type = it.getAttribute('media-type') || '';
+    if (/image\/(jpe?g|png|gif|webp)/.test(type) && (props.includes('cover-image') || it.getAttribute('id') === coverId || /cover/i.test(it.getAttribute('href') || ''))) coverHref = coverHref || it.getAttribute('href');
+  });
+  let cover = null;
+  if (coverHref) { try { cover = await shrinkImage(await zip.file(decodeURIComponent(base + coverHref)).async('blob')); } catch (e) { cover = null; } }
   const spine = [...opf.getElementsByTagName('itemref')].map((r) => manifest[r.getAttribute('idref')]).filter(Boolean);
   const chapters = [];
   for (const href of spine) {
@@ -1477,7 +1576,7 @@ async function importEpub(file) {
   }
   if (!chapters.length) throw new Error('empty');
   const id = 'u-' + Math.abs([...(title + author + file.size)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7)).toString(36);
-  await IDB.put({ id, title: title.trim(), author: author.trim(), chapters, added: Date.now() });
+  await IDB.put({ id, title: title.trim(), author: author.trim(), chapters, cover, added: Date.now() });
   return id;
 }
 document.addEventListener('change', async (e) => {
@@ -1494,7 +1593,9 @@ document.addEventListener('click', async (e) => {
   if (a === 'rd-next') rdTurn(1);
   if (a === 'rd-prev') rdTurn(-1);
   if (a === 'rd-read') rdToggleRead();
-  if (a === 'rd-font' && S.rd) { const p = rdCurrentPara(); S.rd.fs = Math.max(14, Math.min(28, S.rd.fs + 2 * +b.dataset.d)); LS.set('vp-fs', S.rd.fs); rdLayout(); rdGotoPara(p); }
+  if (a === 'rd-opts') { const o = $('#rdOpts'); if (o) o.hidden = !o.hidden; }
+  if (a === 'rd-hint-x') { LS.set('vp-rdhint', 1); const h = $('#rdHint'); if (h) h.remove(); rdResize(); }
+  if (a === 'rd-font' && S.rd) { rdHideKr(); const p = rdCurrentPara(); S.rd.fs = Math.max(14, Math.min(28, S.rd.fs + 2 * +b.dataset.d)); LS.set('vp-fs', S.rd.fs); rdLayout(); rdGotoPara(p); }
   if (a === 'rd-words' && S.rd) {
     const ws = (S.rd.book.words || []).filter((w) => w.ch === S.rd.ch).map((w) => ({ ...w, t: w.p, v: { vid: `book:${S.rd.book.id}:${S.rd.ch}` } }));
     const sh = $('#sheet');
@@ -1503,16 +1604,100 @@ document.addEventListener('click', async (e) => {
   }
   if (a === 'bk-del') { await IDB.del(b.dataset.id); delete userBookMeta[b.dataset.id]; renderLibrary(); }
 });
-// swipe to turn pages; arrow keys too
+// swipe a sentence sideways for its Korean; swipe up/down (or tap the edges) to turn pages
 let rdSw = null;
-document.addEventListener('touchstart', (e) => { const v = e.target.closest('#rdView'); rdSw = v && e.touches.length === 1 ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null; }, { passive: true });
+document.addEventListener('touchstart', (e) => {
+  const v = e.target.closest('#rdView');
+  rdSw = v && e.touches.length === 1 ? { x: e.touches[0].clientX, y: e.touches[0].clientY, s: e.target.closest('.s') } : null;
+}, { passive: true });
+document.addEventListener('touchmove', (e) => {
+  if (!rdSw || !rdSw.s) return;
+  const dx = e.touches[0].clientX - rdSw.x, dy = e.touches[0].clientY - rdSw.y;
+  if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy)) rdSw.s.style.transform = `translateX(${Math.max(-14, Math.min(14, dx * 0.15))}px)`;
+}, { passive: true });
 document.addEventListener('touchend', (e) => {
   if (!rdSw || !S.rd) return;
-  const t = e.changedTouches[0], dx = t.clientX - rdSw.x, dy = t.clientY - rdSw.y; rdSw = null;
-  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) rdTurn(dx < 0 ? 1 : -1);
+  const t = e.changedTouches[0], dx = t.clientX - rdSw.x, dy = t.clientY - rdSw.y, sEl = rdSw.s; rdSw = null;
+  if (sEl) sEl.style.transform = '';
+  if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3 && sEl) { rdToggleKr(+sEl.dataset.si); return; }
+  if (Math.abs(dy) > 50 && Math.abs(dy) > Math.abs(dx) * 1.3) rdTurn(dy < 0 ? 1 : -1);
 }, { passive: true });
+function rdHideKr() { const b = $('#rdKr'); if (b) b.remove(); document.querySelectorAll('#reader .s.kr-on').forEach((x) => x.classList.remove('kr-on')); if (S.rd) S.rd.krI = -1; }
+async function rdToggleKr(i) {
+  const R = S.rd; if (!R || !R.sents[i]) return;
+  if (R.krI === i) { rdHideKr(); return; }
+  rdHideKr(); R.krI = i; rdTouch();
+  const sEl = document.querySelector(`#reader .s[data-si="${i}"]`), view = $('#rdView'); if (!sEl || !view) return;
+  sEl.classList.add('kr-on');
+  const vr = view.getBoundingClientRect(), rects = [...sEl.getClientRects()].filter((r) => r.right > vr.left && r.left < vr.right);
+  const last = rects.length ? rects[rects.length - 1] : sEl.getBoundingClientRect(), first = rects.length ? rects[0] : last;
+  const box = document.createElement('div'); box.id = 'rdKr'; box.className = 'rd-kr'; box.innerHTML = '번역 중…';
+  view.appendChild(box);
+  const place = () => {
+    const below = last.bottom - vr.top + 6, h = box.offsetHeight;
+    box.style.top = (below + h < vr.height - 8 ? below : Math.max(6, first.top - vr.top - h - 6)) + 'px';
+  };
+  place();
+  const text = lineText(R.sents[i]);
+  const res = await translateKo(text);
+  if (!S.rd || S.rd.krI !== i || !document.getElementById('rdKr')) return;
+  box.innerHTML = res && res.ko ? esc(res.ko) : `${res && res.none ? '문장 번역 키가 설정되지 않았어요.' : '번역을 가져오지 못했어요.'} <a href="${papagoURL(text)}" target="_blank" rel="noopener">파파고에서 보기</a>`;
+  place();
+}
 document.addEventListener('keydown', (e) => {
   if (!S.rd || /input|textarea|select/i.test(e.target.tagName)) return;
   if (e.key === 'ArrowRight' || e.key === 'PageDown') { rdTurn(1); e.preventDefault(); }
   if (e.key === 'ArrowLeft' || e.key === 'PageUp') { rdTurn(-1); e.preventDefault(); }
+});
+
+document.addEventListener('click', (e) => { if ($('#rdKr') && !e.target.closest('#rdKr') && !e.target.closest('.s.kr-on')) rdHideKr(); }, true);
+function rdTouch() { if (S.rd) S.rd.lastAct = Date.now(); }
+
+
+/* ================= learning calendar ================= */
+S.cal = { y: null, m: null, sel: null };
+const mins = (sec) => Math.round(sec / 60);
+function renderLog() {
+  const now = new Date(Date.now() - 4 * 3600e3);
+  if (S.cal.y === null) { S.cal.y = now.getFullYear(); S.cal.m = now.getMonth(); }
+  const y = S.cal.y, m = S.cal.m, today = dayKeyLocal();
+  const first = new Date(y, m, 1), days = new Date(y, m + 1, 0).getDate();
+  const key = (d) => `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  let cells = '', tot = { read: 0, watch: 0, rv: 0, readDays: 0, watchDays: 0, active: 0 };
+  for (let i = 0; i < first.getDay(); i++) cells += '<div class="cd empty"></div>';
+  for (let d = 1; d <= days; d++) {
+    const k = key(d), t = dayTotals(k);
+    const any = t.read >= 60 || t.watch >= 60 || t.rv > 0;
+    tot.read += t.read; tot.watch += t.watch; tot.rv += t.rv; if (t.read >= 60) tot.readDays++; if (t.watch >= 60) tot.watchDays++; if (any) tot.active++;
+    const lvl = (sec) => (sec >= 1800 ? 3 : sec >= 600 ? 2 : sec >= 60 ? 1 : 0), rl = t.rv >= 15 ? 3 : t.rv >= 5 ? 2 : t.rv > 0 ? 1 : 0;
+    cells += `<button class="cd ${k === today ? 'today' : ''} ${S.cal.sel === k ? 'sel' : ''} ${any ? 'on' : ''}" data-act="cal-day" data-k="${k}">
+      <span class="dn">${d}</span>
+      <span class="marks">${lvl(t.read) ? `<i class="mk mk-book l${lvl(t.read)}"></i>` : ''}${lvl(t.watch) ? `<i class="mk mk-vid l${lvl(t.watch)}"></i>` : ''}${rl ? `<i class="mk mk-rv l${rl}"></i>` : ''}</span></button>`;
+  }
+  // streak: consecutive active days ending today (or yesterday)
+  let streak = 0; for (let i = 0; i < 400; i++) { const k = dayKeyLocal(Date.now() - i * 864e5), t = dayTotals(k); if (t.read >= 60 || t.watch >= 60 || t.rv > 0) streak++; else if (i > 0) break; }
+  let detail = '';
+  if (S.cal.sel) {
+    const t = dayTotals(S.cal.sel);
+    const bk = [...t.books].map((id) => (builtIn(id) || userBookMeta[id] || { title: id }).title);
+    const vd = [...t.vids].map((id) => (S.videos.find((v) => v.vid === id) || { title: id }).title);
+    const dt = new Date(S.cal.sel + 'T12:00:00');
+    detail = `<div class="panel cal-detail"><b>${dt.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' })}</b>
+      ${t.read >= 60 ? `<div><i class="mk mk-book l2"></i> 독서 ${mins(t.read)}분 · ${bk.map(esc).join(', ')}</div>` : ''}
+      ${t.watch >= 60 ? `<div><i class="mk mk-vid l2"></i> 영상 ${mins(t.watch)}분 · ${vd.length}편<div class="small">${vd.map(esc).join('<br>')}</div></div>` : ''}
+      ${t.rv ? `<div><i class="mk mk-rv l2"></i> 복습 ${t.rv}문제</div>` : ''}
+      ${t.read < 60 && t.watch < 60 && !t.rv ? '<div class="small">이날은 기록이 없어요.</div>' : ''}</div>`;
+  }
+  $('#view').innerHTML = `<div class="center">${reviewTabs('log')}
+    <div class="cal-head"><button class="btn sm" data-act="cal-mv" data-d="-1" aria-label="이전 달">◀</button><b>${y}년 ${m + 1}월</b><button class="btn sm" data-act="cal-mv" data-d="1" aria-label="다음 달">▶</button></div>
+    <div class="cal-sum"><div><b>${streak}</b><span>연속 학습일</span></div><div><b>${mins(tot.read)}</b><span>독서 분 (${tot.readDays}일)</span></div><div><b>${mins(tot.watch)}</b><span>영상 분 (${tot.watchDays}일)</span></div><div><b>${tot.rv}</b><span>복습 문제</span></div></div>
+    <div class="cal">${['일', '월', '화', '수', '목', '금', '토'].map((w) => `<div class="cw">${w}</div>`).join('')}${cells}</div>
+    <div class="legend" style="justify-content:center"><span><i class="mk mk-book l2"></i>독서</span><span><i class="mk mk-vid l2"></i>영상</span><span><i class="mk mk-rv l2"></i>복습</span><span class="small">진할수록 오래</span></div>
+    ${detail}
+    <p class="small" style="text-align:center">독서는 책 화면에서 2분 안에 넘기거나 누른 시간, 영상은 실제로 재생된 시간만 셉니다. 1분 이상인 날만 표시돼요.</p></div>`;
+}
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-act="cal-day"],[data-act="cal-mv"]'); if (!b) return;
+  if (b.dataset.act === 'cal-day') { S.cal.sel = S.cal.sel === b.dataset.k ? null : b.dataset.k; renderLog(); }
+  else { let m = S.cal.m + +b.dataset.d, y = S.cal.y; if (m < 0) { m = 11; y--; } if (m > 11) { m = 0; y++; } S.cal.m = m; S.cal.y = y; S.cal.sel = null; renderLog(); }
 });

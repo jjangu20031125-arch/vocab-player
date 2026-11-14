@@ -9,39 +9,48 @@
    "chapters": [
     {
      "n": 1,
-     "title": "Chapter 1"
+     "title": "Chapter 1",
+     "paras": 152
     },
     {
      "n": 2,
-     "title": "Chapter 2"
+     "title": "Chapter 2",
+     "paras": 137
     },
     {
      "n": 3,
-     "title": "Chapter 3"
+     "title": "Chapter 3",
+     "paras": 171
     },
     {
      "n": 4,
-     "title": "Chapter 4"
+     "title": "Chapter 4",
+     "paras": 170
     },
     {
      "n": 5,
-     "title": "Chapter 5"
+     "title": "Chapter 5",
+     "paras": 153
     },
     {
      "n": 6,
-     "title": "Chapter 6"
+     "title": "Chapter 6",
+     "paras": 135
     },
     {
      "n": 7,
-     "title": "Chapter 7"
+     "title": "Chapter 7",
+     "paras": 415
     },
     {
      "n": 8,
-     "title": "Chapter 8"
+     "title": "Chapter 8",
+     "paras": 113
     },
     {
      "n": 9,
-     "title": "Chapter 9"
+     "title": "Chapter 9",
+     "paras": 163
     }
    ],
    "words": [
@@ -601,7 +610,9 @@
      },
      "note": "이 소설의 핵심 단어예요. 마지막 장에서 다시 중요하게 나와요."
     }
-   ]
+   ],
+   "cover": "data/books/gatsby/cover.jpg",
+   "coverCredit": "표지: Francis Cugat, Celestial Eyes (1925 초판 표지화, 퍼블릭 도메인) · Standard Ebooks 표지 디자인 (CC0)"
   }
  ]
 }
