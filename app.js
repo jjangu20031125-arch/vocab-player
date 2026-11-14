@@ -118,8 +118,8 @@ function logAdd(field, amount, extra = {}) {
 }
 function dayKeyLocal(t = Date.now()) { const d = new Date(t - 4 * 3600e3); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 function dayTotals(day) {
-  const out = { read: 0, watch: 0, rv: 0, books: new Set(), vids: new Set() };
-  Object.values((S.prog.log || {})[day] || {}).forEach((r) => { out.read += r.read || 0; out.watch += r.watch || 0; out.rv += r.rv || 0; (r.books || []).forEach((x) => out.books.add(x)); (r.vids || []).forEach((x) => out.vids.add(x)); });
+  const out = { read: 0, watch: 0, rv: 0, sh: 0, wr: 0, books: new Set(), vids: new Set() };
+  Object.values((S.prog.log || {})[day] || {}).forEach((r) => { out.read += r.read || 0; out.watch += r.watch || 0; out.rv += r.rv || 0; out.sh += r.sh || 0; out.wr += r.wr || 0; (r.books || []).forEach((x) => out.books.add(x)); (r.vids || []).forEach((x) => out.vids.add(x)); });
   return out;
 }
 setInterval(() => {
@@ -145,6 +145,9 @@ function mergeState(a, b) {
     const newer = (v.at || 0) > (o.at || 0) ? v : o, far = (v.maxPct || 0) > (o.maxPct || 0) ? v : o;
     out.books[k] = { ...newer, maxCh: far.maxCh, maxP: far.maxP, maxPct: far.maxPct };
   }
+  const wm = {};
+  for (const x of [...(a.writing || []), ...(b.writing || [])]) if (x && x.id && (!wm[x.id] || (x.at || 0) > (wm[x.id].at || 0))) wm[x.id] = x;
+  out.writing = Object.values(wm).sort((x, y) => (x.created || 0) - (y.created || 0));
   out.log = JSON.parse(JSON.stringify(a.log || {}));
   for (const [day, devs] of Object.entries(b.log || {})) {
     out.log[day] = out.log[day] || {};
@@ -234,7 +237,7 @@ function srcA(vid, t, prefix = '') {
 /* ---------------- routing ---------------- */
 function route() {
   const h = location.hash || '#/';
-  const navKey = h.startsWith('#/review') || h.startsWith('#/log') ? 'review' : h.startsWith('#/book') ? 'books' : h.startsWith('#/words') ? 'words' : h.startsWith('#/cards') || h.startsWith('#/quiz') ? 'practice' : 'home';
+  const navKey = h.startsWith('#/review') || h.startsWith('#/log') ? 'review' : h.startsWith('#/book') ? 'books' : h.startsWith('#/words') ? 'words' : h.startsWith('#/cards') || h.startsWith('#/quiz') || h.startsWith('#/write') ? 'practice' : 'home';
   document.querySelectorAll('#nav a').forEach((a) => a.classList.toggle('on', a.dataset.nav === navKey && !h.startsWith('#/v/')));
   closeSheet();
   const m = h.match(/^#\/v\/([\w-]{11})(?:\?t=(\d+))?/);
@@ -249,6 +252,7 @@ function route() {
   if (navKey === 'words') return renderWords();
   if (h.startsWith('#/cards')) { S.fc.deck = null; return renderCards(); }
   if (h.startsWith('#/quiz')) { S.quiz.qs = null; return renderQuiz(); }
+  if (h.startsWith('#/write')) return renderWrite();
   renderHome();
 }
 function refresh() {
@@ -260,6 +264,7 @@ function refresh() {
   if (h.startsWith('#/words')) return renderWords();
   if (h.startsWith('#/cards')) return renderCards();
   if (h.startsWith('#/quiz')) return renderQuiz();
+  if (h.startsWith('#/write')) return renderWrite();
   renderHome();
 }
 
@@ -376,6 +381,7 @@ async function openWatch(vid, startT) {
           <button class="btn sm" data-act="loop" id="loopBtn">반복 끔</button>
           <button class="btn sm" data-act="next" aria-label="다음 문장">다음 ▶</button>
           <select id="rate" aria-label="재생 속도"><option value="0.75">0.75x</option><option value="1" selected>1x</option><option value="1.25">1.25x</option></select>
+          <button class="btn sm" data-act="shadow-line">🎤 따라 말하기</button>
           <button class="btn sm" data-act="next-video">다음 영상 ⏭</button>
           <button class="btn sm ${S.autoNext ? 'on' : ''}" data-act="auto" id="autoBtn">연속 재생 ${S.autoNext ? '켬' : '끔'}</button>
         </div>
@@ -758,7 +764,7 @@ async function define(word, sentence) {
   if (r.ok && r.j.ko) { koCache[key] = r.j; return r.j; }
   return null;
 }
-function closeSheet() { const s = $('#sheet'); s.hidden = true; s.innerHTML = ''; document.querySelectorAll('.w.sel').forEach((x) => x.classList.remove('sel')); }
+function closeSheet() { if (typeof SH !== 'undefined' && SH.ctx) shadowStopAll(); const s = $('#sheet'); s.hidden = true; s.innerHTML = ''; document.querySelectorAll('.w.sel').forEach((x) => x.classList.remove('sel')); }
 async function openWordSheet(li, k, span) {
   const inBook = !!(span && span.closest('#reader'));
   const lines = inBook ? (S.rd && S.rd.sents) : (S.w && S.w.lines);
@@ -788,6 +794,7 @@ async function openWordSheet(li, k, span) {
       <button class="btn sm ${saved ? 'on' : ''}" data-act="save-word" data-key="${esc(key)}" data-word="${esc(raw)}" data-l="${li}" data-k="${k}">${saved ? '저장됨 · 취소' : '모르는 단어로 저장'}</button>
       <a class="btn sm" href="${naver}" target="_blank" rel="noopener">네이버 사전</a>
       <button class="btn sm" data-act="sheet-kr">문장 번역</button>
+      <button class="btn sm" data-act="shadow-sheet">🎤 따라 말하기</button>
       ${inBook ? `<button class="btn sm" data-act="say-line">이 문장 듣기</button>` : `<button class="btn sm" data-act="seek" data-i="${li}">이 문장 듣기</button>`}
     </div>
     <div id="sheetKr"></div>`;
@@ -870,7 +877,7 @@ function renderWords() {
 
 /* ---------------- flashcards ---------------- */
 const reviewTabs = (on) => `<div class="ptabs"><a href="#/review" class="${on === 'review' ? 'on' : ''}">오늘 복습</a><a href="#/log" class="${on === 'log' ? 'on' : ''}">학습 달력</a></div>`;
-const practiceTabs = (on) => `<div class="ptabs"><a href="#/cards" class="${on === 'cards' ? 'on' : ''}">플래시카드</a><a href="#/quiz" class="${on === 'quiz' ? 'on' : ''}">퀴즈</a></div>`;
+const practiceTabs = (on) => `<div class="ptabs"><a href="#/cards" class="${on === 'cards' ? 'on' : ''}">플래시카드</a><a href="#/quiz" class="${on === 'quiz' ? 'on' : ''}">퀴즈</a><a href="#/write" class="${on === 'write' ? 'on' : ''}">영작${newFeedback() ? `<span class="nb">${newFeedback()}</span>` : ''}</a></div>`;
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function buildDeck() {
   const ws = vocab().filter((w) => !st(w.id)).map((w) => ({ kind: 'v', id: w.id, front: w.expr, ko: w.ko, ex: w.ex, exKo: w.exKo, from: w.v.title, vid: w.v.vid, t: w.t }));
@@ -1667,15 +1674,15 @@ function renderLog() {
   for (let i = 0; i < first.getDay(); i++) cells += '<div class="cd empty"></div>';
   for (let d = 1; d <= days; d++) {
     const k = key(d), t = dayTotals(k);
-    const any = t.read >= 60 || t.watch >= 60 || t.rv > 0;
+    const any = t.read >= 60 || t.watch >= 60 || t.rv > 0 || t.sh > 0 || t.wr > 0;
     tot.read += t.read; tot.watch += t.watch; tot.rv += t.rv; if (t.read >= 60) tot.readDays++; if (t.watch >= 60) tot.watchDays++; if (any) tot.active++;
     const lvl = (sec) => (sec >= 1800 ? 3 : sec >= 600 ? 2 : sec >= 60 ? 1 : 0), rl = t.rv >= 15 ? 3 : t.rv >= 5 ? 2 : t.rv > 0 ? 1 : 0;
     cells += `<button class="cd ${k === today ? 'today' : ''} ${S.cal.sel === k ? 'sel' : ''} ${any ? 'on' : ''}" data-act="cal-day" data-k="${k}">
       <span class="dn">${d}</span>
-      <span class="marks">${lvl(t.read) ? `<i class="mk mk-book l${lvl(t.read)}"></i>` : ''}${lvl(t.watch) ? `<i class="mk mk-vid l${lvl(t.watch)}"></i>` : ''}${rl ? `<i class="mk mk-rv l${rl}"></i>` : ''}</span></button>`;
+      <span class="marks">${lvl(t.read) ? `<i class="mk mk-book l${lvl(t.read)}"></i>` : ''}${lvl(t.watch) ? `<i class="mk mk-vid l${lvl(t.watch)}"></i>` : ''}${rl ? `<i class="mk mk-rv l${rl}"></i>` : ''}${t.sh + t.wr ? `<i class="mk mk-sh l${t.sh + t.wr >= 10 ? 3 : t.sh + t.wr >= 4 ? 2 : 1}"></i>` : ''}</span></button>`;
   }
   // streak: consecutive active days ending today (or yesterday)
-  let streak = 0; for (let i = 0; i < 400; i++) { const k = dayKeyLocal(Date.now() - i * 864e5), t = dayTotals(k); if (t.read >= 60 || t.watch >= 60 || t.rv > 0) streak++; else if (i > 0) break; }
+  let streak = 0; for (let i = 0; i < 400; i++) { const k = dayKeyLocal(Date.now() - i * 864e5), t = dayTotals(k); if (t.read >= 60 || t.watch >= 60 || t.rv > 0 || t.sh > 0 || t.wr > 0) streak++; else if (i > 0) break; }
   let detail = '';
   if (S.cal.sel) {
     const t = dayTotals(S.cal.sel);
@@ -1686,13 +1693,15 @@ function renderLog() {
       ${t.read >= 60 ? `<div><i class="mk mk-book l2"></i> 독서 ${mins(t.read)}분 · ${bk.map(esc).join(', ')}</div>` : ''}
       ${t.watch >= 60 ? `<div><i class="mk mk-vid l2"></i> 영상 ${mins(t.watch)}분 · ${vd.length}편<div class="small">${vd.map(esc).join('<br>')}</div></div>` : ''}
       ${t.rv ? `<div><i class="mk mk-rv l2"></i> 복습 ${t.rv}문제</div>` : ''}
-      ${t.read < 60 && t.watch < 60 && !t.rv ? '<div class="small">이날은 기록이 없어요.</div>' : ''}</div>`;
+      ${t.sh ? `<div><i class="mk mk-sh l2"></i> 쉐도잉 ${t.sh}문장</div>` : ''}
+      ${t.wr ? `<div><i class="mk mk-sh l2"></i> 영작 ${t.wr}문장</div>` : ''}
+      ${t.read < 60 && t.watch < 60 && !t.rv && !t.sh && !t.wr ? '<div class="small">이날은 기록이 없어요.</div>' : ''}</div>`;
   }
   $('#view').innerHTML = `<div class="center">${reviewTabs('log')}
     <div class="cal-head"><button class="btn sm" data-act="cal-mv" data-d="-1" aria-label="이전 달">◀</button><b>${y}년 ${m + 1}월</b><button class="btn sm" data-act="cal-mv" data-d="1" aria-label="다음 달">▶</button></div>
     <div class="cal-sum"><div><b>${streak}</b><span>연속 학습일</span></div><div><b>${mins(tot.read)}</b><span>독서 분 (${tot.readDays}일)</span></div><div><b>${mins(tot.watch)}</b><span>영상 분 (${tot.watchDays}일)</span></div><div><b>${tot.rv}</b><span>복습 문제</span></div></div>
     <div class="cal">${['일', '월', '화', '수', '목', '금', '토'].map((w) => `<div class="cw">${w}</div>`).join('')}${cells}</div>
-    <div class="legend" style="justify-content:center"><span><i class="mk mk-book l2"></i>독서</span><span><i class="mk mk-vid l2"></i>영상</span><span><i class="mk mk-rv l2"></i>복습</span><span class="small">진할수록 오래</span></div>
+    <div class="legend" style="justify-content:center"><span><i class="mk mk-book l2"></i>독서</span><span><i class="mk mk-vid l2"></i>영상</span><span><i class="mk mk-rv l2"></i>복습</span><span><i class="mk mk-sh l2"></i>쉐도잉·영작</span><span class="small">진할수록 오래</span></div>
     ${detail}
     <p class="small" style="text-align:center">독서는 책 화면에서 2분 안에 넘기거나 누른 시간, 영상은 실제로 재생된 시간만 셉니다. 1분 이상인 날만 표시돼요.</p></div>`;
 }
@@ -1701,3 +1710,207 @@ document.addEventListener('click', (e) => {
   if (b.dataset.act === 'cal-day') { S.cal.sel = S.cal.sel === b.dataset.k ? null : b.dataset.k; renderLog(); }
   else { let m = S.cal.m + +b.dataset.d, y = S.cal.y; if (m < 0) { m = 11; y--; } if (m > 11) { m = 0; y++; } S.cal.m = m; S.cal.y = y; S.cal.sel = null; renderLog(); }
 });
+
+
+/* ================= shadowing: listen → say it (recorded) → compare (no scoring) ================= */
+const SH = { rec: null, chunks: [], url: null, stream: null, timer: null, ctx: null };
+function shadowOpen(ctx) {
+  // ctx: { text, kind: 'video' | 'book', line }
+  SH.ctx = ctx; shadowClearRec();
+  const sh = $('#sheet');
+  sh.innerHTML = `<button class="x close" data-act="sh-close" aria-label="닫기">✕</button>
+    <div class="small">따라 말하기 · 채점 없이 듣고 비교해요</div>
+    <div class="sh-text">${esc(ctx.text)}</div>
+    <div class="sh-steps">
+      <button class="btn" data-act="sh-model">① 원문 듣기</button>
+      <button class="btn primary" data-act="sh-rec" id="shRec">② 따라 말하기 (녹음)</button>
+      <button class="btn" data-act="sh-mine" id="shMine" disabled>③ 내 목소리 듣기</button>
+      <button class="btn" data-act="sh-both" id="shBoth" disabled>원문 → 내 목소리 이어 듣기</button>
+    </div>
+    <div class="small" id="shMsg">원문을 듣고, ②를 눌러 따라 말한 뒤 다시 누르면 녹음이 끝나요.</div>
+    ${ctx.kind === 'video' ? '<div class="row"><button class="btn sm" data-act="sh-next">다음 문장으로 ▶</button></div>' : ''}`;
+  sh.hidden = false;
+}
+function shadowClearRec() { if (SH.url) URL.revokeObjectURL(SH.url); SH.url = null; SH.chunks = []; }
+function shadowModel() {
+  return new Promise((resolve) => {
+    const c = SH.ctx; if (!c) return resolve();
+    if (c.kind === 'video' && S.w && S.w.player && S.w.player.seekTo) {
+      const L = c.line, p = S.w.player;
+      p.seekTo(L.t / 1000, true); p.playVideo();
+      clearInterval(SH.timer);
+      SH.timer = setInterval(() => { const t = curTime(); if (t == null || t >= L.end - 60) { clearInterval(SH.timer); try { p.pauseVideo(); } catch (e) {} resolve(); } }, 100);
+      setTimeout(() => { clearInterval(SH.timer); resolve(); }, Math.max(2000, L.end - L.t + 2500));
+    } else {
+      if (!('speechSynthesis' in window)) return resolve();
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(c.text.replace(/[“”]/g, '"')); u.lang = 'en-US'; u.rate = S.rd ? S.rd.rate : 0.95;
+      const vs = speechSynthesis.getVoices(); const pick = vs.find((v) => /en[-_]US/i.test(v.lang)); if (pick) u.voice = pick;
+      u.onend = resolve; u.onerror = resolve; speechSynthesis.speak(u);
+    }
+  });
+}
+async function shadowRecToggle() {
+  const btn = $('#shRec'), msg = $('#shMsg');
+  if (SH.rec && SH.rec.state === 'recording') { SH.rec.stop(); return; }
+  if (!navigator.mediaDevices || !window.MediaRecorder) { msg.textContent = '이 브라우저는 녹음을 지원하지 않아요.'; return; }
+  try {
+    SH.stream = SH.stream || await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (e) { msg.textContent = '마이크 권한이 필요해요. 브라우저 설정에서 이 사이트의 마이크를 허용해 주세요.'; return; }
+  shadowClearRec();
+  try { if (S.w && S.w.player && S.w.player.pauseVideo) S.w.player.pauseVideo(); } catch (e) {}
+  SH.rec = new MediaRecorder(SH.stream);
+  SH.rec.ondataavailable = (e) => { if (e.data && e.data.size) SH.chunks.push(e.data); };
+  SH.rec.onstop = () => {
+    SH.url = URL.createObjectURL(new Blob(SH.chunks, { type: SH.rec.mimeType || 'audio/webm' }));
+    if (btn) { btn.textContent = '② 다시 녹음'; btn.classList.remove('rec'); }
+    const m = $('#shMine'), b2 = $('#shBoth'); if (m) m.disabled = false; if (b2) b2.disabled = false;
+    if (msg) msg.textContent = '③으로 내 목소리를 들어 보거나, 이어 듣기로 원문과 바로 비교해 보세요.';
+    logAdd('sh', 1);
+  };
+  SH.rec.start();
+  btn.textContent = '■ 녹음 끝내기'; btn.classList.add('rec');
+  msg.textContent = '녹음 중… 말한 뒤 다시 누르세요.';
+  clearTimeout(SH.stopT); SH.stopT = setTimeout(() => { if (SH.rec && SH.rec.state === 'recording') SH.rec.stop(); }, 20000);
+}
+function shadowPlayMine() { return new Promise((res) => { if (!SH.url) return res(); const a = new Audio(SH.url); a.onended = res; a.onerror = res; a.play().catch(res); }); }
+function shadowStopAll() {
+  clearInterval(SH.timer); clearTimeout(SH.stopT);
+  if (SH.rec && SH.rec.state === 'recording') SH.rec.stop();
+  if (SH.stream) { SH.stream.getTracks().forEach((t) => t.stop()); SH.stream = null; }
+  SH.ctx = null;
+}
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-act^="sh-"],[data-act="shadow-line"],[data-act="shadow-sheet"]'); if (!b) return;
+  const a = b.dataset.act;
+  if (a === 'shadow-line') {
+    if (!S.w || !S.w.lines.length) { note('자막이 있어야 따라 말하기를 할 수 있어요.'); return; }
+    const i = Math.max(0, S.w.active), L = S.w.lines[i];
+    shadowOpen({ kind: 'video', line: L, i, text: lineText(L) }); return;
+  }
+  if (a === 'shadow-sheet') {
+    const C = S.sheetCtx; if (!C) return;
+    if (C.book) shadowOpen({ kind: 'book', line: C.L, text: lineText(C.L) });
+    else { const i = S.w ? S.w.lines.indexOf(C.L) : -1; shadowOpen({ kind: 'video', line: C.L, i, text: lineText(C.L) }); }
+    return;
+  }
+  if (a === 'sh-close') { shadowStopAll(); closeSheet(); return; }
+  if (a === 'sh-model') { await shadowModel(); return; }
+  if (a === 'sh-rec') { shadowRecToggle(); return; }
+  if (a === 'sh-mine') { shadowPlayMine(); return; }
+  if (a === 'sh-both') { await shadowModel(); await new Promise((r) => setTimeout(r, 400)); await shadowPlayMine(); return; }
+  if (a === 'sh-next' && S.w && SH.ctx) {
+    const i = (SH.ctx.i >= 0 ? SH.ctx.i : S.w.active) + 1, L = S.w.lines[i];
+    if (!L) { note('마지막 문장이에요.'); return; }
+    shadowOpen({ kind: 'video', line: L, i, text: lineText(L) }); setActive(i); shadowModel();
+  }
+});
+
+/* ================= writing with corrections delivered into the app ================= */
+// Entries live in the synced (passcode-protected) progress store, never in public files.
+// Claude fills `fb` on request through the app itself; the app then shows it here.
+function writingList() { return (S.prog.writing || []).filter((x) => !x.del); }
+const newFeedback = () => writingList().filter((x) => x.fb && !x.seen).length;
+function todaysExprs() {
+  const d = S.prog.daily || {};
+  const all = vocab().filter((w) => st(w.id) !== 'known');
+  const byId = Object.fromEntries(all.map((w) => [w.id, w]));
+  let pick = (d.ids || []).map((id) => byId[id]).filter(Boolean);
+  if (pick.length < 3) pick = pick.concat(all.filter((w) => (S.prog.fsrs || {})[w.id] && !pick.includes(w)));
+  if (pick.length < 3) pick = pick.concat(all.filter((w) => !pick.includes(w)));
+  const seed = dayKeyLocal().split('-').join('') | 0;
+  return pick.slice(0, 12).sort((a, b) => ((a.id.length * seed) % 97) - ((b.id.length * seed) % 97)).slice(0, 3);
+}
+function wordDiff(a, b) {
+  const A = a.split(/\s+/).filter(Boolean), B = b.split(/\s+/).filter(Boolean);
+  const n = A.length, m = B.length, dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+  const eq = (x, y) => x.replace(/[^\w']/g, '').toLowerCase() === y.replace(/[^\w']/g, '').toLowerCase() && x.slice(-1) === y.slice(-1);
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) dp[i][j] = eq(A[i], B[j]) ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  let i = 0, j = 0, out = [];
+  while (i < n && j < m) {
+    if (eq(A[i], B[j])) { out.push(esc(B[j])); i++; j++; }
+    else if (dp[i + 1][j] >= dp[i][j + 1]) { out.push(`<del>${esc(A[i])}</del>`); i++; }
+    else { out.push(`<ins>${esc(B[j])}</ins>`); j++; }
+  }
+  while (i < n) out.push(`<del>${esc(A[i++])}</del>`);
+  while (j < m) out.push(`<ins>${esc(B[j++])}</ins>`);
+  return out.join(' ');
+}
+async function applyFeedbackToReview() {
+  // expressions used wrongly come back in review sooner (once per feedback)
+  let changed = false;
+  for (const x of writingList()) {
+    if (!x.fb || x.fb.applied) continue;
+    for (const [id, ok] of Object.entries(x.fb.used || {})) if (ok === false && vocab().some((w) => w.id === id)) await scheduleAs(id, 1);
+    x.fb.applied = true; x.at = Date.now(); changed = true;
+  }
+  if (changed) saveProg();
+}
+function renderWrite() {
+  let seenChanged = false;
+  writingList().forEach((x) => { if (x.fb && !x.seen) { x.seen = true; x.justIn = true; x.at = Date.now(); seenChanged = true; } });
+  if (seenChanged) saveProg();
+  const ex = todaysExprs(), list = writingList().slice().reverse();
+  const pending = list.filter((x) => !x.fb);
+  const sel = new Set(S.wsel || []);
+  $('#view').innerHTML = `<div class="center">${practiceTabs('write')}
+    <div class="qcard">
+      <div class="small">오늘의 표현으로 문장을 써 보세요 · 쓰고 싶은 표현을 눌러 고르세요</div>
+      <div class="chips" style="margin:10px 0">${ex.map((w) => `<button class="btn sm ${sel.has(w.id) ? 'on' : ''}" data-act="w-pick" data-id="${esc(w.id)}" title="${esc(w.ko)}">${esc(w.expr)}</button>`).join('')}</div>
+      <div class="small" style="margin:-4px 0 8px">${ex.map((w) => `<b>${esc(w.expr)}</b> ${esc(w.ko)}`).join(' · ')}</div>
+      <textarea id="wText" class="rvin" rows="3" placeholder="예: I'm inclined to reserve judgment until I hear his side." maxlength="600"></textarea>
+      <div class="err" id="wErr"></div>
+      <div class="btns" style="justify-content:flex-start"><button class="btn primary" data-act="w-save">저장 (첨삭 대기)</button></div>
+    </div>
+    <div class="rvhead" style="margin-top:18px"><b>내 문장</b><span class="small">첨삭 대기 ${pending.length}개</span></div>
+    <p class="small" style="margin:2px 0 10px">채팅에서 Claude에게 <b>"첨삭해줘"</b>라고 하면 대기 중인 문장이 첨삭돼서 여기에 들어와요 (PC의 Claude 앱이 켜져 있어야 해요). PC가 꺼져 있으면 <button class="kolink" data-act="w-copy" style="text-decoration:underline">대기 문장 복사</button>해서 채팅에 붙여 주세요.</p>
+    ${list.map((x) => {
+      const ws = (x.exprs || []).map((id) => vocab().find((w) => w.id === id)).filter(Boolean);
+      const fb = x.fb;
+      return `<div class="vsec wr">
+        <div class="small">${new Date(x.created).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })} · ${ws.map((w) => esc(w.expr)).join(', ') || '자유 영작'} · ${fb ? `<b style="color:var(--green)">첨삭 완료${x.justIn ? ' · 새로 도착' : ''}</b>` : '첨삭 대기'}</div>
+        ${fb ? `<div class="wr-diff">${wordDiff(x.text, fb.corrected || x.text)}</div>
+          ${(fb.notes || []).length ? `<ul class="wr-notes">${fb.notes.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}
+          ${fb.better ? `<div class="wnote">더 자연스럽게: ${esc(fb.better)} ${spk(fb.better)}</div>` : ''}
+          ${Object.keys(fb.used || {}).length ? `<div class="small" style="margin-top:6px">${Object.entries(fb.used).map(([id, ok]) => { const w = vocab().find((v) => v.id === id); return w ? `${ok ? '✓' : '✗'} ${esc(w.expr)}${ok ? '' : ' (복습에 다시 나와요)'}` : ''; }).join(' · ')}</div>` : ''}`
+        : `<div class="wr-text">${esc(x.text)}</div>`}
+        <div class="row" style="margin-top:6px"><button class="btn sm" data-act="w-del" data-id="${esc(x.id)}">삭제</button></div>
+      </div>`;
+    }).join('') || '<p class="small">아직 쓴 문장이 없어요.</p>'}
+  </div>`;
+  applyFeedbackToReview();
+}
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-act^="w-"]'); if (!b) return;
+  const a = b.dataset.act;
+  if (a === 'w-pick') { const s2 = new Set(S.wsel || []); s2.has(b.dataset.id) ? s2.delete(b.dataset.id) : s2.add(b.dataset.id); S.wsel = [...s2]; b.classList.toggle('on'); }
+  if (a === 'w-save') {
+    const t = ($('#wText').value || '').trim();
+    if (!t) { $('#wErr').textContent = '문장을 먼저 써 주세요.'; return; }
+    const now = Date.now();
+    S.prog.writing = [...(S.prog.writing || []), { id: 'w' + now.toString(36), text: t, exprs: S.wsel || [], created: now, at: now }];
+    S.wsel = []; logAdd('wr', 1); saveProg(); renderWrite();
+  }
+  if (a === 'w-del') { S.prog.writing = (S.prog.writing || []).map((x) => (x.id === b.dataset.id ? { ...x, del: true, at: Date.now() } : x)); saveProg(); renderWrite(); }
+  if (a === 'w-copy') {
+    const items = writingList().filter((x) => !x.fb);
+    const txt = items.length ? '첨삭해줘\n' + items.map((x, i) => `${i + 1}. ${x.text}${(x.exprs || []).length ? `  [표현: ${x.exprs.map((id) => (vocab().find((w) => w.id === id) || {}).expr).filter(Boolean).join(', ')}]` : ''}`).join('\n') : '';
+    if (!txt) { note('첨삭 대기 중인 문장이 없어요.'); return; }
+    try { await navigator.clipboard.writeText(txt); note('복사했어요. Claude 채팅에 붙여 넣으세요.'); } catch (x) { note('복사하지 못했어요. 문장을 길게 눌러 직접 복사해 주세요.'); }
+  }
+});
+document.addEventListener('input', (e) => { if (e.target.id === 'wText') { const er = $('#wErr'); if (er) er.textContent = ''; } });
+// lets Claude deliver corrections through the app (used from the chat on request)
+window.vpPendingWriting = () => writingList().filter((x) => !x.fb).map((x) => ({ id: x.id, text: x.text, exprs: (x.exprs || []).map((id) => { const w = vocab().find((v) => v.id === id); return w ? { id, expr: w.expr, ko: w.ko } : { id }; }) }));
+window.vpDeliverFeedback = async (items) => {
+  await pull();
+  let n = 0;
+  for (const it of items || []) {
+    const x = (S.prog.writing || []).find((w) => w.id === it.id); if (!x || x.fb) continue;
+    x.fb = { corrected: String(it.corrected || x.text), notes: (it.notes || []).map(String).slice(0, 8), better: it.better ? String(it.better) : '', used: it.used || {}, by: 'claude', at: Date.now() };
+    x.at = Date.now(); n++;
+  }
+  S.prog.writing = [...S.prog.writing];
+  await new Promise((r) => { saveProg(); setTimeout(r, 1500); });
+  return n;
+};

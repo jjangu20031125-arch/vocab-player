@@ -261,3 +261,15 @@ html.reading .view{padding-bottom:0}
 .mk-book{background:var(--blue)}.mk-vid{background:var(--accent)}.mk-rv{background:var(--green)}
 .cal-detail{margin-top:12px;display:flex;flex-direction:column;gap:6px;font-size:14px}
 @media (max-width:520px){.cal-sum b{font-size:18px}.cd{padding:3px 1px}}
+/* shadowing */
+.sh-text{font-family:Georgia,serif;font-size:19px;line-height:1.55;margin:8px 0 12px}
+.sh-steps{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.sh-steps .btn[disabled]{opacity:.4;cursor:default}
+.btn.rec{background:var(--accent);border-color:var(--accent);color:#fff}
+.mk-sh{background:#8a63c9}
+/* writing */
+.vsec.wr{padding:12px 16px}
+.wr-text,.wr-diff{font-size:16px;line-height:1.6;margin-top:6px}
+.wr-diff del{color:var(--accent);text-decoration:line-through}
+.wr-diff ins{color:var(--green);text-decoration:none;background:var(--green-bg);border-radius:3px;padding:0 2px}
+.wr-notes{margin:8px 0 0;padding-left:18px;font-size:14px;color:var(--ink2)}
