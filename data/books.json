@@ -613,6 +613,637 @@
    ],
    "cover": "data/books/gatsby/cover.jpg",
    "coverCredit": "표지: Francis Cugat, Celestial Eyes (1925 초판 표지화, 퍼블릭 도메인) · Standard Ebooks 표지 디자인 (CC0)"
+  },
+  {
+   "id": "siddhartha",
+   "title": "Siddhartha",
+   "author": "Hermann Hesse",
+   "year": 1922,
+   "source": "Standard Ebooks (Gunther Olesch 외 번역, 2001년 퍼블릭 도메인 공개 · CC0 편집본)",
+   "cover": "data/books/siddhartha/cover.jpg",
+   "coverCredit": "표지: Abanindranath Tagore, The Victory of Buddha (1914, 퍼블릭 도메인) · Standard Ebooks 표지 디자인 (CC0)",
+   "chapters": [
+    {
+     "n": 1,
+     "title": "The Son of the Brahmin",
+     "paras": 53
+    },
+    {
+     "n": 2,
+     "title": "With the Samanas",
+     "paras": 43
+    },
+    {
+     "n": 3,
+     "title": "Gotama",
+     "paras": 46
+    },
+    {
+     "n": 4,
+     "title": "Awakening",
+     "paras": 12
+    },
+    {
+     "n": 5,
+     "title": "Kamala",
+     "paras": 75
+    },
+    {
+     "n": 6,
+     "title": "With the Childlike People",
+     "paras": 47
+    },
+    {
+     "n": 7,
+     "title": "Sansara",
+     "paras": 17
+    },
+    {
+     "n": 8,
+     "title": "By the River",
+     "paras": 49
+    },
+    {
+     "n": 9,
+     "title": "The Ferryman",
+     "paras": 73
+    },
+    {
+     "n": 10,
+     "title": "The Son",
+     "paras": 35
+    },
+    {
+     "n": 11,
+     "title": "Om",
+     "paras": 25
+    },
+    {
+     "n": 12,
+     "title": "Govinda",
+     "paras": 43
+    }
+   ],
+   "words": [
+    {
+     "id": "siddhartha-1-01",
+     "ch": 1,
+     "p": 1,
+     "expr": "thirsty for (something)",
+     "pos": "형용사구",
+     "ko": "~을 몹시 갈망하는, ~에 목마른",
+     "ex": "As a new intern, she was thirsty for feedback on every report.",
+     "exKo": "신입 인턴이던 그녀는 보고서마다 피드백을 몹시 갈망했다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "He moved to Seoul, ___ new experiences.",
+        "a": [
+         "thirsty for"
+        ]
+       },
+       {
+        "s": "The students were ___ real-world examples, not more theory.",
+        "a": [
+         "thirsty for"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Young Siddhartha was ___ for knowledge.",
+       "opts": [
+        "thirsty",
+        "dry",
+        "empty"
+       ],
+       "a": "thirsty",
+       "why": "thirsty for: ~을 갈망하는 / dry: 마른, 건조한 / empty: 비어 있는"
+      }
+     },
+     "note": "물을 마시고 싶은 갈증을 지식·경험 같은 추상적인 것에 빗댄 표현이에요. 이 책 전체에서 thirst(갈증)가 반복되는 핵심 이미지예요."
+    },
+    {
+     "id": "siddhartha-1-02",
+     "ch": 1,
+     "p": 7,
+     "expr": "innermost",
+     "pos": "형용사",
+     "ko": "가장 깊은 곳의, 마음속 깊이 숨겨진",
+     "ex": "She rarely shares her innermost feelings, even with close friends.",
+     "exKo": "그녀는 친한 친구에게도 마음속 깊은 감정을 거의 털어놓지 않는다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "In his diary he wrote down his ___ fears.",
+        "a": [
+         "innermost"
+        ]
+       },
+       {
+        "s": "The ___ room of the temple was closed to visitors.",
+        "a": [
+         "innermost"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He finally told her his ___ thoughts.",
+       "opts": [
+        "innermost",
+        "outermost",
+        "uppermost"
+       ],
+       "a": "innermost",
+       "why": "innermost: 가장 안쪽의, 내밀한 / outermost: 가장 바깥쪽의 / uppermost: 가장 위의, 가장 중요한"
+      }
+     },
+     "note": "inner(안쪽의)의 최상급처럼 쓰여요. feelings, thoughts, self와 자주 붙어요."
+    },
+    {
+     "id": "siddhartha-1-03",
+     "ch": 1,
+     "p": 14,
+     "expr": "lost in thought",
+     "pos": "형용사구",
+     "ko": "생각에 잠긴",
+     "ex": "I was so lost in thought that I missed my subway stop.",
+     "exKo": "생각에 너무 잠겨 있어서 지하철역을 지나쳤다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "He stared out the window, ___.",
+        "a": [
+         "lost in thought"
+        ]
+       },
+       {
+        "s": "She walked home slowly, completely ___.",
+        "a": [
+         "lost in thought"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Siddhartha sat there ___ in thought.",
+       "opts": [
+        "lost",
+        "missed",
+        "gone"
+       ],
+       "a": "lost",
+       "why": "lost in thought: 생각에 잠긴 / missed: 놓친 / gone: 사라진"
+      }
+     },
+     "note": "be lost in ~ 은 어떤 것에 '빠져서' 주변을 잊은 상태예요. lost in a book(책에 빠진)처럼도 써요."
+    },
+    {
+     "id": "siddhartha-1-04",
+     "ch": 1,
+     "p": 15,
+     "expr": "self-denial",
+     "pos": "명사",
+     "ko": "자기 부정, 극기 (욕구를 스스로 억누름)",
+     "ex": "Training for a marathon takes months of self-denial.",
+     "exKo": "마라톤 준비에는 몇 달간의 극기가 필요하다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The monks lived a life of strict ___.",
+        "a": [
+         "self-denial"
+        ]
+       },
+       {
+        "s": "Saving that much money required a lot of ___.",
+        "a": [
+         "self-denial"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Fasting is a form of ___.",
+       "opts": [
+        "self-denial",
+        "self-esteem",
+        "self-service"
+       ],
+       "a": "self-denial",
+       "why": "self-denial: 극기, 자기 부정 / self-esteem: 자존감 / self-service: 셀프서비스"
+      }
+     },
+     "note": "Samana(고행자)들이 추구하는 길을 가리키는 말이에요. 2장에서 여러 번 다시 나와요."
+    },
+    {
+     "id": "siddhartha-1-05",
+     "ch": 1,
+     "p": 22,
+     "expr": "with your permission",
+     "pos": "구",
+     "ko": "허락해 주신다면, 실례가 안 된다면",
+     "ex": "With your permission, I'd like to record this meeting.",
+     "exKo": "허락해 주신다면 이 회의를 녹음하고 싶습니다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "___, I'll leave a little early today.",
+        "a": [
+         "With your permission"
+        ]
+       },
+       {
+        "s": "___, sir, I'd like to ask one more question.",
+        "a": [
+         "With your permission"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "___ your permission, I'd like to share my screen.",
+       "opts": [
+        "With",
+        "By",
+        "On"
+       ],
+       "a": "With",
+       "why": "with your permission: 허락해 주신다면 / by, on은 이 표현에 쓰지 않아요"
+      }
+     },
+     "note": "격식 있는 자리에서 무언가를 하기 전에 정중하게 양해를 구할 때 써요. 비즈니스 회의에서도 그대로 쓸 수 있어요."
+    },
+    {
+     "id": "siddhartha-2-01",
+     "ch": 2,
+     "p": 1,
+     "expr": "contempt",
+     "pos": "명사",
+     "ko": "경멸, 멸시",
+     "ex": "He spoke about his old company with open contempt.",
+     "exKo": "그는 예전 회사에 대해 대놓고 경멸하듯 말했다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "She looked at the offer with ___.",
+        "a": [
+         "contempt"
+        ]
+       },
+       {
+        "s": "The manager treated our ideas with ___.",
+        "a": [
+         "contempt"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "His voice was full of ___ for the lazy staff.",
+       "opts": [
+        "contempt",
+        "content",
+        "context"
+       ],
+       "a": "contempt",
+       "why": "contempt: 경멸 / content: 내용, 만족한 / context: 맥락"
+      }
+     },
+     "note": "with contempt(경멸하며), hold ~ in contempt(~을 경멸하다) 형태로 자주 써요."
+    },
+    {
+     "id": "siddhartha-2-02",
+     "ch": 2,
+     "p": 2,
+     "expr": "overcome",
+     "pos": "동사",
+     "ko": "극복하다, 이겨내다",
+     "ex": "She overcame her fear of public speaking by practising every day.",
+     "exKo": "그녀는 매일 연습해서 발표 공포증을 극복했다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "We need to ___ a few technical problems before launch.",
+        "a": [
+         "overcome"
+        ]
+       },
+       {
+        "s": "He finally ___ his shyness and asked her out.",
+        "a": [
+         "overcame"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "It took years to ___ the injury.",
+       "opts": [
+        "overcome",
+        "overlook",
+        "overtake"
+       ],
+       "a": "overcome",
+       "why": "overcome: 극복하다 / overlook: 간과하다 / overtake: 추월하다"
+      }
+     },
+     "note": "과거형 overcame, 과거분사 overcome이에요. be overcome by(감정 등에 압도되다)로도 써요."
+    },
+    {
+     "id": "siddhartha-2-03",
+     "ch": 2,
+     "p": 13,
+     "expr": "numb",
+     "pos": "동사·형용사",
+     "ko": "(감각을) 마비시키다 / 감각이 없는",
+     "ex": "Scrolling through my phone at night just numbs my brain.",
+     "exKo": "밤에 휴대폰을 넘겨 보는 건 그냥 머리를 멍하게 만들 뿐이다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "My fingers were ___ from the cold.",
+        "a": [
+         "numb"
+        ]
+       },
+       {
+        "s": "He used work to ___ the pain of the breakup.",
+        "a": [
+         "numb"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The cold water ___ his feet.",
+       "opts": [
+        "numbed",
+        "numbered",
+        "nodded"
+       ],
+       "a": "numbed",
+       "why": "numb: 마비시키다 / number: 번호를 매기다 / nod: 끄덕이다"
+      }
+     },
+     "note": "b는 소리 나지 않아요(넘). 고통이나 감정을 '잠깐 무디게' 하는 뉘앙스로 이 장에서 쓰여요."
+    },
+    {
+     "id": "siddhartha-2-04",
+     "ch": 2,
+     "p": 13,
+     "expr": "delusion",
+     "pos": "명사",
+     "ko": "망상, (잘못된) 착각",
+     "ex": "He's under the delusion that the project will finish itself.",
+     "exKo": "그는 프로젝트가 저절로 끝날 거라고 착각하고 있다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "She lives under the ___ that everyone likes her.",
+        "a": [
+         "delusion"
+        ]
+       },
+       {
+        "s": "Thinking we could win without practice was a ___.",
+        "a": [
+         "delusion"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He was under the ___ that he was always right.",
+       "opts": [
+        "delusion",
+        "direction",
+        "decision"
+       ],
+       "a": "delusion",
+       "why": "delusion: 망상, 착각 / direction: 방향 / decision: 결정"
+      }
+     },
+     "note": "be under the delusion that ~ (~라고 착각하다) 형태가 가장 흔해요."
+    },
+    {
+     "id": "siddhartha-2-05",
+     "ch": 2,
+     "p": 29,
+     "expr": "on one's way",
+     "pos": "구",
+     "ko": "길을 나선, (어디로) 가는 중인",
+     "ex": "I'm on my way to the lab now.",
+     "exKo": "지금 연구실로 가는 중이야.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Don't start without me, I'm ___.",
+        "a": [
+         "on my way"
+        ]
+       },
+       {
+        "s": "Many travellers were ___ to the city.",
+        "a": [
+         "on their way"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "I'll call you when I'm ___ my way home.",
+       "opts": [
+        "on",
+        "in",
+        "at"
+       ],
+       "a": "on",
+       "why": "on one's way: 가는 중 / in the way: 방해가 되는 / at은 쓰지 않아요"
+      }
+     },
+     "note": "책에서는 get on their way(길을 나서다), went on their way(가던 길을 갔다)로 나와요. 문자로는 'On my way!'가 아주 흔해요."
+    },
+    {
+     "id": "siddhartha-2-06",
+     "ch": 2,
+     "p": 42,
+     "expr": "be content with (something)",
+     "pos": "동사구",
+     "ko": "~에 만족하다",
+     "ex": "I'm not content with a B; I want to retake the exam.",
+     "exKo": "B로는 만족 못 해. 시험 다시 보고 싶어.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "She was ___ a small apartment near campus.",
+        "a": [
+         "content with"
+        ]
+       },
+       {
+        "s": "Don't be ___ the first draft.",
+        "a": [
+         "content with"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He was content ___ a simple life.",
+       "opts": [
+        "with",
+        "to",
+        "for"
+       ],
+       "a": "with",
+       "why": "be content with + 명사 / be content to + 동사원형 (~하는 것으로 만족하다)"
+      }
+     },
+     "note": "content(만족한)는 형용사일 때 뒤에 강세(컨텐트)예요. 명사 content(내용, 콘텐츠)는 앞에 강세예요."
+    },
+    {
+     "id": "siddhartha-3-01",
+     "ch": 3,
+     "p": 10,
+     "expr": "in no way",
+     "pos": "부사구",
+     "ko": "결코 ~ 아닌, 조금도 ~ 않는",
+     "ex": "This mistake in no way reflects your ability.",
+     "exKo": "이 실수가 네 능력을 보여주는 건 결코 아니야.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The new rule is ___ meant to punish anyone.",
+        "a": [
+         "in no way"
+        ]
+       },
+       {
+        "s": "I am ___ responsible for what happened.",
+        "a": [
+         "in no way"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "This ___ no way changes our plan.",
+       "opts": [
+        "in",
+        "on",
+        "by"
+       ],
+       "a": "in",
+       "why": "in no way: 결코 ~ 아닌 / by no means도 같은 뜻이에요"
+      }
+     },
+     "note": "not보다 훨씬 강하게 부정해요. 문장 맨 앞에 오면 In no way did he… 처럼 도치돼요."
+    },
+    {
+     "id": "siddhartha-3-02",
+     "ch": 3,
+     "p": 25,
+     "expr": "renounce",
+     "pos": "동사",
+     "ko": "(권리·소유·신념 등을) 버리다, 포기하다",
+     "ex": "He renounced his inheritance and started his own business.",
+     "exKo": "그는 상속을 포기하고 자기 사업을 시작했다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "She ___ her old beliefs after the trip.",
+        "a": [
+         "renounced"
+        ]
+       },
+       {
+        "s": "Monks ___ worldly possessions.",
+        "a": [
+         "renounce"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He ___ his citizenship to work abroad.",
+       "opts": [
+        "renounced",
+        "announced",
+        "pronounced"
+       ],
+       "a": "renounced",
+       "why": "renounce: 포기하다 / announce: 발표하다 / pronounce: 발음하다"
+      }
+     },
+     "note": "give up보다 공식적이고 단호한 느낌이에요. 권리·직위·국적·신념을 공개적으로 버릴 때 써요."
+    },
+    {
+     "id": "siddhartha-3-03",
+     "ch": 3,
+     "p": 29,
+     "expr": "summon one's courage",
+     "pos": "동사구",
+     "ko": "용기를 내다, 용기를 끌어모으다",
+     "ex": "I finally summoned my courage and asked the professor for a reference letter.",
+     "exKo": "마침내 용기를 내서 교수님께 추천서를 부탁드렸다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "She ___ and raised her hand.",
+        "a": [
+         "summoned her courage",
+         "summoned up her courage"
+        ]
+       },
+       {
+        "s": "It took me a week to ___ to call him.",
+        "a": [
+         "summon my courage",
+         "summon up my courage",
+         "summon the courage"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He ___ his courage and spoke to the Buddha.",
+       "opts": [
+        "summoned",
+        "called",
+        "collected"
+       ],
+       "a": "summoned",
+       "why": "summon one's courage: 용기를 내다 / summon은 '불러 모으다'라서 용기·힘과 어울려요"
+      }
+     },
+     "note": "summon up the courage to + 동사원형 형태로도 자주 써요."
+    },
+    {
+     "id": "siddhartha-3-04",
+     "ch": 3,
+     "p": 40,
+     "expr": "unwavering",
+     "pos": "형용사",
+     "ko": "흔들림 없는, 확고한",
+     "ex": "Thank you for your unwavering support this year.",
+     "exKo": "올해 변함없이 지지해 주셔서 감사합니다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "She showed ___ commitment to the project.",
+        "a": [
+         "unwavering"
+        ]
+       },
+       {
+        "s": "His ___ focus impressed the interviewers.",
+        "a": [
+         "unwavering"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He looked at me with an ___ gaze.",
+       "opts": [
+        "unwavering",
+        "unwilling",
+        "unaware"
+       ],
+       "a": "unwavering",
+       "why": "unwavering: 흔들림 없는 / unwilling: 내키지 않는 / unaware: 모르는"
+      }
+     },
+     "note": "waver(흔들리다, 망설이다)의 반대예요. 감사 메일에서 unwavering support로 자주 쓰여요."
+    }
+   ]
   }
  ]
 }
