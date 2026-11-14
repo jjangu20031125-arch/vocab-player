@@ -60,12 +60,13 @@ function pattern(expr) {
   const out = [];
   String(expr).replace(/\(([^)]*)\)/g, ' * ').split(/[\s\-]+/).forEach((tok) => {
     if (tok === '*') { if (out.length && out[out.length - 1] !== '*') out.push('*'); return; }
+    if (/^(one|someone)['’]s$/i.test(tok)) { out.push('POSS'); return; }
     const n = norm(tok);
     if (!n) return;
     if (POSS.has(n)) out.push('POSS');
     else out.push(stem(n));
   });
-  while (out.length && (out[0] === '*' || ARTICLES.has(out[0]))) out.shift();
+  while (out.length && (out[0] === '*' || ARTICLES.has(out[0]) || out[0] === 'be')) out.shift();
   while (out.length && out[out.length - 1] === '*') out.pop();
   return out;
 }
@@ -110,6 +111,8 @@ function mergeState(a, b) {
   const tm = {};
   for (const t of [...(a.topics || []), ...(b.topics || [])]) if (t && t.id && (!tm[t.id] || (t.at || 0) > (tm[t.id].at || 0))) tm[t.id] = t;
   out.topics = Object.values(tm).sort((x, y) => (x.created || 0) - (y.created || 0));
+  out.books = { ...(a.books || {}) };
+  for (const [k, v] of Object.entries(b.books || {})) if (!out.books[k] || (v.at || 0) > (out.books[k].at || 0)) out.books[k] = v;
   out.fsrs = { ...(a.fsrs || {}) };
   for (const [k, v] of Object.entries(b.fsrs || {})) if (!out.fsrs[k] || (v.at || 0) > (out.fsrs[k].at || 0)) out.fsrs[k] = v;
   const da = a.daily || {}, db = b.daily || {};
@@ -163,35 +166,58 @@ function setStatus(id, s) {
 function note(t) { const n = $('#note'); if (!t) { n.hidden = true; return; } n.textContent = t; n.hidden = false; }
 
 /* ---------------- data ---------------- */
-const vocab = () => S.videos.flatMap((v) => (v.words || []).map((w) => ({ ...w, v })));
+function bookSources() {
+  const out = [];
+  (S.books || []).forEach((b) => (b.chapters || []).forEach((c) => {
+    const words = (b.words || []).filter((w) => w.ch === c.n).map((w) => ({ ...w, t: w.p }));
+    if (words.length) out.push({ vid: `book:${b.id}:${c.n}`, title: `${b.title} · ${c.n}장`, kind: 'book', book: b.id, ch: c.n, words, batchOrder: -1, order: c.n });
+  }));
+  return out;
+}
+const allSources = () => [...S.videos, ...bookSources()];
+const vocab = () => allSources().flatMap((v) => (v.words || []).map((w) => ({ ...w, v })));
 const savedList = () => Object.entries(S.prog.saved).filter(([, x]) => x && !x.del).map(([k, x]) => ({ key: k, ...x }));
 function reviewSet() {
   const seen = {}, rev = {};
-  [...S.videos].sort((a, b) => (a.batchOrder || 0) - (b.batchOrder || 0) || (a.order || 0) - (b.order || 0))
+  allSources().sort((a, b) => (a.batchOrder || 0) - (b.batchOrder || 0) || (a.order || 0) - (b.order || 0))
     .forEach((v) => (v.words || []).forEach((w) => { const k = pattern(w.expr).join(' '); if (seen[k]) rev[w.id] = true; else seen[k] = 1; }));
   return rev;
 }
 const homeOrder = (a, b) => (b.batchOrder || 0) - (a.batchOrder || 0) || (a.order || 0) - (b.order || 0);
-function ytAt(vid, t) { return '#/v/' + encodeURIComponent(vid) + (t ? '?t=' + Math.floor(t) : ''); }
+function ytAt(vid, t) {
+  if (String(vid).startsWith('book:')) { const [, b, ch] = String(vid).split(':'); return `#/book/${encodeURIComponent(b)}?ch=${ch}${t != null ? '&p=' + t : ''}`; }
+  return '#/v/' + encodeURIComponent(vid) + (t ? '?t=' + Math.floor(t) : '');
+}
+function srcA(vid, t, prefix = '') {
+  if (!vid) return '';
+  if (String(vid).startsWith('book:')) return `<a class="ts" href="${ytAt(vid, t)}">책 ${String(vid).split(':')[2]}장</a>`;
+  return `<a class="ts" href="${ytAt(vid, t)}">${ICON_PLAY}${prefix}${fmt(t)}</a>`;
+}
 
 /* ---------------- routing ---------------- */
 function route() {
   const h = location.hash || '#/';
-  const navKey = h.startsWith('#/review') ? 'review' : h.startsWith('#/words') ? 'words' : h.startsWith('#/cards') ? 'cards' : h.startsWith('#/quiz') ? 'quiz' : 'home';
+  const navKey = h.startsWith('#/review') ? 'review' : h.startsWith('#/book') ? 'books' : h.startsWith('#/words') ? 'words' : h.startsWith('#/cards') || h.startsWith('#/quiz') ? 'practice' : 'home';
   document.querySelectorAll('#nav a').forEach((a) => a.classList.toggle('on', a.dataset.nav === navKey && !h.startsWith('#/v/')));
   closeSheet();
   const m = h.match(/^#\/v\/([\w-]{11})(?:\?t=(\d+))?/);
-  if (m) return openWatch(m[1], m[2] ? +m[2] : 0);
+  if (m) { leaveReader(); return openWatch(m[1], m[2] ? +m[2] : 0); }
   leaveWatch();
+  const bm = h.match(/^#\/book\/([\w-]+)(?:\?(.*))?/);
+  if (bm) { const q = new URLSearchParams(bm[2] || ''); return openBook(bm[1], q.get('ch'), q.get('p')); }
+  leaveReader();
+  if (navKey === 'books') return renderLibrary();
   if (navKey === 'review') { S.rv = null; return renderReview(); }
   if (navKey === 'words') return renderWords();
-  if (navKey === 'cards') { S.fc.deck = null; return renderCards(); }
-  if (navKey === 'quiz') { S.quiz.qs = null; return renderQuiz(); }
+  if (h.startsWith('#/cards')) { S.fc.deck = null; return renderCards(); }
+  if (h.startsWith('#/quiz')) { S.quiz.qs = null; return renderQuiz(); }
   renderHome();
 }
 function refresh() {
   const h = location.hash || '#/';
   if (h.startsWith('#/review')) return;
+  if (h.startsWith('#/book/')) { rdRepaintWords(); return; }
+  if (h.startsWith('#/books')) return renderLibrary();
   if (h.startsWith('#/v/')) { renderSubs(); renderVWords(); return; }
   if (h.startsWith('#/words')) return renderWords();
   if (h.startsWith('#/cards')) return renderCards();
@@ -681,7 +707,7 @@ async function fillMeaning(key, word, L, k) {
   if (upd.ko !== cur.ko || upd.def !== cur.def) { upd.at = Date.now(); S.prog.saved[key] = upd; saveProg(); refreshKeepSheet(); updateBadge(); }
   else if (!cur.ko) refreshKeepSheet(); // still missing: the popup and word list ask for it
 }
-function refreshKeepSheet() { const h = location.hash || ''; if (h.startsWith('#/v/')) { renderSubs(); renderVWords(); } else refresh(); }
+function refreshKeepSheet() { const h = location.hash || ''; if (h.startsWith('#/v/')) { renderSubs(); renderVWords(); } else if (h.startsWith('#/book/')) { rdRepaintWords(); } else refresh(); }
 function koInputHTML(key, extra = '') {
   return `<div class="koedit"><input id="koIn-${esc(key)}" placeholder="한국어 뜻을 직접 적어 주세요" maxlength="80"><button class="btn sm primary" data-act="ko-save" data-key="${esc(key)}" ${extra}>뜻 저장</button></div><div class="err" id="koErr-${esc(key)}"></div>`;
 }
@@ -696,10 +722,13 @@ async function define(word, sentence) {
 }
 function closeSheet() { const s = $('#sheet'); s.hidden = true; s.innerHTML = ''; document.querySelectorAll('.w.sel').forEach((x) => x.classList.remove('sel')); }
 async function openWordSheet(li, k, span) {
-  const w = S.w; if (!w || !w.lines[li]) return;
+  const inBook = !!(span && span.closest('#reader'));
+  const lines = inBook ? (S.rd && S.rd.sents) : (S.w && S.w.lines);
+  if (!lines || !lines[li]) return;
   document.querySelectorAll('.w.sel').forEach((x) => x.classList.remove('sel'));
   if (span) span.classList.add('sel');
-  const L = w.lines[li], tok = L.words[k];
+  const L = lines[li], tok = L.words[k];
+  S.sheetCtx = inBook ? { L, k, vid: `book:${S.rd.book.id}:${S.rd.ch}`, t: L.p, book: true } : { L, k, vid: S.w.vid, t: Math.floor(L.t / 1000) };
   const raw = tok.w.replace(/^[^A-Za-z0-9']+|[^A-Za-z0-9']+$/g, '');
   const vocabId = span && span.dataset.vid;
   const entry = vocabId ? vocab().find((x) => x.id === vocabId) : null;
@@ -719,9 +748,10 @@ async function openWordSheet(li, k, span) {
     <div class="row">
       <button class="btn sm ${saved ? 'on' : ''}" data-act="save-word" data-key="${esc(key)}" data-word="${esc(raw)}" data-l="${li}" data-k="${k}">${saved ? '저장됨 · 취소' : '모르는 단어로 저장'}</button>
       <a class="btn sm" href="${naver}" target="_blank" rel="noopener">네이버 사전</a>
-      <a class="btn sm" href="${papago}" target="_blank" rel="noopener">문장 번역</a>
-      <button class="btn sm" data-act="seek" data-i="${li}">이 문장 듣기</button>
-    </div>`;
+      <button class="btn sm" data-act="sheet-kr">문장 번역</button>
+      ${inBook ? `<button class="btn sm" data-act="say-line">이 문장 듣기</button>` : `<button class="btn sm" data-act="seek" data-i="${li}">이 문장 듣기</button>`}
+    </div>
+    <div id="sheetKr"></div>`;
   sheet.hidden = false;
   const seq = ++S.sheetSeq;
   delete sheet.dataset.ko; delete sheet.dataset.def;
@@ -772,7 +802,7 @@ function wordRow(w, rev, inWatch) {
       <div>${esc(w.ko)}</div>
       ${w.ex ? `<div class="ex">${esc(w.ex)}</div><div class="exko">${esc(w.exKo || '')}</div>` : ''}
       ${w.note ? `<div class="wnote">${esc(w.note)}</div>` : ''}${dueLabel(w.id)}</div>
-    <div class="acts">${inWatch ? `<button class="ts" data-act="seek-t" data-t="${w.t}">${ICON_PLAY}${fmt(w.t)}</button>` : `<a class="ts" href="${ytAt(w.v.vid, w.t)}">${ICON_PLAY}${fmt(w.t)}</a>`}
+    <div class="acts">${inWatch ? `<button class="ts" data-act="seek-t" data-t="${w.t}">${ICON_PLAY}${fmt(w.t)}</button>` : srcA(w.v.vid, w.t)}
       <button class="btn sm ${s === 'known' ? 'on' : ''}" data-act="known" data-id="${esc(w.id)}">${s === 'known' ? '앎 취소' : '이미 앎'}</button></div></div>`;
 }
 function prefillKo() { if (S.editKey) { const x = S.prog.saved[S.editKey], i = document.getElementById('koIn-' + S.editKey); if (x && i && !i.value) i.value = x.ko || ''; } }
@@ -780,12 +810,12 @@ function renderWords() {
   const rev = reviewSet();
   let html = statsHTML();
   html += `<div class="chips"><button class="btn ${S.hideDone ? 'on' : ''}" data-act="hide-done">외운 표현 숨기기</button></div>`;
-  const vs = [...S.videos].sort((a, b) => (b.batchOrder || 0) - (a.batchOrder || 0) || (a.order || 0) - (b.order || 0));
+  const vs = allSources().sort((a, b) => (b.batchOrder || 0) - (a.batchOrder || 0) || (a.order || 0) - (b.order || 0));
   vs.forEach((v) => {
     let ws = (v.words || []).map((w) => ({ ...w, v }));
     if (S.hideDone) ws = ws.filter((w) => !st(w.id));
     if (!ws.length) return;
-    html += `<div class="vsec"><h3><a href="${ytAt(v.vid)}">${esc(v.title)}</a><span class="pill ${v.kind === 'short' ? 'p-short' : 'p-long'}">${v.kind === 'short' ? '쇼츠' : '영상'}</span></h3>${ws.map((w) => wordRow(w, rev, false)).join('')}</div>`;
+    html += `<div class="vsec"><h3><a href="${ytAt(v.vid)}">${esc(v.title)}</a><span class="pill ${v.kind === 'short' ? 'p-short' : v.kind === 'book' ? 'p-cc' : 'p-long'}">${v.kind === 'short' ? '쇼츠' : v.kind === 'book' ? '책' : '영상'}</span></h3>${ws.map((w) => wordRow(w, rev, false)).join('')}</div>`;
   });
   let sv = savedList().sort((a, b) => (b.at || 0) - (a.at || 0));
   if (S.hideDone) sv = sv.filter((x) => x.s !== 'learned');
@@ -793,13 +823,14 @@ function renderWords() {
   html += sv.length ? `<div class="vsec">${sv.map((x) => `<div class="word">
       <button class="chk ${x.s === 'learned' ? 'on' : ''}" data-act="saved-learn" data-key="${esc(x.key)}" aria-label="외웠음 표시">${x.s === 'learned' ? ICON_CHECK : ''}</button>
       <div><span class="expr">${esc(x.word)}</span> ${spk(x.word)}${S.editKey === x.key || !x.ko ? `${!x.ko ? '<div><span class="pill p-review">뜻 입력 필요</span></div>' : ''}${koInputHTML(x.key)}${S.editKey === x.key ? '<button class="btn sm" data-act="ko-cancel" style="margin-top:4px">취소</button>' : ''}` : `<div><button class="kolink" data-act="ko-edit" data-key="${esc(x.key)}" title="뜻 고치기">${esc(x.ko)} <span class="small">✎</span></button></div>`}${x.def ? `<div class="small" style="font-size:13px;color:var(--ink2)">${esc(x.def)}</div>` : ''}${x.ctx ? `<div class="ex">${esc(x.ctx)}</div>` : ''}</div>
-      <div class="acts">${x.vid ? `<a class="ts" href="${ytAt(x.vid, x.t)}">${ICON_PLAY}${fmt(x.t)}</a>` : ''}<button class="btn sm" data-act="saved-del" data-key="${esc(x.key)}">삭제</button></div></div>`).join('')}</div>`
+      <div class="acts">${srcA(x.vid, x.t)}<button class="btn sm" data-act="saved-del" data-key="${esc(x.key)}">삭제</button></div></div>`).join('')}</div>`
     : '<p class="small">영상 자막에서 단어를 눌러 "모르는 단어로 저장"하면 여기에 모여요.</p>';
   $('#view').innerHTML = html;
   prefillKo();
 }
 
 /* ---------------- flashcards ---------------- */
+const practiceTabs = (on) => `<div class="ptabs"><a href="#/cards" class="${on === 'cards' ? 'on' : ''}">플래시카드</a><a href="#/quiz" class="${on === 'quiz' ? 'on' : ''}">퀴즈</a></div>`;
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function buildDeck() {
   const ws = vocab().filter((w) => !st(w.id)).map((w) => ({ kind: 'v', id: w.id, front: w.expr, ko: w.ko, ex: w.ex, exKo: w.exKo, from: w.v.title, vid: w.v.vid, t: w.t }));
@@ -810,12 +841,12 @@ function buildDeck() {
 function renderCards() {
   if (!S.fc.deck) buildDeck();
   const d = S.fc.deck, c = d[S.fc.i];
-  const scope = `<div class="chips" style="justify-content:center">${[['all', '전체'], ['vocab', '단어장 표현'], ['saved', '저장한 단어']].map(([k, l]) => `<button class="btn sm ${S.fc.scope === k ? 'on' : ''}" data-act="fc-scope" data-k="${k}">${l}</button>`).join('')}</div>`;
+  const scope = `${practiceTabs('cards')}<div class="chips" style="justify-content:center">${[['all', '전체'], ['vocab', '단어장 표현'], ['saved', '저장한 단어']].map(([k, l]) => `<button class="btn sm ${S.fc.scope === k ? 'on' : ''}" data-act="fc-scope" data-k="${k}">${l}</button>`).join('')}</div>`;
   if (!c) { $('#view').innerHTML = `<div class="center">${scope}<p class="empty">${d.length ? '한 바퀴 다 돌았어요.' : '남은 카드가 없어요.'}</p><div class="btns"><button class="btn primary" data-act="fc-restart">다시 섞기</button></div></div>`; return; }
   $('#view').innerHTML = `<div class="center">${scope}<div class="counter">${S.fc.i + 1} / ${d.length} · 연습용 (복습 일정은 '복습' 탭에서 관리돼요)</div>
     <div class="fc" data-act="fc-flip"><div class="big">${esc(c.front)} ${spk(c.front)}</div><div class="from">${esc(c.from)}</div>
       ${S.fc.flip ? `<div class="ko">${esc(c.ko)}</div>${c.ex ? `<div class="ex" style="margin-top:10px">${esc(c.ex)}</div><div class="exko">${esc(c.exKo || '')}</div>` : ''}` : '<div class="hint">눌러서 뜻 보기</div>'}</div>
-    <div class="btns">${c.vid ? `<a class="ts" href="${ytAt(c.vid, c.t)}">${ICON_PLAY}장면 ${fmt(c.t)}</a>` : ''}<button class="btn" data-act="fc-again">다음에 다시</button><button class="btn primary" data-act="fc-learn">외웠음</button></div></div>`;
+    <div class="btns">${srcA(c.vid, c.t, '장면 ')}<button class="btn" data-act="fc-again">다음에 다시</button><button class="btn primary" data-act="fc-learn">외웠음</button></div></div>`;
 }
 
 /* ---------------- quiz ---------------- */
@@ -842,7 +873,7 @@ function renderQuiz() {
   const it = quizItems();
   const counts = { all: it.all.length, vocab: it.v.length, saved: it.sv.length };
   S.quiz.scope = S.quiz.scope || 'all';
-  const scope = `<div class="chips" style="justify-content:center">${[['all', '전체'], ['vocab', '기본 표현'], ['saved', '저장한 단어']].map(([k, l]) => `<button class="btn sm ${S.quiz.scope === k ? 'on' : ''}" data-act="q-scope" data-k="${k}">${l} ${counts[k]}</button>`).join('')}</div>`;
+  const scope = `${practiceTabs('quiz')}<div class="chips" style="justify-content:center">${[['all', '전체'], ['vocab', '기본 표현'], ['saved', '저장한 단어']].map(([k, l]) => `<button class="btn sm ${S.quiz.scope === k ? 'on' : ''}" data-act="q-scope" data-k="${k}">${l} ${counts[k]}</button>`).join('')}</div>`;
   const noKo = savedList().filter((x) => !x.ko).length;
   const noKoNote = noKo ? `<p class="small" style="text-align:center">뜻이 비어 있는 저장 단어 ${noKo}개는 빠져 있어요. <a href="#/words">단어장에서 뜻 채우기</a></p>` : '';
   if (it.all.length < 4 || !counts[S.quiz.scope]) { $('#view').innerHTML = `<div class="center">${scope}<p class="empty">${it.all.length < 4 ? '퀴즈는 뜻이 있는 단어가 4개 이상일 때 열려요.' : '이 범위에는 아직 퀴즈로 낼 단어가 없어요.'}</p>${noKoNote}</div>`; return; }
@@ -854,7 +885,7 @@ function renderQuiz() {
     <div class="small">${q.dir === 'en2ko' ? '이 표현의 뜻은?' : '이 뜻에 맞는 표현은?'}</div>
     <div class="q">${esc(q.dir === 'en2ko' ? q.w.expr : q.w.ko)}</div>
     ${q.opts.map((o, k) => { let c = ''; if (Q.ans !== null) { if (o.id === q.w.id) c = 'right'; else if (k === Q.ans) c = 'wrong'; } return `<button class="opt ${c}" data-act="q-ans" data-k="${k}" ${Q.ans !== null ? 'disabled' : ''}>${label(o)}</button>`; }).join('')}
-    ${Q.ans !== null ? `<div class="fb">${esc(q.w.expr)} ${spk(q.w.expr)} — ${esc(q.w.ko)}<br><span class="ex">${esc(q.w.ex || '')}</span></div><div class="btns" style="justify-content:flex-start"><a class="ts" href="${ytAt(q.w.vid, q.w.t)}">${ICON_PLAY}장면 ${fmt(q.w.t)}</a><button class="btn primary" data-act="q-next">다음</button></div>` : ''}
+    ${Q.ans !== null ? `<div class="fb">${esc(q.w.expr)} ${spk(q.w.expr)} — ${esc(q.w.ko)}<br><span class="ex">${esc(q.w.ex || '')}</span></div><div class="btns" style="justify-content:flex-start">${srcA(q.w.vid, q.w.t, '장면 ')}<button class="btn primary" data-act="q-next">다음</button></div>` : ''}
   </div></div>`;
 }
 
@@ -877,7 +908,7 @@ $('#gatePass').addEventListener('input', () => { $('#gateErr').textContent = '';
 /* ---------------- events ---------------- */
 document.addEventListener('click', (e) => {
   const word = e.target.closest('.w');
-  if (word && S.w) { openWordSheet(+word.dataset.l, +word.dataset.k, word); return; }
+  if (word && (S.w || word.closest('#reader'))) { openWordSheet(+word.dataset.l, +word.dataset.k, word); return; }
   const kindBtn = e.target.closest('[data-kind]');
   if (kindBtn) { S.kind = kindBtn.dataset.kind; renderHome(); return; }
   const b = e.target.closest('[data-act]');
@@ -907,13 +938,25 @@ document.addEventListener('click', (e) => {
     case 'sheet-learn': setStatus(id, st(id) === 'learned' ? null : 'learned'); closeSheet(); refresh(); break;
     case 'sheet-known': setStatus(id, 'known'); closeSheet(); refresh(); break;
     case 'sheet-close': closeSheet(); break;
+    case 'say-line': if (S.sheetCtx) speak(lineText(S.sheetCtx.L)); break;
+    case 'sheet-kr': {
+      const C = S.sheetCtx; if (!C) break;
+      const box = $('#sheetKr'); const text = lineText(C.L); const seq = S.sheetSeq;
+      box.innerHTML = '<div class="kr">번역 중…</div>';
+      translateKo(text).then((res) => {
+        if (seq !== S.sheetSeq || !$('#sheetKr')) return;
+        $('#sheetKr').innerHTML = res && res.ko ? `<div class="kr">${esc(res.ko)}</div>`
+          : `<div class="kr">${res && res.none ? '문장 번역 키가 설정되지 않았어요.' : '번역을 가져오지 못했어요.'} <a href="${papagoURL(text)}" target="_blank" rel="noopener">파파고에서 보기</a></div>`;
+      });
+      break;
+    }
     case 'save-word': {
       const key = b.dataset.key; if (!key) break;
       const cur = S.prog.saved[key];
       if (cur && !cur.del) { S.prog.saved[key] = { ...cur, del: true, at: Date.now() }; saveProg(); closeSheet(); refresh(); break; }
-      const L = w && w.lines[+b.dataset.l];
+      const C = S.sheetCtx || {}, L = C.L;
       const sh = $('#sheet');
-      S.prog.saved[key] = { word: b.dataset.word, ko: sh.dataset.ko || (cur && cur.ko) || '', def: sh.dataset.def || (cur && cur.def) || '', ctx: L ? L.words.map((x) => x.w).join(' ').slice(0, 140) : '', vid: w ? w.vid : null, t: L ? Math.floor(L.t / 1000) : 0, at: Date.now(), del: false, s: null };
+      S.prog.saved[key] = { word: b.dataset.word, ko: sh.dataset.ko || (cur && cur.ko) || '', def: sh.dataset.def || (cur && cur.def) || '', ctx: L ? L.words.map((x) => x.w).join(' ').slice(0, 140) : '', vid: C.vid || null, t: C.t || 0, at: Date.now(), del: false, s: null };
       saveProg();
       b.textContent = '저장됨 · 취소'; b.classList.add('on');
       if (L) fillMeaning(key, b.dataset.word, L, +b.dataset.k);
@@ -927,8 +970,8 @@ document.addEventListener('click', (e) => {
       const cur = S.prog.saved[key];
       if (cur && !cur.del) S.prog.saved[key] = { ...cur, ko: val.slice(0, 80), at: Date.now() };
       else if (b.dataset.word) { // typed in the popup before saving: save the word with it
-        const L = w && w.lines[+b.dataset.l];
-        S.prog.saved[key] = { word: b.dataset.word, ko: val.slice(0, 80), def: $('#sheet').dataset.def || '', ctx: L ? L.words.map((x) => x.w).join(' ').slice(0, 140) : '', vid: w ? w.vid : null, t: L ? Math.floor(L.t / 1000) : 0, at: Date.now(), del: false, s: null };
+        const C = S.sheetCtx || {}, L = C.L;
+        S.prog.saved[key] = { word: b.dataset.word, ko: val.slice(0, 80), def: $('#sheet').dataset.def || '', ctx: L ? L.words.map((x) => x.w).join(' ').slice(0, 140) : '', vid: C.vid || null, t: C.t || 0, at: Date.now(), del: false, s: null };
       }
       S.editKey = null; saveProg();
       if (!$('#sheet').hidden) closeSheet();
@@ -987,6 +1030,7 @@ window.addEventListener('hashchange', route);
     const j = await r.json();
     S.videos = Array.isArray(j.videos) ? j.videos : [];
   } catch (e) { S.videos = []; note('영상 목록을 불러오지 못했어요.'); }
+  try { const r = await fetch('data/books.json', { cache: 'no-cache' }); S.books = (await r.json()).books || []; } catch (e) { S.books = []; }
   await pull(); // shows the passcode screen itself when the server asks for one
   route();
   updateBadge();
@@ -1020,7 +1064,7 @@ function dueLabel(id) {
 }
 function reviewItems() {
   const items = [];
-  [...S.videos].sort((a, b) => (a.batchOrder || 0) - (b.batchOrder || 0) || (a.order || 0) - (b.order || 0)).forEach((v) => (v.words || []).forEach((w) => {
+  allSources().sort((a, b) => (a.batchOrder || 0) - (b.batchOrder || 0) || (a.order || 0) - (b.order || 0)).forEach((v) => (v.words || []).forEach((w) => {
     if (st(w.id) !== 'known') items.push({ id: w.id, kind: 'v', w: { ...w, v } });
   }));
   savedList().forEach((x) => { if (x.ko && x.s !== 'known') items.push({ id: 's:' + x.key, kind: 's', x }); });
@@ -1147,7 +1191,7 @@ function renderReview() {
       ${q.why ? `<div class="wnote">${esc(q.why)}</div>` : ''}
       ${w && w.ex && q.type !== 'mcq' ? `<div class="ex">${esc(w.ex)}</div>` : ''}
       <div class="small" style="margin-top:6px">다음 복습: ${esc(R.nextIn || '')}</div></div>
-      <div class="btns" style="justify-content:flex-start">${w ? `<a class="ts" href="${ytAt(w.v.vid, w.t)}">${ICON_PLAY}장면 ${fmt(w.t)}</a>` : ''}<button class="btn primary" data-act="rv-next">다음</button></div>`;
+      <div class="btns" style="justify-content:flex-start">${w ? srcA(w.v.vid, w.t, '장면 ') : ''}<button class="btn primary" data-act="rv-next">다음</button></div>`;
   }
   $('#view').innerHTML = `<div class="center">${head}<div class="qcard">${body}${input}${fb}</div></div>`;
   const inp = $('#rvIn'); if (inp && !answered) inp.focus({ preventScroll: true });
@@ -1189,3 +1233,286 @@ document.addEventListener('keydown', (e) => {
   else if (e.target.id === 'rvIn') { e.preventDefault(); const b = document.querySelector('[data-act="rv-check"]'); if (b) b.click(); }
 });
 document.addEventListener('input', (e) => { if (e.target.id === 'rvIn') { const er = $('#rvErr'); if (er) er.textContent = ''; } });
+
+/* ================= books: library, paginated reader, read-aloud, EPUB import ================= */
+// Imported EPUBs stay on this device only (IndexedDB); they are never uploaded.
+const IDB = {
+  db: null,
+  open() {
+    if (this.db) return Promise.resolve(this.db);
+    return new Promise((res, rej) => {
+      const r = indexedDB.open('vocab-player', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('books', { keyPath: 'id' });
+      r.onsuccess = () => { this.db = r.result; res(this.db); };
+      r.onerror = () => rej(r.error);
+    });
+  },
+  async tx(mode, fn) { const db = await this.open(); return new Promise((res, rej) => { const t = db.transaction('books', mode); const st = t.objectStore('books'); const out = fn(st); t.oncomplete = () => res(out && out.result !== undefined ? out.result : out); t.onerror = () => rej(t.error); }); },
+  all() { return this.tx('readonly', (st) => st.getAll()); },
+  get(id) { return this.tx('readonly', (st) => st.get(id)); },
+  put(b) { return this.tx('readwrite', (st) => st.put(b)); },
+  del(id) { return this.tx('readwrite', (st) => st.delete(id)); },
+};
+const builtIn = (id) => (S.books || []).find((b) => b.id === id);
+const userBookMeta = {}; // id -> {title, author, chapters:[{title}]}
+async function loadUserBooks() {
+  try { const all = await IDB.all(); all.forEach((b) => { userBookMeta[b.id] = { id: b.id, title: b.title, author: b.author, chapters: b.chapters.map((c, i) => ({ n: i + 1, title: c.title })), user: true }; }); return all.map((b) => userBookMeta[b.id]); }
+  catch (e) { return []; }
+}
+async function renderLibrary() {
+  const users = await loadUserBooks();
+  if (!(location.hash || '').startsWith('#/books')) return;
+  const pos = S.prog.books || {};
+  const card = (b, extra) => {
+    const at = pos[b.id], n = (b.chapters || []).length;
+    return `<div class="bk"><a class="bk-main" href="#/book/${esc(b.id)}${at ? `?ch=${at.ch}&p=${at.p}` : ''}">
+      <div class="bk-cover">${esc((b.title || '?').split(' ').map((w) => w[0]).slice(0, 2).join(''))}</div>
+      <div><div class="bk-t">${esc(b.title)}</div><div class="small">${esc(b.author || '')}${b.year ? ' · ' + b.year : ''}</div>
+      <div class="small" style="margin-top:4px">${at ? `${at.ch}장 읽는 중` : '처음부터'} · 전체 ${n}장${b.words ? ` · 장별 표현 ${b.words.length}개` : ''}</div></div></a>${extra || ''}</div>`;
+  };
+  $('#view').innerHTML = `
+    <div class="h2" style="margin-top:4px">기본 책</div>
+    ${(S.books || []).map((b) => card(b, `<div class="small bk-src">${esc(b.source || '')}</div>`)).join('') || '<p class="small">없음</p>'}
+    <div class="h2">내가 불러온 책 <span class="small">이 기기에만 저장돼요</span></div>
+    ${users.map((b) => card(b, `<button class="btn sm" data-act="bk-del" data-id="${esc(b.id)}">이 기기에서 삭제</button>`)).join('') || '<p class="small">아직 없어요.</p>'}
+    <div class="panel" style="margin-top:12px">
+      <label class="btn primary" style="cursor:pointer">EPUB 불러오기<input type="file" id="epubIn" accept=".epub,application/epub+zip" hidden></label>
+      <div class="err" id="epubErr"></div>
+      <p class="small" style="margin:8px 0 0">DRM이 없는 EPUB만 열 수 있어요 (리디북스·교보·킨들 구매본은 안 돼요). 파일은 서버로 올라가지 않고 이 기기 브라우저에만 저장돼서, 휴대폰과 PC에서 각각 한 번씩 불러와야 해요. 읽던 위치와 저장한 단어는 기기끼리 공유돼요.</p>
+    </div>`;
+}
+
+/* reader state */
+const RD_PAD = 26, RD_GAP = 2 * RD_PAD;
+function splitSentences(text) {
+  const out = [];
+  const re = /[^.!?…]+(?:[.!?…]+["'”’)\]]*|$)\s*/g;
+  let m, buf = '';
+  while ((m = re.exec(text)) && m[0]) {
+    buf += m[0];
+    const tail = buf.trim().split(' ').pop() || '';
+    if (/^(Mr|Mrs|Ms|Dr|St|Jr|Sr|vs|etc|Mt|No)\.$/i.test(tail) || buf.trim().length < 2) continue;
+    out.push(buf.trim()); buf = '';
+  }
+  if (buf.trim()) out.push(buf.trim());
+  return out.length ? out : [text];
+}
+async function chapterText(book, n) {
+  if (book.user) { const b = await IDB.get(book.id); return b ? b.chapters[n - 1] : null; }
+  const r = await fetch(`data/books/${book.id}/${n}.json`); return r.ok ? r.json() : null;
+}
+function leaveReader() { rdStopReading(); if (S.rd) { window.removeEventListener('resize', rdResize); S.rd = null; } }
+async function openBook(id, ch, p) {
+  let book = builtIn(id) || userBookMeta[id];
+  if (!book) { await loadUserBooks(); book = userBookMeta[id]; }
+  if (!book) { $('#view').innerHTML = '<p class="empty">이 책을 찾을 수 없어요. 다른 기기에서 불러온 책이면 이 기기에서도 EPUB을 불러와 주세요.</p>'; return; }
+  const saved = (S.prog.books || {})[id];
+  ch = Math.min(Math.max(1, +ch || (saved ? saved.ch : 1)), book.chapters.length);
+  p = p != null ? +p : (saved && saved.ch === ch ? saved.p : 0);
+  if (S.rd && S.rd.book.id === id && S.rd.ch === ch) { rdGotoPara(p); return; }
+  rdStopReading();
+  const data = await chapterText(book, ch);
+  if (!data) { $('#view').innerHTML = '<p class="empty">본문을 불러오지 못했어요.</p>'; return; }
+  const sents = [];
+  data.paras.forEach((para, pi) => splitSentences(para).forEach((sx) => sents.push({ p: pi, words: sx.split(/\s+/).filter(Boolean).map((w) => ({ w, n: norm(w), s: stem(w) })) })));
+  S.rd = { book, ch, data, sents, page: 0, pages: 1, fs: LS.get('vp-fs', 19), reading: false, readI: -1, rate: LS.get('vp-rate', 1) };
+  const chWords = (book.words || []).filter((w) => w.ch === ch);
+  $('#view').innerHTML = `<div class="rd">
+    <div class="rd-top"><a href="#/books" class="btn sm">← 서재</a>
+      <select id="rdCh" aria-label="장 선택">${book.chapters.map((c) => `<option value="${c.n}" ${c.n === ch ? 'selected' : ''}>${esc(c.title || c.n + '장')}</option>`).join('')}</select>
+      ${chWords.length ? `<button class="btn sm" data-act="rd-words">이 장 표현 ${chWords.length}</button>` : ''}
+    </div>
+    <div class="rd-view" id="rdView"><div class="rd-flow" id="reader"></div>
+      <button class="rd-tap rd-l" data-act="rd-prev" aria-label="이전 쪽"></button><button class="rd-tap rd-r" data-act="rd-next" aria-label="다음 쪽"></button></div>
+    <div class="rd-bar">
+      <button class="btn sm" data-act="rd-prev" aria-label="이전 쪽">◀</button><span id="rdPage" class="small"></span><button class="btn sm" data-act="rd-next" aria-label="다음 쪽">▶</button>
+      <button class="btn sm" data-act="rd-read" id="rdReadBtn">${ICON_SPK} 읽어주기</button>
+      <select id="rdRate" aria-label="읽기 속도">${[0.8, 1, 1.2].map((r) => `<option value="${r}" ${r === S.rd.rate ? 'selected' : ''}>${r}x</option>`).join('')}</select>
+      <button class="btn sm" data-act="rd-font" data-d="-1" aria-label="글자 작게">가-</button><button class="btn sm" data-act="rd-font" data-d="1" aria-label="글자 크게">가+</button>
+    </div></div>`;
+  rdRender();
+  window.removeEventListener('resize', rdResize);
+  window.addEventListener('resize', rdResize);
+  if (document.fonts && document.fonts.ready) await document.fonts.ready; // page breaks depend on the font
+  if (!S.rd || S.rd.ch !== ch) return;
+  rdLayout();
+  rdGotoPara(p);
+}
+function rdRender() {
+  const R = S.rd, el = $('#reader'); if (!R || !el) return;
+  let html = '', cur = -1;
+  R.sents.forEach((L, i) => {
+    if (L.p !== cur) { if (cur >= 0) html += '</p>'; html += `<p data-p="${L.p}">`; cur = L.p; }
+    html += `<span class="s ${i === R.readI ? 'reading' : ''}" data-si="${i}">${lineHTML(L, i)}</span> `;
+  });
+  if (cur >= 0) html += '</p>';
+  html += `<p class="rd-end small">— ${esc(R.book.chapters[R.ch - 1].title || R.ch + '장')} 끝 —</p>`;
+  el.innerHTML = html;
+  rdLayout();
+}
+function rdRepaintWords() { if (!S.rd) return; const p = rdCurrentPara(); rdRender(); rdGotoPara(p); }
+function rdLayout() {
+  const R = S.rd, view = $('#rdView'), flow = $('#reader'); if (!R || !view || !flow) return;
+  const top = view.getBoundingClientRect().top, bar = document.querySelector('.rd-bar');
+  const h = Math.max(260, window.innerHeight - top - (bar ? bar.offsetHeight : 50) - 14);
+  view.style.height = h + 'px';
+  const W = view.clientWidth - 2 * RD_PAD;
+  R.W = W;
+  flow.style.cssText = `position:absolute;top:0;left:${RD_PAD}px;height:${h}px;width:${W}px;column-width:${W}px;column-gap:${RD_GAP}px;column-fill:auto;font-size:${R.fs}px`;
+  R.pages = Math.max(1, Math.round((flow.scrollWidth + RD_GAP) / (W + RD_GAP)));
+  rdShow();
+}
+function rdResize() { if (!S.rd) return; const p = rdCurrentPara(); rdLayout(); rdGotoPara(p); }
+function rdShow() {
+  const R = S.rd, flow = $('#reader'); if (!R || !flow) return;
+  R.page = Math.max(0, Math.min(R.page, R.pages - 1));
+  const view = $('#rdView'); if (view) view.scrollLeft = 0;
+  flow.style.transform = `translateX(${-R.page * (R.W + RD_GAP)}px)`;
+  const pg = $('#rdPage'); if (pg) pg.textContent = `${R.page + 1} / ${R.pages}쪽 · ${R.ch}/${R.book.chapters.length}장`;
+}
+function rdPageOf(el) {
+  const R = S.rd, flow = $('#reader'); if (!el || !flow) return 0;
+  const x = el.getBoundingClientRect().left - flow.getBoundingClientRect().left;
+  return Math.max(0, Math.floor((x + 2) / (R.W + RD_GAP)));
+}
+function rdCurrentPara() {
+  const R = S.rd; if (!R) return 0;
+  const ps = [...document.querySelectorAll('#reader p[data-p]')];
+  const hit = ps.find((p) => rdPageOf(p) >= R.page) || ps[ps.length - 1];
+  return hit ? +hit.dataset.p : 0;
+}
+function rdGotoPara(p) {
+  const R = S.rd; if (!R) return;
+  const el = document.querySelector(`#reader p[data-p="${p}"]`);
+  R.page = el ? rdPageOf(el) : (p > 0 ? R.pages - 1 : 0);
+  rdShow(); rdSavePos();
+}
+let rdPosTimer = null;
+function rdSavePos() {
+  clearTimeout(rdPosTimer);
+  rdPosTimer = setTimeout(() => { const R = S.rd; if (!R) return; S.prog.books = S.prog.books || {}; S.prog.books[R.book.id] = { ch: R.ch, p: rdCurrentPara(), at: Date.now() }; saveProg(); }, 600);
+}
+function rdTurn(d) {
+  const R = S.rd; if (!R) return;
+  closeSheet();
+  if (R.page + d >= R.pages) { if (R.ch < R.book.chapters.length) location.hash = `#/book/${R.book.id}?ch=${R.ch + 1}&p=0`; return; }
+  if (R.page + d < 0) { if (R.ch > 1) location.hash = `#/book/${R.book.id}?ch=${R.ch - 1}&p=99999`; return; }
+  R.page += d; rdShow(); rdSavePos();
+}
+
+/* read aloud: one sentence at a time, the current sentence highlighted, pages follow along */
+function rdStopReading() {
+  const R = S.rd; if (R) { R.reading = false; R.readI = -1; }
+  try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
+  document.querySelectorAll('#reader .s.reading').forEach((x) => x.classList.remove('reading'));
+  const b = $('#rdReadBtn'); if (b) { b.innerHTML = `${ICON_SPK} 읽어주기`; b.classList.remove('on'); }
+}
+function rdFirstSentOnPage() {
+  const ss = [...document.querySelectorAll('#reader .s')];
+  const hit = ss.find((x) => rdPageOf(x) >= S.rd.page);
+  return hit ? +hit.dataset.si : 0;
+}
+function rdSpeakFrom(i) {
+  const R = S.rd; if (!R || !R.reading) return;
+  if (i >= R.sents.length) { rdStopReading(); if (R.ch < R.book.chapters.length) note('이 장을 다 읽었어요. ▶ 버튼으로 다음 장으로 넘어가세요.'); return; }
+  document.querySelectorAll('#reader .s.reading').forEach((x) => x.classList.remove('reading'));
+  const el = document.querySelector(`#reader .s[data-si="${i}"]`);
+  if (el) { el.classList.add('reading'); const pg = rdPageOf(el); if (pg !== R.page) { R.page = pg; rdShow(); rdSavePos(); } }
+  R.readI = i;
+  const u = new SpeechSynthesisUtterance(lineText(R.sents[i]).replace(/[“”]/g, '"'));
+  u.lang = 'en-US'; u.rate = R.rate;
+  const vs = speechSynthesis.getVoices();
+  const pick = vs.find((v) => /en[-_]US/i.test(v.lang) && /Samantha|Google US|Aria|Jenny|Natural|Ava/i.test(v.name)) || vs.find((v) => /en[-_]US/i.test(v.lang));
+  if (pick) u.voice = pick;
+  u.onend = () => { if (S.rd === R && R.reading && R.readI === i) rdSpeakFrom(i + 1); };
+  u.onerror = () => { if (S.rd === R && R.reading && R.readI === i) rdSpeakFrom(i + 1); };
+  speechSynthesis.speak(u);
+}
+function rdToggleRead() {
+  const R = S.rd; if (!R) return;
+  if (!('speechSynthesis' in window)) { note('이 브라우저는 소리 내어 읽기를 지원하지 않아요.'); return; }
+  if (R.reading) { rdStopReading(); return; }
+  speechSynthesis.cancel();
+  R.reading = true;
+  const b = $('#rdReadBtn'); if (b) { b.textContent = '■ 멈춤'; b.classList.add('on'); }
+  rdSpeakFrom(rdFirstSentOnPage());
+}
+
+/* EPUB import (DRM-free only) */
+let jszipP = null;
+function loadJSZip() {
+  if (window.JSZip) return Promise.resolve(window.JSZip);
+  if (!jszipP) jszipP = new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'vendor/jszip.min.js'; s.onload = () => res(window.JSZip); s.onerror = rej; document.head.appendChild(s); });
+  return jszipP;
+}
+async function importEpub(file) {
+  const JSZip = await loadJSZip();
+  const zip = await JSZip.loadAsync(file);
+  const enc = zip.file('META-INF/encryption.xml');
+  if (enc) {
+    const x = await enc.async('string');
+    const algos = [...x.matchAll(/Algorithm="([^"]+)"/g)].map((m) => m[1]);
+    if (algos.some((a) => !/embedding|font|obfuscat/i.test(a))) throw new Error('drm');
+  }
+  const container = await zip.file('META-INF/container.xml').async('string');
+  const opfPath = (container.match(/full-path="([^"]+)"/) || [])[1];
+  if (!opfPath) throw new Error('bad');
+  const base = opfPath.includes('/') ? opfPath.slice(0, opfPath.lastIndexOf('/') + 1) : '';
+  const opf = new DOMParser().parseFromString(await zip.file(opfPath).async('string'), 'application/xml');
+  const title = (opf.getElementsByTagName('dc:title')[0] || {}).textContent || file.name.replace(/\.epub$/i, '');
+  const author = (opf.getElementsByTagName('dc:creator')[0] || {}).textContent || '';
+  const manifest = {};
+  [...opf.getElementsByTagName('item')].forEach((it) => { manifest[it.getAttribute('id')] = it.getAttribute('href'); });
+  const spine = [...opf.getElementsByTagName('itemref')].map((r) => manifest[r.getAttribute('idref')]).filter(Boolean);
+  const chapters = [];
+  for (const href of spine) {
+    const path = decodeURIComponent(base + href.split('#')[0]);
+    const f = zip.file(path); if (!f) continue;
+    const doc = new DOMParser().parseFromString(await f.async('string'), 'text/html');
+    const heads = doc.querySelector('h1,h2,h3');
+    const paras = [...doc.querySelectorAll('p,li,blockquote')].map((el) => el.textContent.replace(/\s+/g, ' ').trim()).filter((t) => t.length > 1);
+    const words = paras.join(' ').split(' ').length;
+    if (words < 60) continue; // cover, title page, table of contents
+    chapters.push({ title: (heads && heads.textContent.trim().slice(0, 60)) || `Part ${chapters.length + 1}`, paras });
+  }
+  if (!chapters.length) throw new Error('empty');
+  const id = 'u-' + Math.abs([...(title + author + file.size)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7)).toString(36);
+  await IDB.put({ id, title: title.trim(), author: author.trim(), chapters, added: Date.now() });
+  return id;
+}
+document.addEventListener('change', async (e) => {
+  if (e.target.id === 'rdCh' && S.rd) { location.hash = `#/book/${S.rd.book.id}?ch=${e.target.value}&p=0`; return; }
+  if (e.target.id === 'rdRate' && S.rd) { S.rd.rate = +e.target.value; LS.set('vp-rate', S.rd.rate); return; }
+  if (e.target.id !== 'epubIn' || !e.target.files[0]) return;
+  const err = $('#epubErr'); err.textContent = '불러오는 중…';
+  try { const id = await importEpub(e.target.files[0]); err.textContent = ''; location.hash = `#/book/${id}`; }
+  catch (x) { err.textContent = x.message === 'drm' ? 'DRM(복제 방지)이 걸린 책이라 열 수 없어요.' : x.message === 'empty' ? '본문을 찾지 못했어요. 다른 EPUB 파일로 시도해 주세요.' : 'EPUB 파일을 읽지 못했어요.'; }
+});
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-act^="rd-"],[data-act="bk-del"]'); if (!b) return;
+  const a = b.dataset.act;
+  if (a === 'rd-next') rdTurn(1);
+  if (a === 'rd-prev') rdTurn(-1);
+  if (a === 'rd-read') rdToggleRead();
+  if (a === 'rd-font' && S.rd) { const p = rdCurrentPara(); S.rd.fs = Math.max(14, Math.min(28, S.rd.fs + 2 * +b.dataset.d)); LS.set('vp-fs', S.rd.fs); rdLayout(); rdGotoPara(p); }
+  if (a === 'rd-words' && S.rd) {
+    const ws = (S.rd.book.words || []).filter((w) => w.ch === S.rd.ch).map((w) => ({ ...w, t: w.p, v: { vid: `book:${S.rd.book.id}:${S.rd.ch}` } }));
+    const sh = $('#sheet');
+    sh.innerHTML = `<button class="x close" data-act="sheet-close" aria-label="닫기">✕</button><div class="sw" style="font-size:20px">${S.rd.ch}장 핵심 표현</div><div class="vsec" style="border:none;padding:0">${ws.map((w) => wordRow(w, {}, false)).join('')}</div>`;
+    sh.hidden = false;
+  }
+  if (a === 'bk-del') { await IDB.del(b.dataset.id); delete userBookMeta[b.dataset.id]; renderLibrary(); }
+});
+// swipe to turn pages; arrow keys too
+let rdSw = null;
+document.addEventListener('touchstart', (e) => { const v = e.target.closest('#rdView'); rdSw = v && e.touches.length === 1 ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null; }, { passive: true });
+document.addEventListener('touchend', (e) => {
+  if (!rdSw || !S.rd) return;
+  const t = e.changedTouches[0], dx = t.clientX - rdSw.x, dy = t.clientY - rdSw.y; rdSw = null;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) rdTurn(dx < 0 ? 1 : -1);
+}, { passive: true });
+document.addEventListener('keydown', (e) => {
+  if (!S.rd || /input|textarea|select/i.test(e.target.tagName)) return;
+  if (e.key === 'ArrowRight' || e.key === 'PageDown') { rdTurn(1); e.preventDefault(); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { rdTurn(-1); e.preventDefault(); }
+});

@@ -1,0 +1,607 @@
+{
+ "books": [
+  {
+   "id": "gatsby",
+   "title": "The Great Gatsby",
+   "author": "F. Scott Fitzgerald",
+   "year": 1925,
+   "source": "Standard Ebooks (미국 퍼블릭 도메인, CC0 편집본)",
+   "chapters": [
+    {
+     "n": 1,
+     "title": "Chapter 1"
+    },
+    {
+     "n": 2,
+     "title": "Chapter 2"
+    },
+    {
+     "n": 3,
+     "title": "Chapter 3"
+    },
+    {
+     "n": 4,
+     "title": "Chapter 4"
+    },
+    {
+     "n": 5,
+     "title": "Chapter 5"
+    },
+    {
+     "n": 6,
+     "title": "Chapter 6"
+    },
+    {
+     "n": 7,
+     "title": "Chapter 7"
+    },
+    {
+     "n": 8,
+     "title": "Chapter 8"
+    },
+    {
+     "n": 9,
+     "title": "Chapter 9"
+    }
+   ],
+   "words": [
+    {
+     "id": "gatsby-1-01",
+     "ch": 1,
+     "p": 0,
+     "expr": "turn (something) over in one's mind",
+     "pos": "동사구",
+     "ko": "(어떤 일을) 곰곰이 되새기다",
+     "ex": "I've been turning his offer over in my mind all week.",
+     "exKo": "그의 제안을 일주일 내내 곰곰이 되새기고 있다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I couldn't sleep; I kept ___.",
+        "a": [
+         "turning it over in my mind"
+        ]
+       },
+       {
+        "s": "She ___ for days before she finally said yes.",
+        "a": [
+         "turned it over in her mind",
+         "turned the offer over in her mind"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He ___ the idea over in his mind before making a decision.",
+       "opts": [
+        "turned",
+        "took",
+        "gave"
+       ],
+       "a": "turned",
+       "why": "turn over in one's mind: 곰곰이 되새기다 / take over: 인계받다 / give over: 넘겨주다"
+      }
+     },
+     "note": "소설의 첫 문장에 나와요. think about보다 오래, 여러 번 되짚는 느낌이에요."
+    },
+    {
+     "id": "gatsby-1-02",
+     "ch": 1,
+     "p": 2,
+     "expr": "privy to",
+     "pos": "형용사구",
+     "ko": "(비밀 등을) 알고 있는, 내막에 관여한",
+     "ex": "Only a few managers were privy to the merger plans.",
+     "exKo": "합병 계획을 아는 사람은 관리자 몇 명뿐이었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Only the CEO was ___ the details of the deal.",
+        "a": [
+         "privy to"
+        ]
+       },
+       {
+        "s": "I wasn't ___ their private conversation.",
+        "a": [
+         "privy to"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Only two engineers were ___ to the new design.",
+       "opts": [
+        "privy",
+        "private",
+        "prior"
+       ],
+       "a": "privy",
+       "why": "privy to: 비밀을 알고 있는 / private: 사적인 / prior to: ~보다 앞서"
+      }
+     },
+     "note": "격식 있는 말이라 비즈니스 이메일에서도 자주 보여요."
+    },
+    {
+     "id": "gatsby-1-03",
+     "ch": 1,
+     "p": 2,
+     "expr": "be inclined to (do)",
+     "pos": "동사구",
+     "ko": "~하는 경향이 있다, ~하고 싶은 마음이 들다",
+     "ex": "I'm inclined to agree with you on this one.",
+     "exKo": "이번 건은 네 말에 동의하는 쪽이야.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "After hearing both sides, I'm ___ believe her.",
+        "a": [
+         "inclined to"
+        ]
+       },
+       {
+        "s": "He's ___ overthink small decisions.",
+        "a": [
+         "inclined to"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "I'm ___ to think the project will be delayed.",
+       "opts": [
+        "inclined",
+        "included",
+        "declined"
+       ],
+       "a": "inclined",
+       "why": "be inclined to: ~하는 쪽으로 마음이 기울다 / be included: 포함되다 / decline to: 거절하다"
+      }
+     },
+     "note": "의견을 부드럽게 말할 때 좋아요. I'm inclined to think…는 I think…보다 단정하지 않게 들려요."
+    },
+    {
+     "id": "gatsby-1-04",
+     "ch": 1,
+     "p": 2,
+     "expr": "reserve judgment",
+     "pos": "동사구",
+     "ko": "판단을 보류하다",
+     "ex": "Let's reserve judgment until we see the final results.",
+     "exKo": "최종 결과를 볼 때까지 판단을 보류하자.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I'll ___ until I've heard his side of the story.",
+        "a": [
+         "reserve judgment",
+         "reserve judgement",
+         "reserve my judgment"
+        ]
+       },
+       {
+        "s": "Good managers ___ instead of jumping to conclusions.",
+        "a": [
+         "reserve judgment",
+         "reserve judgement"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Don't ___ to conclusions; let's wait for the data.",
+       "opts": [
+        "jump",
+        "reserve",
+        "hold"
+       ],
+       "a": "jump",
+       "why": "jump to conclusions: 성급히 결론 내리다 / reserve judgment: 판단을 보류하다 / hold off: 미루다"
+      }
+     },
+     "note": "원문은 영국식 철자 judgement예요. 미국식은 judgment."
+    },
+    {
+     "id": "gatsby-1-05",
+     "ch": 1,
+     "p": 18,
+     "expr": "supercilious",
+     "pos": "형용사",
+     "ko": "거만한, 남을 깔보는",
+     "ex": "She gave me a supercilious smile and walked away.",
+     "exKo": "그녀는 나를 깔보는 듯한 미소를 짓고 가 버렸다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "His ___ attitude made everyone at the meeting uncomfortable.",
+        "a": [
+         "supercilious"
+        ]
+       },
+       {
+        "s": "The waiter looked at our shoes with a ___ expression.",
+        "a": [
+         "supercilious"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He wasn't just confident; he was ___, treating everyone as beneath him.",
+       "opts": [
+        "supercilious",
+        "superstitious",
+        "superficial"
+       ],
+       "a": "supercilious",
+       "why": "supercilious: 거만하게 깔보는 / superstitious: 미신을 믿는 / superficial: 피상적인"
+      }
+     },
+     "note": "톰 뷰캐넌을 묘사하는 단어예요."
+    },
+    {
+     "id": "gatsby-2-01",
+     "ch": 2,
+     "p": 0,
+     "expr": "desolate",
+     "pos": "형용사",
+     "ko": "황량한, 쓸쓸한",
+     "ex": "The town felt desolate after the factory closed.",
+     "exKo": "공장이 문을 닫은 뒤 마을은 황량하게 느껴졌다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "We drove through a ___ stretch of desert for hours.",
+        "a": [
+         "desolate"
+        ]
+       },
+       {
+        "s": "After everyone left, the office looked cold and ___.",
+        "a": [
+         "desolate"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The abandoned station looked completely ___.",
+       "opts": [
+        "desolate",
+        "desperate",
+        "dedicated"
+       ],
+       "a": "desolate",
+       "why": "desolate: 황량한, 쓸쓸한 / desperate: 절박한 / dedicated: 헌신적인"
+      }
+     }
+    },
+    {
+     "id": "gatsby-2-02",
+     "ch": 2,
+     "p": 14,
+     "expr": "perceptible",
+     "pos": "형용사",
+     "ko": "감지할 수 있는, 눈에 띄는",
+     "ex": "There was a perceptible change in his tone.",
+     "exKo": "그의 말투에 눈에 띄는 변화가 있었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The difference in sound quality is barely ___.",
+        "a": [
+         "perceptible"
+        ]
+       },
+       {
+        "s": "There was a ___ drop in sales after the price increase.",
+        "a": [
+         "perceptible"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The change was so small that it was barely ___.",
+       "opts": [
+        "perceptible",
+        "perceptive",
+        "permissible"
+       ],
+       "a": "perceptible",
+       "why": "perceptible: (사물이) 감지될 수 있는 / perceptive: (사람이) 눈치 빠른 / permissible: 허용되는"
+      }
+     }
+    },
+    {
+     "id": "gatsby-2-03",
+     "ch": 2,
+     "p": 14,
+     "expr": "vitality",
+     "pos": "명사",
+     "ko": "활력, 생명력",
+     "ex": "Her vitality filled the whole room.",
+     "exKo": "그녀의 활력이 방 전체를 채웠다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Regular exercise gave him a new sense of ___.",
+        "a": [
+         "vitality"
+        ]
+       },
+       {
+        "s": "The city lost its ___ after the main factory closed.",
+        "a": [
+         "vitality"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Despite her age, she was full of ___ and humor.",
+       "opts": [
+        "vitality",
+        "validity",
+        "vanity"
+       ],
+       "a": "vitality",
+       "why": "vitality: 활력 / validity: 타당성, 유효성 / vanity: 허영심"
+      }
+     }
+    },
+    {
+     "id": "gatsby-2-04",
+     "ch": 2,
+     "p": 68,
+     "expr": "raise one's eyebrows",
+     "pos": "동사구",
+     "ko": "(놀람·의심·못마땅함으로) 눈썹을 치켜올리다",
+     "ex": "Her bold proposal raised a few eyebrows in the meeting.",
+     "exKo": "그녀의 대담한 제안에 회의에서 몇몇이 눈썹을 치켜올렸다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "When I said I was quitting, my boss ___.",
+        "a": [
+         "raised his eyebrows",
+         "raised her eyebrows",
+         "raised an eyebrow"
+        ]
+       },
+       {
+        "s": "The CEO's strange comment ___ among investors.",
+        "a": [
+         "raised eyebrows",
+         "raised some eyebrows",
+         "raised a few eyebrows"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "His decision to skip the meeting ___ a few eyebrows.",
+       "opts": [
+        "raised",
+        "rose",
+        "arose"
+       ],
+       "a": "raised",
+       "why": "raise eyebrows: 의아하게 만들다 (타동사 raise) / rise: 스스로 오르다 (목적어 없음) / arise: 생기다"
+      }
+     },
+     "note": "raise a few eyebrows는 '사람들을 의아하게 만들다'라는 뜻으로 비즈니스 기사에 자주 나와요."
+    },
+    {
+     "id": "gatsby-2-05",
+     "ch": 2,
+     "p": 68,
+     "expr": "in despair",
+     "pos": "부사구",
+     "ko": "절망하여, 어찌할 바를 몰라",
+     "ex": "He threw up his hands in despair.",
+     "exKo": "그는 절망해서 두 손을 들었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "She looked at the broken laptop ___.",
+        "a": [
+         "in despair"
+        ]
+       },
+       {
+        "s": "After the third rejection, he sat ___ in his car.",
+        "a": [
+         "in despair"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He shook his head ___ when he saw the test results.",
+       "opts": [
+        "in despair",
+        "in charge",
+        "in advance"
+       ],
+       "a": "in despair",
+       "why": "in despair: 절망하여 / in charge: 책임을 맡은 / in advance: 미리"
+      }
+     }
+    },
+    {
+     "id": "gatsby-3-01",
+     "ch": 3,
+     "p": 8,
+     "expr": "ill at ease",
+     "pos": "형용사구",
+     "ko": "불편한, 마음이 편치 않은",
+     "ex": "I felt ill at ease at the formal dinner.",
+     "exKo": "격식 있는 저녁 자리에서 마음이 편치 않았다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "He seemed ___ among strangers at the party.",
+        "a": [
+         "ill at ease"
+        ]
+       },
+       {
+        "s": "New employees often feel ___ for the first few weeks.",
+        "a": [
+         "ill at ease"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "She felt ___ in the room full of senior executives.",
+       "opts": [
+        "ill at ease",
+        "at ease",
+        "at large"
+       ],
+       "a": "ill at ease",
+       "why": "ill at ease: 불편한 / at ease: 편안한 / at large: (범인이) 잡히지 않은, 전반적인"
+      }
+     }
+    },
+    {
+     "id": "gatsby-3-02",
+     "ch": 3,
+     "p": 75,
+     "expr": "come across",
+     "pos": "동사구",
+     "ko": "(우연히) 마주치다, 발견하다",
+     "ex": "I came across an old photo while cleaning my room.",
+     "exKo": "방을 치우다가 옛날 사진을 우연히 발견했다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I ___ a great article about battery research yesterday.",
+        "a": [
+         "came across"
+        ]
+       },
+       {
+        "s": "If you ___ any typos, please let me know.",
+        "a": [
+         "come across"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "While searching online, I ___ an interesting job posting.",
+       "opts": [
+        "came across",
+        "came up with",
+        "came down with"
+       ],
+       "a": "came across",
+       "why": "come across: 우연히 발견하다 / come up with: (아이디어를) 생각해 내다 / come down with: (병에) 걸리다"
+      }
+     },
+     "note": "come across as(~라는 인상을 주다)도 같이 알아 두면 좋아요."
+    },
+    {
+     "id": "gatsby-3-03",
+     "ch": 3,
+     "p": 75,
+     "expr": "reassurance",
+     "pos": "명사",
+     "ko": "안심시키는 말·태도, 확신",
+     "ex": "The doctor's words gave me some reassurance.",
+     "exKo": "의사의 말이 나를 좀 안심시켰다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "New team members need a little ___ in their first week.",
+        "a": [
+         "reassurance"
+        ]
+       },
+       {
+        "s": "He looked at me for ___ before he started speaking.",
+        "a": [
+         "reassurance"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Before the exam, her mother's ___ calmed her down.",
+       "opts": [
+        "reassurance",
+        "insurance",
+        "assurance"
+       ],
+       "a": "reassurance",
+       "why": "reassurance: 걱정을 덜어 주는 안심 / insurance: 보험 / assurance: 확언, 보증"
+      }
+     }
+    },
+    {
+     "id": "gatsby-3-04",
+     "ch": 3,
+     "p": 159,
+     "expr": "be at a disadvantage",
+     "pos": "동사구",
+     "ko": "불리한 입장에 있다",
+     "ex": "Without a car, you're at a disadvantage in this city.",
+     "exKo": "이 도시에서는 차가 없으면 불리하다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Students without internet access ___ during online classes.",
+        "a": [
+         "are at a disadvantage"
+        ]
+       },
+       {
+        "s": "I felt ___ because I was the only one who didn't speak French.",
+        "a": [
+         "at a disadvantage"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Without the right data, our team will be at a ___.",
+       "opts": [
+        "disadvantage",
+        "discount",
+        "distance"
+       ],
+       "a": "disadvantage",
+       "why": "at a disadvantage: 불리한 / at a discount: 할인된 / at a distance: 멀리서"
+      }
+     }
+    },
+    {
+     "id": "gatsby-3-05",
+     "ch": 3,
+     "p": 167,
+     "expr": "careless",
+     "pos": "형용사",
+     "ko": "부주의한, 무신경한",
+     "ex": "It was careless of me to leave the door unlocked.",
+     "exKo": "문을 잠그지 않은 건 내 부주의였다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "One ___ mistake ruined the whole report.",
+        "a": [
+         "careless"
+        ]
+       },
+       {
+        "s": "He made a ___ remark that hurt her feelings.",
+        "a": [
+         "careless"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Leaving your password on a sticky note is really ___.",
+       "opts": [
+        "careless",
+        "carefree",
+        "caring"
+       ],
+       "a": "careless",
+       "why": "careless: 부주의한 / carefree: 근심 걱정 없는 / caring: 배려심 있는"
+      }
+     },
+     "note": "이 소설의 핵심 단어예요. 마지막 장에서 다시 중요하게 나와요."
+    }
+   ]
+  }
+ ]
+}
