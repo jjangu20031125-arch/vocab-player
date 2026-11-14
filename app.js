@@ -1295,7 +1295,7 @@ const IDB = {
       r.onerror = () => rej(r.error);
     });
   },
-  async tx(mode, fn) { const db = await this.open(); return new Promise((res, rej) => { const t = db.transaction('books', mode); const st = t.objectStore('books'); const out = fn(st); t.oncomplete = () => res(out && out.result !== undefined ? out.result : out); t.onerror = () => rej(t.error); }); },
+  async tx(mode, fn) { const db = await this.open(); return new Promise((res, rej) => { const t = db.transaction('books', mode); const st = t.objectStore('books'); const out = fn(st); t.oncomplete = () => res(out instanceof IDBRequest ? out.result : out); t.onerror = () => rej(t.error); }); },
   all() { return this.tx('readonly', (st) => st.getAll()); },
   get(id) { return this.tx('readonly', (st) => st.get(id)); },
   put(b) { return this.tx('readwrite', (st) => st.put(b)); },
@@ -1303,9 +1303,48 @@ const IDB = {
 };
 const builtIn = (id) => (S.books || []).find((b) => b.id === id);
 const userBookMeta = {}; // id -> {title, author, chapters:[{title}]}
+// Imported books: a full copy on this device (IndexedDB) plus a private copy in the
+// passcode-protected store, so other devices can download it.
 async function loadUserBooks() {
-  try { const all = await IDB.all(); all.forEach((b) => { userBookMeta[b.id] = { id: b.id, title: b.title, author: b.author, cover: b.cover || null, chapters: b.chapters.map((c, i) => ({ n: i + 1, title: c.title, paras: c.paras.length })), user: true }; }); return all.map((b) => userBookMeta[b.id]); }
-  catch (e) { return []; }
+  let local = [];
+  try { local = await IDB.all(); } catch (e) { local = []; }
+  local.forEach((b) => { userBookMeta[b.id] = { id: b.id, title: b.title, author: b.author, cover: b.cover || null, chapters: b.chapters.map((c, i) => ({ n: i + 1, title: c.title, paras: c.paras.length })), user: true, local: true, synced: !!b.synced }; });
+  if (S.server === 'ok') {
+    const r = await api('/api/books');
+    if (r.ok && Array.isArray(r.j.books)) {
+      S.bookStore = true;
+      r.j.books.forEach((m) => {
+        const loc = userBookMeta[m.id];
+        userBookMeta[m.id] = { id: m.id, title: m.title, author: m.author, cover: m.cover || (loc && loc.cover) || null, chapters: m.chapters.map((c, i) => ({ n: i + 1, title: c.title, paras: c.paras })), user: true, local: !!(loc && loc.local), synced: true };
+      });
+      // local books that the server lost track of are not synced
+      Object.values(userBookMeta).forEach((b) => { if (b.local && !r.j.books.some((m) => m.id === b.id)) b.synced = false; });
+    } else S.bookStore = false;
+  }
+  return Object.values(userBookMeta);
+}
+async function uploadBook(id, onProgress) {
+  const b = await IDB.get(id); if (!b) throw new Error('missing');
+  for (let i = 0; i < b.chapters.length; i++) {
+    const r = await api('/api/books', { method: 'PUT', body: JSON.stringify({ id, n: i + 1, chapter: b.chapters[i] }) });
+    if (!r.ok) throw new Error(r.status === 413 ? 'too_large' : 'upload');
+    if (onProgress) onProgress(i + 1, b.chapters.length);
+  }
+  const meta = { id, title: b.title, author: b.author, cover: b.cover || null, chapters: b.chapters.map((c) => ({ title: c.title, paras: c.paras.length })), added: b.added };
+  const r = await api('/api/books', { method: 'PUT', body: JSON.stringify({ meta }) });
+  if (!r.ok) throw new Error('upload');
+  await IDB.put({ ...b, synced: true });
+}
+async function downloadBook(meta, onProgress) {
+  const chapters = [];
+  for (let n = 1; n <= meta.chapters.length; n++) {
+    const r = await api(`/api/books?id=${encodeURIComponent(meta.id)}&ch=${n}`);
+    if (!r.ok || !r.j.chapter) throw new Error('download');
+    chapters.push(r.j.chapter);
+    if (onProgress) onProgress(n, meta.chapters.length);
+  }
+  await IDB.put({ id: meta.id, title: meta.title, author: meta.author, cover: meta.cover || null, chapters, added: Date.now(), synced: true });
+  userBookMeta[meta.id] = { ...userBookMeta[meta.id], local: true, synced: true };
 }
 // cover: the book's own cover image when there is one, otherwise a typeset cover with title and author
 function coverHTML(b) {
@@ -1330,12 +1369,14 @@ async function renderLibrary() {
   $('#view').innerHTML = `
     <div class="h2" style="margin-top:4px">기본 책</div>
     ${(S.books || []).map((b) => card(b, `<div class="small bk-src">${esc(b.source || '')}${b.coverCredit ? '<br>' + esc(b.coverCredit) : ''}</div>`)).join('') || '<p class="small">없음</p>'}
-    <div class="h2">내가 불러온 책 <span class="small">이 기기에만 저장돼요</span></div>
-    ${users.map((b) => card(b, `<button class="btn sm" data-act="bk-del" data-id="${esc(b.id)}">이 기기에서 삭제</button>`)).join('') || '<p class="small">아직 없어요.</p>'}
+    <div class="h2">내가 불러온 책 <span class="small">${S.bookStore ? '비밀번호로 잠긴 저장소에 보관돼 모든 기기에서 보여요' : '이 기기에만 저장돼요'}</span></div>
+    ${users.map((b) => card(b, `<div class="bk-acts"><span class="small">${b.synced ? (b.local ? '모든 기기 · 이 기기에 받음' : '모든 기기 · 열면 이 기기로 받아요') : '이 기기에만 있음'}</span>
+      ${!b.synced && S.bookStore ? `<button class="btn sm" data-act="bk-up" data-id="${esc(b.id)}">모든 기기에 올리기</button>` : ''}
+      <button class="btn sm" data-act="bk-del" data-id="${esc(b.id)}" data-step="0">삭제</button></div>`)).join('') || '<p class="small">아직 없어요.</p>'}
     <div class="panel" style="margin-top:12px">
       <label class="btn primary" style="cursor:pointer">EPUB 불러오기<input type="file" id="epubIn" accept=".epub,application/epub+zip" hidden></label>
       <div class="err" id="epubErr"></div>
-      <p class="small" style="margin:8px 0 0">DRM이 없는 EPUB만 열 수 있어요 (리디북스·교보·킨들 구매본은 안 돼요). 파일은 서버로 올라가지 않고 이 기기 브라우저에만 저장돼서, 휴대폰과 PC에서 각각 한 번씩 불러와야 해요. 읽던 위치와 저장한 단어는 기기끼리 공유돼요.</p>
+      <p class="small" style="margin:8px 0 0">DRM이 없는 EPUB만 열 수 있어요 (리디북스·교보·킨들 구매본은 안 돼요). 불러온 책은 공개 사이트가 아니라 사이트 비밀번호로 잠긴 개인 저장소에 올라가서, 다른 기기에서는 처음 열 때 한 번 받아 와요. 비밀번호를 아는 사람만 볼 수 있으니 비밀번호는 공유하지 마세요.</p>
     </div>`;
 }
 
@@ -1355,14 +1396,21 @@ function splitSentences(text) {
   return out.length ? out : [text];
 }
 async function chapterText(book, n) {
-  if (book.user) { const b = await IDB.get(book.id); return b ? b.chapters[n - 1] : null; }
+  if (book.user) {
+    let b = await IDB.get(book.id).catch(() => null);
+    if (!b && book.synced) { // first time on this device: fetch the private copy once
+      const v = $('#view'); if (v) v.innerHTML = '<p class="empty" id="dlMsg">이 기기로 책을 받는 중…</p>';
+      try { await downloadBook(book, (i, n2) => { const m = $('#dlMsg'); if (m) m.textContent = `이 기기로 책을 받는 중… ${i}/${n2}장`; }); b = await IDB.get(book.id); } catch (e) { return null; }
+    }
+    return b ? b.chapters[n - 1] : null;
+  }
   const r = await fetch(`data/books/${book.id}/${n}.json`); return r.ok ? r.json() : null;
 }
 function leaveReader() { rdStopReading(); rdHideKr(); document.documentElement.classList.remove('reading'); if (S.rd) { window.removeEventListener('resize', rdResize); if (window.visualViewport) visualViewport.removeEventListener('resize', rdResize); S.rd = null; } }
 async function openBook(id, ch, p) {
   let book = builtIn(id) || userBookMeta[id];
   if (!book) { await loadUserBooks(); book = userBookMeta[id]; }
-  if (!book) { $('#view').innerHTML = '<p class="empty">이 책을 찾을 수 없어요. 다른 기기에서 불러온 책이면 이 기기에서도 EPUB을 불러와 주세요.</p>'; return; }
+  if (!book) { $('#view').innerHTML = '<p class="empty">이 책을 찾을 수 없어요. 삭제됐거나, 불러온 기기에서 아직 "모든 기기에 올리기"를 하지 않은 책일 수 있어요.</p>'; return; }
   const saved = (S.prog.books || {})[id];
   ch = Math.min(Math.max(1, +ch || (saved ? saved.ch : 1)), book.chapters.length);
   p = p != null ? +p : (saved && saved.ch === ch ? saved.p : 0);
@@ -1591,11 +1639,18 @@ document.addEventListener('change', async (e) => {
   if (e.target.id === 'rdRate' && S.rd) { S.rd.rate = +e.target.value; LS.set('vp-rate', S.rd.rate); return; }
   if (e.target.id !== 'epubIn' || !e.target.files[0]) return;
   const err = $('#epubErr'); err.textContent = '불러오는 중…';
-  try { const id = await importEpub(e.target.files[0]); err.textContent = ''; location.hash = `#/book/${id}`; }
+  try {
+    const id = await importEpub(e.target.files[0]);
+    if (S.server === 'ok') {
+      try { await uploadBook(id, (i, n) => { err.textContent = `모든 기기에서 보이게 올리는 중… ${i}/${n}장`; }); }
+      catch (x) { note(x.message === 'too_large' ? '책의 한 장이 너무 커서 다른 기기용으로 올리지 못했어요. 이 기기에서는 읽을 수 있어요.' : '다른 기기용으로 올리지 못했어요. 서재에서 "모든 기기에 올리기"로 다시 시도해 주세요.'); }
+    }
+    err.textContent = ''; location.hash = `#/book/${id}`;
+  }
   catch (x) { err.textContent = x.message === 'drm' ? 'DRM(복제 방지)이 걸린 책이라 열 수 없어요.' : x.message === 'empty' ? '본문을 찾지 못했어요. 다른 EPUB 파일로 시도해 주세요.' : 'EPUB 파일을 읽지 못했어요.'; }
 });
 document.addEventListener('click', async (e) => {
-  const b = e.target.closest('[data-act^="rd-"],[data-act="bk-del"]'); if (!b) return;
+  const b = e.target.closest('[data-act^="rd-"],[data-act^="bk-"]'); if (!b) return;
   const a = b.dataset.act;
   if (a === 'rd-next') rdTurn(1);
   if (a === 'rd-prev') rdTurn(-1);
@@ -1609,7 +1664,18 @@ document.addEventListener('click', async (e) => {
     sh.innerHTML = `<button class="x close" data-act="sheet-close" aria-label="닫기">✕</button><div class="sw" style="font-size:20px">${S.rd.ch}장 핵심 표현</div><div class="vsec" style="border:none;padding:0">${ws.map((w) => wordRow(w, {}, false)).join('')}</div>`;
     sh.hidden = false;
   }
-  if (a === 'bk-del') { await IDB.del(b.dataset.id); delete userBookMeta[b.dataset.id]; renderLibrary(); }
+  if (a === 'bk-del') {
+    if (b.dataset.step === '0') { b.dataset.step = '1'; b.textContent = '한 번 더 누르면 모든 기기에서 삭제'; b.classList.add('on'); return; }
+    const id = b.dataset.id;
+    try { await IDB.del(id); } catch (x) {}
+    if (S.bookStore) await api('/api/books?id=' + encodeURIComponent(id), { method: 'DELETE' });
+    delete userBookMeta[id]; renderLibrary();
+  }
+  if (a === 'bk-up') {
+    b.disabled = true; b.textContent = '올리는 중…';
+    try { await uploadBook(b.dataset.id, (i, n) => { b.textContent = `올리는 중… ${i}/${n}`; }); renderLibrary(); }
+    catch (x) { b.disabled = false; b.textContent = '다시 시도'; note('올리지 못했어요. 잠시 후 다시 시도해 주세요.'); }
+  }
 });
 // swipe a sentence sideways for its Korean; swipe up/down (or tap the edges) to turn pages
 let rdSw = null;

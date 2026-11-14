@@ -11,6 +11,7 @@ YouTube 영상을 보면서 영어 자막의 단어를 눌러 뜻을 보고, 단
 - `vendor/jszip.min.js` — EPUB 읽기용 JSZip (MIT)
 - `vendor/ts-fsrs.min.mjs` — FSRS 간격 반복 라이브러리 (ts-fsrs, MIT) 번들
 - `data/dict/` — 단어를 눌렀을 때 보여주는 영→한 공개 사전 (cc-kedict·kengdic 기반, 라이선스는 `data/dict/LICENSE.md`)
+- `api/books.js` — 불러온 EPUB 보관 (비밀번호 필요)
 - `api/translate.js` — 밀어서 보는 자막 문장 한국어 번역 (PC 크롬은 기기 내장 번역을 먼저 시도)
 - `api/define.js` — 단어의 한국어 뜻 (Claude 또는 DeepL)
 - `api/progress.js` — 외웠음/이미 앎/저장한 단어/다음 주제를 Upstash Redis에 저장해 기기 간 동기화
@@ -37,7 +38,7 @@ Upstash를 연결하지 않으면 진도는 각 기기 브라우저에만 저장
 
 ## 책
 
-'책' 탭: 기본 책(The Great Gatsby, Standard Ebooks의 미국 퍼블릭 도메인 본문)과 사용자가 불러온 DRM 없는 EPUB을 페이지 넘김으로 읽는다. 단어 탭 → 뜻·발음·저장, 문장 번역, 단어장 표현 색 표시, 소리 내어 읽기(브라우저 음성, 문장 강조·자동 페이지 넘김), 읽던 위치 동기화. 불러온 EPUB은 기기 브라우저(IndexedDB)에만 저장되고 서버로 올라가지 않는다.
+'책' 탭: 기본 책(The Great Gatsby, Standard Ebooks의 미국 퍼블릭 도메인 본문)과 사용자가 불러온 DRM 없는 EPUB을 페이지 넘김으로 읽는다. 단어 탭 → 뜻·발음·저장, 문장 번역, 단어장 표현 색 표시, 소리 내어 읽기(브라우저 음성, 문장 강조·자동 페이지 넘김), 읽던 위치 동기화. 불러온 EPUB은 기기 브라우저(IndexedDB)에 저장되고, 같은 비밀번호로 잠긴 Upstash 저장소에도 장별로 올라간다(`api/books.js`: 목록 키 `vocab-player:books`, 본문 키 `vocab-player:book:<id>:<장>`). 다른 기기는 서재에서 목록을 보고, 처음 열 때 본문을 받아 IndexedDB에 저장한다. 삭제는 두 번 눌러 확인하며 모든 기기에서 지워진다. 예전에 불러와 한 기기에만 있는 책은 서재의 '모든 기기에 올리기'로 올린다.
 
 ## 읽은 위치와 학습 달력
 

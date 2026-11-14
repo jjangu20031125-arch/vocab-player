@@ -273,3 +273,4 @@ html.reading .view{padding-bottom:0}
 .wr-diff del{color:var(--accent);text-decoration:line-through}
 .wr-diff ins{color:var(--green);text-decoration:none;background:var(--green-bg);border-radius:3px;padding:0 2px}
 .wr-notes{margin:8px 0 0;padding-left:18px;font-size:14px;color:var(--ink2)}
+.bk-acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap;width:100%;justify-content:flex-end}
