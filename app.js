@@ -666,6 +666,25 @@ async function dictKo(words, k) {
   return single || phrase ? { single, phrase } : null;
 }
 const koCache = {};
+// Fill a saved word's meanings in the background, so saving before the lookup finishes never leaves them empty.
+async function fillMeaning(key, word, L, k) {
+  const has = () => S.prog.saved[key] && !S.prog.saved[key].del;
+  let ko = '', def = '';
+  if (L && Number.isInteger(k)) { const dk = await dictKo(L.words, k); if (dk) ko = (dk.single || dk.phrase).ko.slice(0, 2).join(', '); }
+  if (!ko) { const kr = await define(word, L ? lineText(L) : word); if (kr && kr.ko) ko = kr.ko; }
+  const d = await lookup(word); if (d && d.defs.length) def = d.defs[0].def;
+  if (!has()) return;
+  const cur = S.prog.saved[key];
+  const upd = { ...cur };
+  if (!cur.ko && ko) upd.ko = ko;
+  if (!cur.def && def) upd.def = def;
+  if (upd.ko !== cur.ko || upd.def !== cur.def) { upd.at = Date.now(); S.prog.saved[key] = upd; saveProg(); refreshKeepSheet(); updateBadge(); }
+  else if (!cur.ko) refreshKeepSheet(); // still missing: the popup and word list ask for it
+}
+function refreshKeepSheet() { const h = location.hash || ''; if (h.startsWith('#/v/')) { renderSubs(); renderVWords(); } else refresh(); }
+function koInputHTML(key, extra = '') {
+  return `<div class="koedit"><input id="koIn-${esc(key)}" placeholder="한국어 뜻을 직접 적어 주세요" maxlength="80"><button class="btn sm primary" data-act="ko-save" data-key="${esc(key)}" ${extra}>뜻 저장</button></div><div class="err" id="koErr-${esc(key)}"></div>`;
+}
 async function define(word, sentence) {
   if (S.translator === 'none') return { none: true };
   const key = norm(word) + '|' + sentence;
@@ -698,7 +717,7 @@ async function openWordSheet(li, k, span) {
     ${entry ? '' : '<div id="ko" class="def">한국어 뜻을 찾는 중…</div>'}
     <div id="dict" class="def small">영어 사전을 찾는 중…</div>
     <div class="row">
-      <button class="btn sm ${saved ? 'on' : ''}" data-act="save-word" data-key="${esc(key)}" data-word="${esc(raw)}" data-l="${li}">${saved ? '저장됨 · 취소' : '모르는 단어로 저장'}</button>
+      <button class="btn sm ${saved ? 'on' : ''}" data-act="save-word" data-key="${esc(key)}" data-word="${esc(raw)}" data-l="${li}" data-k="${k}">${saved ? '저장됨 · 취소' : '모르는 단어로 저장'}</button>
       <a class="btn sm" href="${naver}" target="_blank" rel="noopener">네이버 사전</a>
       <a class="btn sm" href="${papago}" target="_blank" rel="noopener">문장 번역</a>
       <button class="btn sm" data-act="seek" data-i="${li}">이 문장 듣기</button>
@@ -723,7 +742,7 @@ async function openWordSheet(li, k, span) {
       kb.innerHTML = `${kr.pos ? `<b>${esc(kr.pos)}</b>` : ''}<span style="font-size:17px">${esc(kr.ko)}</span>${kr.other ? `<div class="small" style="margin-top:2px">다른 뜻: ${esc(kr.other)}</div>` : ''}`;
       sheet.dataset.ko = kr.ko;
     } else {
-      kb.innerHTML = '<span class="small">공개 사전에 없는 단어예요. 아래 영어 뜻이나 네이버 사전 버튼으로 확인해 보세요.</span>';
+      kb.innerHTML = `<span class="small">공개 사전에 없는 단어예요. 네이버 사전에서 확인하고 뜻을 적어 두면 단어장·퀴즈·복습에 쓰여요.</span>${koInputHTML(key, `data-word="${esc(raw)}" data-l="${li}"`)}`;
     }
   })();
   const d = await lookup(raw);
@@ -756,6 +775,7 @@ function wordRow(w, rev, inWatch) {
     <div class="acts">${inWatch ? `<button class="ts" data-act="seek-t" data-t="${w.t}">${ICON_PLAY}${fmt(w.t)}</button>` : `<a class="ts" href="${ytAt(w.v.vid, w.t)}">${ICON_PLAY}${fmt(w.t)}</a>`}
       <button class="btn sm ${s === 'known' ? 'on' : ''}" data-act="known" data-id="${esc(w.id)}">${s === 'known' ? '앎 취소' : '이미 앎'}</button></div></div>`;
 }
+function prefillKo() { if (S.editKey) { const x = S.prog.saved[S.editKey], i = document.getElementById('koIn-' + S.editKey); if (x && i && !i.value) i.value = x.ko || ''; } }
 function renderWords() {
   const rev = reviewSet();
   let html = statsHTML();
@@ -772,10 +792,11 @@ function renderWords() {
   html += `<div class="h2">자막에서 저장한 단어 ${sv.length}</div>`;
   html += sv.length ? `<div class="vsec">${sv.map((x) => `<div class="word">
       <button class="chk ${x.s === 'learned' ? 'on' : ''}" data-act="saved-learn" data-key="${esc(x.key)}" aria-label="외웠음 표시">${x.s === 'learned' ? ICON_CHECK : ''}</button>
-      <div><span class="expr">${esc(x.word)}</span> ${spk(x.word)}${x.ko ? `<div>${esc(x.ko)}</div>` : ''}${x.def ? `<div class="small" style="font-size:13px;color:var(--ink2)">${esc(x.def)}</div>` : ''}${x.ctx ? `<div class="ex">${esc(x.ctx)}</div>` : ''}</div>
+      <div><span class="expr">${esc(x.word)}</span> ${spk(x.word)}${S.editKey === x.key || !x.ko ? `${!x.ko ? '<div><span class="pill p-review">뜻 입력 필요</span></div>' : ''}${koInputHTML(x.key)}${S.editKey === x.key ? '<button class="btn sm" data-act="ko-cancel" style="margin-top:4px">취소</button>' : ''}` : `<div><button class="kolink" data-act="ko-edit" data-key="${esc(x.key)}" title="뜻 고치기">${esc(x.ko)} <span class="small">✎</span></button></div>`}${x.def ? `<div class="small" style="font-size:13px;color:var(--ink2)">${esc(x.def)}</div>` : ''}${x.ctx ? `<div class="ex">${esc(x.ctx)}</div>` : ''}</div>
       <div class="acts">${x.vid ? `<a class="ts" href="${ytAt(x.vid, x.t)}">${ICON_PLAY}${fmt(x.t)}</a>` : ''}<button class="btn sm" data-act="saved-del" data-key="${esc(x.key)}">삭제</button></div></div>`).join('')}</div>`
     : '<p class="small">영상 자막에서 단어를 눌러 "모르는 단어로 저장"하면 여기에 모여요.</p>';
   $('#view').innerHTML = html;
+  prefillKo();
 }
 
 /* ---------------- flashcards ---------------- */
@@ -791,16 +812,23 @@ function renderCards() {
   const d = S.fc.deck, c = d[S.fc.i];
   const scope = `<div class="chips" style="justify-content:center">${[['all', '전체'], ['vocab', '단어장 표현'], ['saved', '저장한 단어']].map(([k, l]) => `<button class="btn sm ${S.fc.scope === k ? 'on' : ''}" data-act="fc-scope" data-k="${k}">${l}</button>`).join('')}</div>`;
   if (!c) { $('#view').innerHTML = `<div class="center">${scope}<p class="empty">${d.length ? '한 바퀴 다 돌았어요.' : '남은 카드가 없어요.'}</p><div class="btns"><button class="btn primary" data-act="fc-restart">다시 섞기</button></div></div>`; return; }
-  $('#view').innerHTML = `<div class="center">${scope}<div class="counter">${S.fc.i + 1} / ${d.length}</div>
+  $('#view').innerHTML = `<div class="center">${scope}<div class="counter">${S.fc.i + 1} / ${d.length} · 연습용 (복습 일정은 '복습' 탭에서 관리돼요)</div>
     <div class="fc" data-act="fc-flip"><div class="big">${esc(c.front)} ${spk(c.front)}</div><div class="from">${esc(c.from)}</div>
       ${S.fc.flip ? `<div class="ko">${esc(c.ko)}</div>${c.ex ? `<div class="ex" style="margin-top:10px">${esc(c.ex)}</div><div class="exko">${esc(c.exKo || '')}</div>` : ''}` : '<div class="hint">눌러서 뜻 보기</div>'}</div>
     <div class="btns">${c.vid ? `<a class="ts" href="${ytAt(c.vid, c.t)}">${ICON_PLAY}장면 ${fmt(c.t)}</a>` : ''}<button class="btn" data-act="fc-again">다음에 다시</button><button class="btn primary" data-act="fc-learn">외웠음</button></div></div>`;
 }
 
 /* ---------------- quiz ---------------- */
+function quizItems() {
+  const v = vocab().filter((w) => st(w.id) !== 'known').map((w) => ({ id: w.id, expr: w.expr, ko: w.ko, ex: w.ex || '', vid: w.v.vid, t: w.t, src: 'v' }));
+  const sv = savedList().filter((x) => x.ko).map((x) => ({ id: 's:' + x.key, expr: x.word, ko: x.ko, ex: x.ctx || '', vid: x.vid, t: x.t, src: 's' }));
+  return { v, sv, all: [...v, ...sv] };
+}
 function buildQuiz() {
-  const all = vocab();
-  const pool = shuffle(all.filter((w) => st(w.id) !== 'known')).slice(0, 10);
+  const it = quizItems();
+  const all = it.all; // wrong options can come from anything
+  const pick = S.quiz.scope === 'saved' ? it.sv : S.quiz.scope === 'vocab' ? it.v : it.all;
+  const pool = shuffle([...pick]).slice(0, 10);
   S.quiz.qs = pool.map((w, k) => {
     const dir = k % 2 ? 'ko2en' : 'en2ko';
     const key = (x) => String((dir === 'en2ko' ? x.ko : x.expr) || '').trim().toLowerCase();
@@ -811,16 +839,22 @@ function buildQuiz() {
   S.quiz.i = 0; S.quiz.score = 0; S.quiz.ans = null;
 }
 function renderQuiz() {
-  if (vocab().length < 4) { $('#view').innerHTML = '<p class="empty">퀴즈는 표현이 4개 이상일 때 열려요.</p>'; return; }
+  const it = quizItems();
+  const counts = { all: it.all.length, vocab: it.v.length, saved: it.sv.length };
+  S.quiz.scope = S.quiz.scope || 'all';
+  const scope = `<div class="chips" style="justify-content:center">${[['all', '전체'], ['vocab', '기본 표현'], ['saved', '저장한 단어']].map(([k, l]) => `<button class="btn sm ${S.quiz.scope === k ? 'on' : ''}" data-act="q-scope" data-k="${k}">${l} ${counts[k]}</button>`).join('')}</div>`;
+  const noKo = savedList().filter((x) => !x.ko).length;
+  const noKoNote = noKo ? `<p class="small" style="text-align:center">뜻이 비어 있는 저장 단어 ${noKo}개는 빠져 있어요. <a href="#/words">단어장에서 뜻 채우기</a></p>` : '';
+  if (it.all.length < 4 || !counts[S.quiz.scope]) { $('#view').innerHTML = `<div class="center">${scope}<p class="empty">${it.all.length < 4 ? '퀴즈는 뜻이 있는 단어가 4개 이상일 때 열려요.' : '이 범위에는 아직 퀴즈로 낼 단어가 없어요.'}</p>${noKoNote}</div>`; return; }
   if (!S.quiz.qs) buildQuiz();
   const Q = S.quiz, q = Q.qs[Q.i];
-  if (!q) { $('#view').innerHTML = `<div class="center"><div class="qcard" style="text-align:center"><div class="counter">결과</div><div class="q">${Q.score} / ${Q.qs.length}</div><p class="fb">${Q.score === Q.qs.length ? '전부 맞혔어요.' : '틀린 표현은 카드로 한 번 더 보면 좋아요.'}</p><button class="btn primary" data-act="q-restart">새 퀴즈</button></div></div>`; return; }
+  if (!q) { $('#view').innerHTML = `<div class="center">${scope}<div class="qcard" style="text-align:center"><div class="counter">결과</div><div class="q">${Q.score} / ${Q.qs.length}</div><p class="fb">${Q.score === Q.qs.length ? '전부 맞혔어요.' : '틀린 표현은 카드로 한 번 더 보면 좋아요.'}</p><button class="btn primary" data-act="q-restart">새 퀴즈</button></div></div>`; return; }
   const label = (o) => esc(q.dir === 'en2ko' ? o.ko : o.expr);
-  $('#view').innerHTML = `<div class="center"><div class="counter">${Q.i + 1} / ${Q.qs.length} · 맞힌 수 ${Q.score}</div><div class="qcard">
+  $('#view').innerHTML = `<div class="center">${scope}${noKoNote}<div class="counter">${Q.i + 1} / ${Q.qs.length} · 맞힌 수 ${Q.score}</div><div class="qcard">
     <div class="small">${q.dir === 'en2ko' ? '이 표현의 뜻은?' : '이 뜻에 맞는 표현은?'}</div>
     <div class="q">${esc(q.dir === 'en2ko' ? q.w.expr : q.w.ko)}</div>
     ${q.opts.map((o, k) => { let c = ''; if (Q.ans !== null) { if (o.id === q.w.id) c = 'right'; else if (k === Q.ans) c = 'wrong'; } return `<button class="opt ${c}" data-act="q-ans" data-k="${k}" ${Q.ans !== null ? 'disabled' : ''}>${label(o)}</button>`; }).join('')}
-    ${Q.ans !== null ? `<div class="fb">${esc(q.w.expr)} ${spk(q.w.expr)} — ${esc(q.w.ko)}<br><span class="ex">${esc(q.w.ex || '')}</span></div><div class="btns" style="justify-content:flex-start"><a class="ts" href="${ytAt(q.w.v.vid, q.w.t)}">${ICON_PLAY}장면 ${fmt(q.w.t)}</a><button class="btn primary" data-act="q-next">다음</button></div>` : ''}
+    ${Q.ans !== null ? `<div class="fb">${esc(q.w.expr)} ${spk(q.w.expr)} — ${esc(q.w.ko)}<br><span class="ex">${esc(q.w.ex || '')}</span></div><div class="btns" style="justify-content:flex-start"><a class="ts" href="${ytAt(q.w.vid, q.w.t)}">${ICON_PLAY}장면 ${fmt(q.w.t)}</a><button class="btn primary" data-act="q-next">다음</button></div>` : ''}
   </div></div>`;
 }
 
@@ -876,19 +910,38 @@ document.addEventListener('click', (e) => {
     case 'save-word': {
       const key = b.dataset.key; if (!key) break;
       const cur = S.prog.saved[key];
-      if (cur && !cur.del) S.prog.saved[key] = { ...cur, del: true, at: Date.now() };
-      else {
-        const L = w && w.lines[+b.dataset.l];
-        S.prog.saved[key] = { word: b.dataset.word, ko: $('#sheet').dataset.ko || '', def: $('#sheet').dataset.def || '', ctx: L ? L.words.map((x) => x.w).join(' ').slice(0, 140) : '', vid: w ? w.vid : null, t: L ? Math.floor(L.t / 1000) : 0, at: Date.now(), del: false, s: null };
-      }
-      saveProg(); closeSheet(); refresh();
+      if (cur && !cur.del) { S.prog.saved[key] = { ...cur, del: true, at: Date.now() }; saveProg(); closeSheet(); refresh(); break; }
+      const L = w && w.lines[+b.dataset.l];
+      const sh = $('#sheet');
+      S.prog.saved[key] = { word: b.dataset.word, ko: sh.dataset.ko || (cur && cur.ko) || '', def: sh.dataset.def || (cur && cur.def) || '', ctx: L ? L.words.map((x) => x.w).join(' ').slice(0, 140) : '', vid: w ? w.vid : null, t: L ? Math.floor(L.t / 1000) : 0, at: Date.now(), del: false, s: null };
+      saveProg();
+      b.textContent = '저장됨 · 취소'; b.classList.add('on');
+      if (L) fillMeaning(key, b.dataset.word, L, +b.dataset.k);
+      refreshKeepSheet();
       break;
     }
+    case 'ko-save': {
+      const key = b.dataset.key, inp = document.getElementById('koIn-' + key);
+      const val = inp ? inp.value.trim() : '';
+      if (!val) { const er = document.getElementById('koErr-' + key); if (er) er.textContent = '뜻을 입력해 주세요.'; break; }
+      const cur = S.prog.saved[key];
+      if (cur && !cur.del) S.prog.saved[key] = { ...cur, ko: val.slice(0, 80), at: Date.now() };
+      else if (b.dataset.word) { // typed in the popup before saving: save the word with it
+        const L = w && w.lines[+b.dataset.l];
+        S.prog.saved[key] = { word: b.dataset.word, ko: val.slice(0, 80), def: $('#sheet').dataset.def || '', ctx: L ? L.words.map((x) => x.w).join(' ').slice(0, 140) : '', vid: w ? w.vid : null, t: L ? Math.floor(L.t / 1000) : 0, at: Date.now(), del: false, s: null };
+      }
+      S.editKey = null; saveProg();
+      if (!$('#sheet').hidden) closeSheet();
+      refresh(); updateBadge();
+      break;
+    }
+    case 'ko-edit': S.editKey = b.dataset.key; renderWords(); { const i = document.getElementById('koIn-' + b.dataset.key); if (i) i.focus(); } break;
+    case 'ko-cancel': S.editKey = null; renderWords(); break;
     case 'saved-learn': { const x = S.prog.saved[b.dataset.key]; if (x) { S.prog.saved[b.dataset.key] = { ...x, s: x.s === 'learned' ? null : 'learned', at: Date.now() }; saveProg(); renderWords(); } break; }
     case 'saved-del': { const x = S.prog.saved[b.dataset.key]; if (x) { S.prog.saved[b.dataset.key] = { ...x, del: true, at: Date.now() }; saveProg(); renderWords(); } break; }
     case 'hide-done': S.hideDone = !S.hideDone; renderWords(); break;
     case 'fc-flip': S.fc.flip = !S.fc.flip; renderCards(); break;
-    case 'fc-again': S.fc.i++; S.fc.flip = false; renderCards(); break;
+    case 'fc-again': { const d = S.fc.deck, c = d.splice(S.fc.i, 1)[0]; if (c) d.splice(Math.min(S.fc.i + 4, d.length), 0, c); S.fc.flip = false; renderCards(); break; }
     case 'fc-learn': {
       const c = S.fc.deck[S.fc.i];
       if (c && c.kind === 'v') setStatus(c.id, 'learned');
@@ -900,6 +953,7 @@ document.addEventListener('click', (e) => {
     case 'q-ans': { if (S.quiz.ans !== null) break; const k = +b.dataset.k; S.quiz.ans = k; const q = S.quiz.qs[S.quiz.i]; if (q.opts[k].id === q.w.id) S.quiz.score++; renderQuiz(); break; }
     case 'q-next': S.quiz.i++; S.quiz.ans = null; renderQuiz(); break;
     case 'q-restart': buildQuiz(); renderQuiz(); break;
+    case 'q-scope': S.quiz.scope = b.dataset.k; S.quiz.qs = null; renderQuiz(); break;
     case 'topic-save': {
       const ta = $('#topicText'), text = ta.value.trim();
       if (!text) { $('#topicErr').textContent = '주제를 먼저 적어 주세요.'; break; }
@@ -915,6 +969,7 @@ document.addEventListener('change', (e) => {
   if (e.target.id === 'rate' && S.w) { S.w.rate = +e.target.value; try { S.w.player.setPlaybackRate(S.w.rate); } catch (err) {} }
 });
 document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && e.target.id && e.target.id.startsWith('koIn-')) { e.preventDefault(); const b = e.target.parentElement.querySelector('[data-act="ko-save"]'); if (b) b.click(); return; }
   if (e.key === 'Escape') closeSheet();
   if (!S.w || /input|textarea|select/i.test(e.target.tagName)) return;
   if (e.key === 'ArrowLeft' && e.shiftKey) { seekLine(Math.max(0, S.w.active - 1)); e.preventDefault(); }
