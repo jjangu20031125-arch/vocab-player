@@ -1260,6 +1260,3308 @@
      }
     }
    ]
+  },
+  {
+   "vid": "RZ8AJlUndCs",
+   "title": "My wife's logic makes me question reality | Andy Woodhull Stand-Up Comedy",
+   "channel": "Dry Bar Comedy",
+   "kind": "short",
+   "category": "코미디",
+   "lengthSec": 100,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 1,
+   "summary": "넷플릭스를 같이 보기로 해 놓고 30분째 샤워하는 아내가 '샤워가 아니라 헹구는 중'이라고 우기는 이야기예요. 말싸움에서 늘 지는 남편의 하소연이에요.",
+   "words": [
+    {
+     "id": "RZ8AJlUndCs-01",
+     "expr": "rinse off",
+     "pos": "동사구",
+     "ko": "(물로) 헹구다, 가볍게 씻어내다",
+     "t": 36,
+     "ex": "I'll just rinse off after the gym and meet you there.",
+     "exKo": "운동 끝나고 가볍게 씻고 거기서 만날게.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Can you ___ the vegetables before cooking?",
+        "a": [
+         "rinse off"
+        ]
+       },
+       {
+        "s": "He jumped in the lake to ___ the mud.",
+        "a": [
+         "rinse off"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "I'm not taking a shower, I'm just ___ off.",
+       "opts": [
+        "rinsing",
+        "washing",
+        "cleaning"
+       ],
+       "a": "rinsing",
+       "why": "rinse off: 물로 헹구다 / wash off, clean off도 쓰지만 이 장면의 말장난은 rinse off예요"
+      }
+     },
+     "note": "샤워(take a shower)보다 짧고 가볍게 물만 끼얹는 느낌이에요. 그래서 아내가 '샤워가 아니다'라고 우기는 거예요."
+    },
+    {
+     "id": "RZ8AJlUndCs-02",
+     "expr": "fight back",
+     "pos": "동사구",
+     "ko": "반격하다, 맞서 싸우다",
+     "t": 47,
+     "ex": "When the critics attacked her plan, she fought back with data.",
+     "exKo": "비판이 쏟아지자 그녀는 데이터로 반격했다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I didn't know how to ___ against her logic.",
+        "a": [
+         "fight back"
+        ]
+       },
+       {
+        "s": "The team ___ and won in the last minute.",
+        "a": [
+         "fought back"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He was attacked online, but he chose not to fight ___.",
+       "opts": [
+        "back",
+        "up",
+        "off"
+       ],
+       "a": "back",
+       "why": "fight back: 반격하다 / fight off: 물리치다 / fight up은 쓰지 않아요"
+      }
+     }
+    },
+    {
+     "id": "RZ8AJlUndCs-03",
+     "expr": "rest one's eyes",
+     "pos": "동사구",
+     "ko": "잠깐 눈을 붙이다 (자는 게 아니라고 우길 때)",
+     "t": 85,
+     "ex": "I wasn't sleeping in class, I was just resting my eyes.",
+     "exKo": "수업 시간에 잔 거 아니야, 잠깐 눈 감고 있었던 거야.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Grandpa says he's not asleep, he's just ___.",
+        "a": [
+         "resting his eyes"
+        ]
+       },
+       {
+        "s": "I'm going to ___ for ten minutes.",
+        "a": [
+         "rest my eyes"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "\"I'm not asleep. I'm resting my ___.\"",
+       "opts": [
+        "eyes",
+        "head",
+        "face"
+       ],
+       "a": "eyes",
+       "why": "rest one's eyes: 잠깐 눈을 붙이다"
+      }
+     },
+     "note": "졸다가 들켰을 때 쓰는 단골 변명이에요. 미국 가족 코미디에 자주 나와요."
+    },
+    {
+     "id": "RZ8AJlUndCs-04",
+     "expr": "air out",
+     "pos": "동사구",
+     "ko": "(창문을 열어) 환기하다, 바람을 쐬다",
+     "t": 89,
+     "ex": "Open the windows to air out the room after cooking.",
+     "exKo": "요리하고 나면 창문을 열어 방을 환기해.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "We left the tent open to ___.",
+        "a": [
+         "air out",
+         "air it out"
+        ]
+       },
+       {
+        "s": "I hung my jacket outside to ___.",
+        "a": [
+         "air out",
+         "air it out"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The apartment smells like paint, so let's ___ it out.",
+       "opts": [
+        "air",
+        "wind",
+        "blow"
+       ],
+       "a": "air",
+       "why": "air out: 환기하다"
+      }
+     },
+     "note": "입을 벌리고 자는 아내에게 '목도 환기 중이냐'고 받아치는 농담에 쓰였어요."
+    }
+   ]
+  },
+  {
+   "vid": "LR5lLPw_j9o",
+   "title": "You need to spend five minutes with someone to realize they're an idiot | Ricky Mokel",
+   "channel": "Dry Bar Comedy",
+   "kind": "short",
+   "category": "코미디",
+   "lengthSec": 95,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 2,
+   "summary": "사람은 겉모습이 아니라 5분은 이야기해 봐야 안다며, 푸드코트에서 책 읽던 남자에게 말을 걸었다가 엄청나게 어려운 문장으로 대답을 들은 이야기예요.",
+   "words": [
+    {
+     "id": "LR5lLPw_j9o-01",
+     "expr": "back when",
+     "pos": "접속사구",
+     "ko": "~하던 시절에, 예전에 ~할 때",
+     "t": 17,
+     "ex": "Back when I was in high school, nobody had a smartphone.",
+     "exKo": "내가 고등학생이던 시절엔 스마트폰 가진 사람이 없었어.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "This was ___ people still went to the mall.",
+        "a": [
+         "back when"
+        ]
+       },
+       {
+        "s": "___ we were kids, we played outside all day.",
+        "a": [
+         "Back when"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Tickets were cheap ___ when I was a student.",
+       "opts": [
+        "back",
+        "ago",
+        "before"
+       ],
+       "a": "back",
+       "why": "back when + 문장: ~하던 시절에 / ago는 기간 뒤에, before는 '~전에'"
+      }
+     },
+     "note": "옛날 이야기를 꺼낼 때 회화에서 아주 자주 써요."
+    },
+    {
+     "id": "LR5lLPw_j9o-02",
+     "expr": "lean over",
+     "pos": "동사구",
+     "ko": "몸을 (옆·앞으로) 기울이다, 숙이다",
+     "t": 27,
+     "ex": "She leaned over and whispered the answer to me.",
+     "exKo": "그녀는 몸을 기울여 내게 답을 속삭였다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I ___ and asked what he was reading.",
+        "a": [
+         "leaned over"
+        ]
+       },
+       {
+        "s": "Don't ___ the railing, it's not safe.",
+        "a": [
+         "lean over"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He ___ over to look at my screen.",
+       "opts": [
+        "leaned",
+        "bent",
+        "laid"
+       ],
+       "a": "leaned",
+       "why": "lean over: 몸을 기울이다 / bend over: 허리를 굽히다 / laid는 lay(놓다)의 과거"
+      }
+     }
+    },
+    {
+     "id": "LR5lLPw_j9o-03",
+     "expr": "mumble",
+     "pos": "동사",
+     "ko": "중얼거리다, 웅얼웅얼 말하다",
+     "t": 32,
+     "ex": "Don't mumble during the presentation. Speak up!",
+     "exKo": "발표할 때 웅얼거리지 말고 크게 말해!",
+     "drill": {
+      "cloze": [
+       {
+        "s": "He ___ something without looking at me.",
+        "a": [
+         "mumbled"
+        ]
+       },
+       {
+        "s": "If you ___, nobody can hear you.",
+        "a": [
+         "mumble"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He ___ an answer I couldn't understand.",
+       "opts": [
+        "mumbled",
+        "shouted",
+        "announced"
+       ],
+       "a": "mumbled",
+       "why": "mumble: 중얼거리다 / shout: 외치다 / announce: 발표하다"
+      }
+     }
+    },
+    {
+     "id": "LR5lLPw_j9o-04",
+     "expr": "mumbo jumbo",
+     "pos": "명사",
+     "ko": "알아들을 수 없는 소리, 헛소리 같은 말",
+     "t": 53,
+     "ex": "The contract was full of legal mumbo jumbo.",
+     "exKo": "계약서는 알아듣기 힘든 법률 용어투성이였다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I don't believe in that astrology ___.",
+        "a": [
+         "mumbo jumbo"
+        ]
+       },
+       {
+        "s": "Skip the technical ___ and just tell me the price.",
+        "a": [
+         "mumbo jumbo"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "All that corporate mumbo ___ means nothing to customers.",
+       "opts": [
+        "jumbo",
+        "gumbo",
+        "combo"
+       ],
+       "a": "jumbo",
+       "why": "mumbo jumbo: 뜻 모를 헛소리"
+      }
+     },
+     "note": "어렵거나 미신 같은 말을 깎아내릴 때 써요. 공식 자리에서는 jargon(전문 용어)이 무난해요."
+    }
+   ]
+  },
+  {
+   "vid": "5huzhndhNUM",
+   "title": "The most awkward date ever | Alaina Hirschi Stand-Up Comedy",
+   "channel": "Dry Bar Comedy",
+   "kind": "short",
+   "category": "코미디",
+   "lengthSec": 109,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 3,
+   "summary": "데이트 상대가 '왜 아직 결혼 안 했어요?'라고 묻자 장난으로 이혼했다고 했다가, 거짓말이 점점 커지는 이야기예요.",
+   "words": [
+    {
+     "id": "5huzhndhNUM-01",
+     "expr": "go on a date",
+     "pos": "동사구",
+     "ko": "데이트하다, 데이트하러 가다",
+     "t": 5,
+     "ex": "We went on a date to a jazz bar last Friday.",
+     "exKo": "지난 금요일에 재즈 바로 데이트하러 갔어.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I ___ with a guy a while back.",
+        "a": [
+         "went on a date"
+        ]
+       },
+       {
+        "s": "Have you ever ___ with someone you met online?",
+        "a": [
+         "gone on a date"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "They first went ___ a date in college.",
+       "opts": [
+        "on",
+        "to",
+        "for"
+       ],
+       "a": "on",
+       "why": "go on a date: 데이트하다 / go to a date는 쓰지 않아요"
+      }
+     }
+    },
+    {
+     "id": "5huzhndhNUM-02",
+     "expr": "come on to (someone)",
+     "pos": "동사구",
+     "ko": "(이성에게) 작업을 걸다, 추파를 던지다",
+     "t": 80,
+     "ex": "I think that guy at the bar was coming on to you.",
+     "exKo": "바에 있던 그 남자, 너한테 작업 건 것 같은데.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "He still didn't understand that I was ___ him.",
+        "a": [
+         "coming on to"
+        ]
+       },
+       {
+        "s": "She thought he was ___ her, but he was just being nice.",
+        "a": [
+         "coming on to"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Was he just being friendly, or was he coming ___ to me?",
+       "opts": [
+        "on",
+        "up",
+        "over"
+       ],
+       "a": "on",
+       "why": "come on to: 작업을 걸다 / come up to: 다가오다 / come over: 들르다"
+      }
+     },
+     "note": "come on(어서, 제발)과 헷갈리기 쉬워요. 뒤에 to + 사람이 붙으면 '작업 걸다'예요."
+    },
+    {
+     "id": "5huzhndhNUM-03",
+     "expr": "lay it on (even) thicker",
+     "pos": "동사구",
+     "ko": "(이미 과한 걸) 더 과장해서 밀어붙이다",
+     "t": 85,
+     "ex": "He was already flattering her, and then he laid it on even thicker.",
+     "exKo": "그는 이미 그녀를 띄워 주고 있었는데, 거기서 더 과하게 밀어붙였다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "So, I had to ___.",
+        "a": [
+         "lay it on even thicker",
+         "lay it on thicker"
+        ]
+       },
+       {
+        "s": "Don't ___ — a simple thank-you is enough.",
+        "a": [
+         "lay it on thick"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "She was laying it ___ thick with all those compliments.",
+       "opts": [
+        "on",
+        "in",
+        "up"
+       ],
+       "a": "on",
+       "why": "lay it on thick: 과장하다"
+      }
+     },
+     "note": "기본형은 lay it on thick(과장하다)이에요. 영상에서는 비교급으로 '더 세게' 밀어붙였어요."
+    },
+    {
+     "id": "5huzhndhNUM-04",
+     "expr": "work out",
+     "pos": "동사구",
+     "ko": "(일이) 잘 풀리다",
+     "t": 91,
+     "ex": "I hope everything works out with your new job.",
+     "exKo": "새 직장에서 다 잘 풀리길 바라.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Things didn't really ___ with the baby either.",
+        "a": [
+         "work out"
+        ]
+       },
+       {
+        "s": "Our plan ___ better than we expected.",
+        "a": [
+         "worked out"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Don't worry, it'll all work ___ in the end.",
+       "opts": [
+        "out",
+        "up",
+        "on"
+       ],
+       "a": "out",
+       "why": "work out: 잘 풀리다, 운동하다 / work on: ~을 작업하다"
+      }
+     },
+     "note": "'운동하다'라는 뜻도 있어서 문맥으로 구분해요."
+    }
+   ]
+  },
+  {
+   "vid": "GW6flujEhlc",
+   "title": "Marriage makes every simple question complicated | Dan McGowan Stand-Up Comedy",
+   "channel": "Dry Bar Comedy",
+   "kind": "short",
+   "category": "코미디",
+   "lengthSec": 130,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 4,
+   "summary": "'영화 몇 시야?'라는 간단한 질문에 아내가 어떤 차를 탈지, 기름은 언제 넣을지까지 돌아서 답하는 바람에 결국 폭발하는 남편 이야기예요.",
+   "words": [
+    {
+     "id": "GW6flujEhlc-01",
+     "expr": "midlife crisis",
+     "pos": "명사구",
+     "ko": "중년의 위기",
+     "t": 16,
+     "ex": "He bought a sports car during his midlife crisis.",
+     "exKo": "그는 중년의 위기 때 스포츠카를 샀다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I think she's going through some kind of ___.",
+        "a": [
+         "midlife crisis",
+         "a midlife crisis"
+        ]
+       },
+       {
+        "s": "Quitting his job at 45 was not just a ___.",
+        "a": [
+         "midlife crisis"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He's 50 and suddenly wants a motorcycle. Classic ___ crisis.",
+       "opts": [
+        "midlife",
+        "middle",
+        "mid-age"
+       ],
+       "a": "midlife",
+       "why": "midlife crisis: 중년의 위기"
+      }
+     }
+    },
+    {
+     "id": "GW6flujEhlc-02",
+     "expr": "one step at a time",
+     "pos": "부사구",
+     "ko": "한 번에 한 단계씩, 차근차근",
+     "t": 25,
+     "ex": "Learning English is hard, so take it one step at a time.",
+     "exKo": "영어 공부는 어려우니까 차근차근 해.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "We're taking things ___.",
+        "a": [
+         "one step at a time"
+        ]
+       },
+       {
+        "s": "Don't panic. Let's solve this ___.",
+        "a": [
+         "one step at a time"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Recovery takes time. Just go one ___ at a time.",
+       "opts": [
+        "step",
+        "stage",
+        "stair"
+       ],
+       "a": "step",
+       "why": "one step at a time: 한 단계씩"
+      }
+     }
+    },
+    {
+     "id": "GW6flujEhlc-03",
+     "expr": "out of nowhere",
+     "pos": "부사구",
+     "ko": "갑자기, 난데없이",
+     "t": 49,
+     "ex": "A deer jumped out of nowhere in front of my car.",
+     "exKo": "사슴 한 마리가 난데없이 차 앞으로 뛰어들었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The argument came ___.",
+        "a": [
+         "out of nowhere"
+        ]
+       },
+       {
+        "s": "She appeared ___ and saved the game.",
+        "a": [
+         "out of nowhere"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The storm came out ___ nowhere.",
+       "opts": [
+        "of",
+        "from",
+        "in"
+       ],
+       "a": "of",
+       "why": "out of nowhere: 갑자기"
+      }
+     }
+    },
+    {
+     "id": "GW6flujEhlc-04",
+     "expr": "full-blown",
+     "pos": "형용사",
+     "ko": "완전한, 본격적인 (작던 것이 커진)",
+     "t": 51,
+     "ex": "A small cough turned into full-blown pneumonia.",
+     "exKo": "작은 기침이 본격적인 폐렴으로 번졌다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "A simple talk turned into a ___ war.",
+        "a": [
+         "full-blown"
+        ]
+       },
+       {
+        "s": "It's not a ___ crisis yet, but we should be careful.",
+        "a": [
+         "full-blown"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The small protest became a ___ riot.",
+       "opts": [
+        "full-blown",
+        "full-time",
+        "full-length"
+       ],
+       "a": "full-blown",
+       "why": "full-blown: 본격적인 / full-time: 정규직의 / full-length: 전체 길이의"
+      }
+     },
+     "note": "꽃이 활짝 핀(blown) 상태에서 나온 말이에요. 문제나 갈등이 '완전히 커졌다'는 뜻으로 주로 써요."
+    },
+    {
+     "id": "GW6flujEhlc-05",
+     "expr": "gas mileage",
+     "pos": "명사구",
+     "ko": "연비",
+     "t": 103,
+     "ex": "This hybrid gets great gas mileage.",
+     "exKo": "이 하이브리드 차는 연비가 아주 좋다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The minivan gets better ___ than the SUV.",
+        "a": [
+         "gas mileage"
+        ]
+       },
+       {
+        "s": "I care more about ___ than speed.",
+        "a": [
+         "gas mileage"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Smaller cars usually get better gas ___.",
+       "opts": [
+        "mileage",
+        "distance",
+        "economy"
+       ],
+       "a": "mileage",
+       "why": "gas mileage: 연비(미국식) / 영국식은 fuel economy"
+      }
+     },
+     "note": "미국에서는 휘발유를 gas라고 해요. 연비가 좋다는 get good gas mileage예요."
+    }
+   ]
+  },
+  {
+   "vid": "L2-OiwKDflU",
+   "title": "My marriage fight secret weapon | Nate Bargatze",
+   "channel": "Nateland Entertainment",
+   "kind": "short",
+   "category": "코미디",
+   "lengthSec": 70,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 5,
+   "summary": "17년 동안 자기 빨래를 직접 해 온 '희생'을 아내와 싸울 때 쓸 비장의 무기로 아껴 뒀다가 꺼내는 이야기예요.",
+   "words": [
+    {
+     "id": "L2-OiwKDflU-01",
+     "expr": "growing up",
+     "pos": "부사구",
+     "ko": "자라면서, 어릴 때",
+     "t": 0,
+     "ex": "Growing up, we never had a car.",
+     "exKo": "어릴 때 우리 집엔 차가 없었어.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "My mom did my dad's laundry ___.",
+        "a": [
+         "growing up"
+        ]
+       },
+       {
+        "s": "___, I spent every summer in the Philippines.",
+        "a": [
+         "Growing up"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "I moved around a lot ___ up.",
+       "opts": [
+        "growing",
+        "grown",
+        "grew"
+       ],
+       "a": "growing",
+       "why": "growing up: 자라면서 (문장 앞이나 끝에)"
+      }
+     },
+     "note": "어린 시절 이야기를 꺼낼 때 문장 맨 앞에 Growing up, …으로 자주 써요."
+    },
+    {
+     "id": "L2-OiwKDflU-02",
+     "expr": "to be honest",
+     "pos": "부사구",
+     "ko": "솔직히 말하면",
+     "t": 9,
+     "ex": "To be honest, I didn't read the whole report.",
+     "exKo": "솔직히 말하면 보고서를 다 읽진 않았어.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "___, I felt it had been forgotten.",
+        "a": [
+         "To be honest"
+        ]
+       },
+       {
+        "s": "___, I prefer the first design.",
+        "a": [
+         "To be honest"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "___ be honest, I'm a little nervous.",
+       "opts": [
+        "To",
+        "For",
+        "As"
+       ],
+       "a": "To",
+       "why": "to be honest: 솔직히"
+      }
+     },
+     "note": "문자로는 TBH라고 줄여 써요."
+    },
+    {
+     "id": "L2-OiwKDflU-03",
+     "expr": "pop in one's head",
+     "pos": "동사구",
+     "ko": "(생각이) 갑자기 떠오르다",
+     "t": 25,
+     "ex": "His name just popped in my head during the exam.",
+     "exKo": "시험 보다가 그의 이름이 갑자기 떠올랐다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I was driving home and it ___.",
+        "a": [
+         "popped in my head",
+         "popped into my head"
+        ]
+       },
+       {
+        "s": "A great idea ___ in the shower.",
+        "a": [
+         "popped in my head",
+         "popped into my head"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The answer suddenly ___ in my head.",
+       "opts": [
+        "popped",
+        "jumped",
+        "dropped"
+       ],
+       "a": "popped",
+       "why": "pop in(to) one's head: 불쑥 떠오르다"
+      }
+     },
+     "note": "글에서는 pop into one's head가 표준이고, 말할 때는 영상처럼 in도 많이 써요."
+    },
+    {
+     "id": "L2-OiwKDflU-04",
+     "expr": "bring (something) up",
+     "pos": "동사구",
+     "ko": "(화제를) 꺼내다",
+     "t": 28,
+     "ex": "Don't bring up politics at dinner.",
+     "exKo": "저녁 자리에서 정치 얘기는 꺼내지 마.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "All right, I'll ___.",
+        "a": [
+         "bring that up",
+         "bring it up"
+        ]
+       },
+       {
+        "s": "She ___ my old mistake again.",
+        "a": [
+         "brought up"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "I didn't want to bring ___ the money problem.",
+       "opts": [
+        "up",
+        "out",
+        "in"
+       ],
+       "a": "up",
+       "why": "bring up: 화제를 꺼내다 / bring out: 끌어내다, 출시하다 / bring in: 들여오다"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "vid": "bkYy5TI4CAI",
+   "title": "Golfing with the wife did not go as planned | Nate Bargatze",
+   "channel": "Nateland Entertainment",
+   "kind": "short",
+   "category": "코미디",
+   "lengthSec": 60,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 6,
+   "summary": "정해진 티 타임 1분 전에 아내가 화장실에 가겠다고 하자, 혼자 첫 샷을 치고 네 홀을 혼자 돌게 된 이야기예요.",
+   "words": [
+    {
+     "id": "bkYy5TI4CAI-01",
+     "expr": "too bad",
+     "pos": "형용사구",
+     "ko": "안됐지만 어쩔 수 없다, 유감이다",
+     "t": 14,
+     "ex": "You missed the deadline? Too bad, you'll have to wait for next year.",
+     "exKo": "마감 놓쳤어? 안됐지만 내년까지 기다려야 해.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I tell her that is ___.",
+        "a": [
+         "too bad"
+        ]
+       },
+       {
+        "s": "It's ___ you couldn't come to the party.",
+        "a": [
+         "too bad"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "\"The store's closed.\" \"Oh, that's too ___.\"",
+       "opts": [
+        "bad",
+        "sad",
+        "poor"
+       ],
+       "a": "bad",
+       "why": "too bad: 안됐다, 아쉽다"
+      }
+     },
+     "note": "진심으로 아쉬울 때도 쓰지만, 영상처럼 '그건 네 사정이고'라는 차가운 뉘앙스도 있어요."
+    },
+    {
+     "id": "bkYy5TI4CAI-02",
+     "expr": "make (something) up",
+     "pos": "동사구",
+     "ko": "(이야기를) 지어내다",
+     "t": 25,
+     "ex": "He made up an excuse for being late.",
+     "exKo": "그는 늦은 핑계를 지어냈다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Well, you ___ on your own.",
+        "a": [
+         "made that up",
+         "made it up"
+        ]
+       },
+       {
+        "s": "Kids love to ___ stories.",
+        "a": [
+         "make up"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "That's not true. You're making it ___!",
+       "opts": [
+        "up",
+        "out",
+        "over"
+       ],
+       "a": "up",
+       "why": "make up: 지어내다, 화해하다, 화장하다 / make out: 알아보다"
+      }
+     },
+     "note": "make up은 '화해하다', '보충하다' 뜻도 있어서 문맥이 중요해요."
+    },
+    {
+     "id": "bkYy5TI4CAI-03",
+     "expr": "start a fight",
+     "pos": "동사구",
+     "ko": "싸움을 걸다",
+     "t": 34,
+     "ex": "I didn't want to start a fight, so I kept quiet.",
+     "exKo": "싸우기 싫어서 가만히 있었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I'm not trying to ___ before we get going.",
+        "a": [
+         "start a fight"
+        ]
+       },
+       {
+        "s": "He always ___ when he's tired.",
+        "a": [
+         "starts a fight"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Please don't ___ a fight in front of the kids.",
+       "opts": [
+        "start",
+        "make",
+        "open"
+       ],
+       "a": "start",
+       "why": "start a fight: 싸움을 시작하다 / pick a fight: 시비를 걸다"
+      }
+     }
+    },
+    {
+     "id": "bkYy5TI4CAI-04",
+     "expr": "not a big deal",
+     "pos": "구",
+     "ko": "별일 아니다",
+     "t": 52,
+     "ex": "Don't worry about the typo. It's not a big deal.",
+     "exKo": "오타는 신경 쓰지 마. 별거 아니야.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "It's a good shot, ___. A lot of people do that.",
+        "a": [
+         "not a big deal"
+        ]
+       },
+       {
+        "s": "Being five minutes late is ___.",
+        "a": [
+         "not a big deal"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Relax, it's not a big ___.",
+       "opts": [
+        "deal",
+        "thing",
+        "issue"
+       ],
+       "a": "deal",
+       "why": "not a big deal: 별일 아니다 / no big deal도 같은 뜻"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "vid": "8tpX-iYvXu0",
+   "title": "Nobody thinks they are old. | Jim Gaffigan",
+   "channel": "jimgaffigan",
+   "kind": "short",
+   "category": "코미디",
+   "lengthSec": 55,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 7,
+   "summary": "같은 대학 출신이라며 반가워하던 후배가 그가 졸업한 해에 태어났다는 걸 알고 나이를 실감하는 이야기예요.",
+   "words": [
+    {
+     "id": "8tpX-iYvXu0-01",
+     "expr": "slap (someone) across the face",
+     "pos": "동사구",
+     "ko": "~의 따귀를 때리다 (비유: 현실이 확 와닿다)",
+     "t": 4,
+     "ex": "The rejection letter slapped me across the face.",
+     "exKo": "불합격 통지서가 내 뺨을 후려치는 것 같았다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The reality of your age occasionally ___ you across the face.",
+        "a": [
+         "slaps"
+        ]
+       },
+       {
+        "s": "The cold wind ___ me across the face.",
+        "a": [
+         "slapped"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The bad news slapped him ___ the face.",
+       "opts": [
+        "across",
+        "through",
+        "over"
+       ],
+       "a": "across",
+       "why": "slap across the face: 따귀를 때리다"
+      }
+     }
+    },
+    {
+     "id": "8tpX-iYvXu0-02",
+     "expr": "benefit",
+     "pos": "명사",
+     "ko": "자선 행사, 모금 행사",
+     "t": 9,
+     "ex": "The band played at a benefit for the children's hospital.",
+     "exKo": "그 밴드는 어린이 병원 자선 행사에서 공연했다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I did this ___ for a hospital.",
+        "a": [
+         "benefit"
+        ]
+       },
+       {
+        "s": "They held a ___ concert to raise money.",
+        "a": [
+         "benefit"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The money from the ___ will go to the shelter.",
+       "opts": [
+        "benefit",
+        "bonus",
+        "budget"
+       ],
+       "a": "benefit",
+       "why": "benefit: 자선 행사, 혜택 / bonus: 보너스 / budget: 예산"
+      }
+     },
+     "note": "'혜택'이라는 뜻이 익숙하지만, 행사 이름 앞에서는 '자선 행사'예요."
+    },
+    {
+     "id": "8tpX-iYvXu0-03",
+     "expr": "fancy",
+     "pos": "형용사",
+     "ko": "고급스러운, 격식 있는",
+     "t": 11,
+     "ex": "We went to a fancy restaurant for our anniversary.",
+     "exKo": "기념일에 고급 레스토랑에 갔다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "It was a ___ event.",
+        "a": [
+         "fancy"
+        ]
+       },
+       {
+        "s": "I don't need a ___ phone. I just need it to work.",
+        "a": [
+         "fancy"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Wear something nice. It's a ___ party.",
+       "opts": [
+        "fancy",
+        "fantasy",
+        "famous"
+       ],
+       "a": "fancy",
+       "why": "fancy: 고급스러운 / fantasy: 공상 / famous: 유명한"
+      }
+     },
+     "note": "영국에서는 동사로 '~하고 싶다(Fancy a coffee?)'라는 뜻도 있어요."
+    },
+    {
+     "id": "8tpX-iYvXu0-04",
+     "expr": "stuff (something) in one's mouth",
+     "pos": "동사구",
+     "ko": "~을 입에 쑤셔 넣다",
+     "t": 47,
+     "ex": "He stuffed a whole donut in his mouth.",
+     "exKo": "그는 도넛 하나를 통째로 입에 쑤셔 넣었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I got in my car and ___ food in my mouth.",
+        "a": [
+         "stuffed"
+        ]
+       },
+       {
+        "s": "Don't ___ so much food in your mouth.",
+        "a": [
+         "stuff"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He ___ the sandwich in his mouth and ran.",
+       "opts": [
+        "stuffed",
+        "filled",
+        "stored"
+       ],
+       "a": "stuffed",
+       "why": "stuff: 쑤셔 넣다 / fill: 채우다 / store: 보관하다"
+      }
+     },
+     "note": "스트레스를 먹는 걸로 푸는 상황을 웃기게 표현했어요."
+    }
+   ]
+  },
+  {
+   "vid": "A_LCTkiDYqQ",
+   "title": "I don't think my wife understands the forgetting part of forgiving | Jim Gaffigan",
+   "channel": "jimgaffigan",
+   "kind": "short",
+   "category": "코미디",
+   "lengthSec": 60,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 8,
+   "summary": "아내는 용서는 잘하지만 잊지는 않는다며, TV를 보다가 예전 실수를 갑자기 꺼내는 이야기를 교황의 용서에 빗댄 농담이에요.",
+   "words": [
+    {
+     "id": "A_LCTkiDYqQ-01",
+     "expr": "humiliate",
+     "pos": "동사",
+     "ko": "창피를 주다, 굴욕감을 주다",
+     "t": 11,
+     "ex": "The manager humiliated him in front of the whole team.",
+     "exKo": "매니저는 팀 전체 앞에서 그에게 창피를 줬다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Remember that time you ___ me at dinner?",
+        "a": [
+         "humiliated"
+        ]
+       },
+       {
+        "s": "Never ___ someone in public.",
+        "a": [
+         "humiliate"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "I felt ___ when they laughed at my accent.",
+       "opts": [
+        "humiliated",
+        "humble",
+        "honored"
+       ],
+       "a": "humiliated",
+       "why": "humiliated: 굴욕감을 느낀 / humble: 겸손한 / honored: 영광스러운"
+      }
+     },
+     "note": "embarrass(당황하게 하다)보다 훨씬 강해요."
+    },
+    {
+     "id": "A_LCTkiDYqQ-02",
+     "expr": "block (something) out",
+     "pos": "동사구",
+     "ko": "(기억·소리를) 차단하다, 지워 버리다",
+     "t": 18,
+     "ex": "I've completely blocked out that terrible exam.",
+     "exKo": "그 끔찍했던 시험은 기억에서 완전히 지워 버렸어.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I must have ___.",
+        "a": [
+         "blocked it out"
+        ]
+       },
+       {
+        "s": "I wear earplugs to ___ the noise.",
+        "a": [
+         "block out"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "She tried to block ___ the painful memory.",
+       "opts": [
+        "out",
+        "off",
+        "up"
+       ],
+       "a": "out",
+       "why": "block out: 차단하다 / block off: (길을) 막다 / block up: 막히게 하다"
+      }
+     }
+    },
+    {
+     "id": "A_LCTkiDYqQ-03",
+     "expr": "misrepresent",
+     "pos": "동사",
+     "ko": "잘못 전하다, 왜곡해서 말하다",
+     "t": 29,
+     "ex": "The article misrepresented what the CEO actually said.",
+     "exKo": "그 기사는 CEO가 실제로 한 말을 왜곡했다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I don't want to ___ her. She's very forgiving.",
+        "a": [
+         "misrepresent"
+        ]
+       },
+       {
+        "s": "The chart ___ the data.",
+        "a": [
+         "misrepresents",
+         "misrepresented"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Please don't ___ my opinion in your report.",
+       "opts": [
+        "misrepresent",
+        "misplace",
+        "mislead"
+       ],
+       "a": "misrepresent",
+       "why": "misrepresent: 왜곡해 전하다 / misplace: 둔 곳을 잊다 / mislead: 오해하게 만들다"
+      }
+     }
+    },
+    {
+     "id": "A_LCTkiDYqQ-04",
+     "expr": "aspire to (do)",
+     "pos": "동사구",
+     "ko": "~하기를 열망하다, 지향하다",
+     "t": 33,
+     "ex": "She aspires to work at a global semiconductor company.",
+     "exKo": "그녀는 글로벌 반도체 회사에서 일하기를 꿈꾼다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "We all ___ be forgiving.",
+        "a": [
+         "aspire to"
+        ]
+       },
+       {
+        "s": "Many students ___ study abroad.",
+        "a": [
+         "aspire to"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He aspires ___ become a great leader.",
+       "opts": [
+        "to",
+        "for",
+        "at"
+       ],
+       "a": "to",
+       "why": "aspire to + 동사원형/명사: ~을 열망하다"
+      }
+     },
+     "note": "자기소개서에서 I aspire to …로 목표를 말할 때 좋아요."
+    },
+    {
+     "id": "A_LCTkiDYqQ-05",
+     "expr": "granted",
+     "pos": "부사",
+     "ko": "물론 ~이긴 하지만 (상대 말을 일부 인정할 때)",
+     "t": 42,
+     "ex": "Granted, the hotel was expensive, but the view was amazing.",
+     "exKo": "물론 호텔이 비싸긴 했지만 경치는 끝내줬어.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I mean, ___, he was the pope.",
+        "a": [
+         "granted"
+        ]
+       },
+       {
+        "s": "___, it's a small company, but the pay is good.",
+        "a": [
+         "Granted"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "___, he's young, but he works harder than anyone.",
+       "opts": [
+        "Granted",
+        "Given",
+        "Grant"
+       ],
+       "a": "Granted",
+       "why": "Granted, …: 물론 ~이긴 하지만"
+      }
+     },
+     "note": "반박하기 전에 일부를 먼저 인정하는 말이에요. 토론이나 에세이에서 유용해요."
+    }
+   ]
+  },
+  {
+   "vid": "tyVGwheIAfc",
+   "title": "Case solved in under 60 seconds | Brooklyn Nine-Nine",
+   "channel": "Brooklyn Nine-Nine",
+   "kind": "short",
+   "category": "코미디",
+   "lengthSec": 59,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 9,
+   "summary": "제이크가 용의자 휘트먼을 끈질기게 귀찮게 해서, 감방 동료와 짜고 벌인 보석상 강도를 밝혀내는 장면이에요.",
+   "words": [
+    {
+     "id": "tyVGwheIAfc-01",
+     "expr": "accomplice",
+     "pos": "명사",
+     "ko": "공범",
+     "t": 12,
+     "ex": "Police arrested the thief and his accomplice.",
+     "exKo": "경찰은 도둑과 그 공범을 체포했다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "She's clearly an ___ to this crime.",
+        "a": [
+         "accomplice"
+        ]
+       },
+       {
+        "s": "He was charged as an ___ in the robbery.",
+        "a": [
+         "accomplice"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The driver was an ___ in the bank robbery.",
+       "opts": [
+        "accomplice",
+        "accomplishment",
+        "acquaintance"
+       ],
+       "a": "accomplice",
+       "why": "accomplice: 공범 / accomplishment: 성취 / acquaintance: 아는 사람"
+      }
+     },
+     "note": "로사가 제이크 편을 들자 '공범'이라고 몰아붙이는 농담이에요."
+    },
+    {
+     "id": "tyVGwheIAfc-02",
+     "expr": "take another crack at",
+     "pos": "동사구",
+     "ko": "다시 한번 시도하다",
+     "t": 14,
+     "ex": "I failed the test, but I'll take another crack at it next month.",
+     "exKo": "시험에 떨어졌지만 다음 달에 다시 도전할 거야.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I'm going to go ___ Whitman.",
+        "a": [
+         "take another crack at"
+        ]
+       },
+       {
+        "s": "Let me ___ this problem.",
+        "a": [
+         "take another crack at"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Can I take a ___ at fixing it?",
+       "opts": [
+        "crack",
+        "break",
+        "crash"
+       ],
+       "a": "crack",
+       "why": "take a crack at: 시도해 보다 / take a break: 쉬다"
+      }
+     },
+     "note": "처음 시도할 때는 take a crack at, 다시 할 때는 take another crack at이에요."
+    },
+    {
+     "id": "tyVGwheIAfc-03",
+     "expr": "pull (something) off",
+     "pos": "동사구",
+     "ko": "(어려운 일을) 해내다",
+     "t": 44,
+     "ex": "Nobody thought we could finish in a week, but we pulled it off.",
+     "exKo": "다들 일주일 안에 못 끝낼 줄 알았지만 우리는 해냈다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "He ___ the robbery.",
+        "a": [
+         "pulled off"
+        ]
+       },
+       {
+        "s": "It's a risky plan. Can we ___?",
+        "a": [
+         "pull it off"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "It was hard, but she pulled it ___.",
+       "opts": [
+        "off",
+        "out",
+        "up"
+       ],
+       "a": "off",
+       "why": "pull off: 해내다 / pull out: 빠지다, 꺼내다 / pull up: 차를 세우다"
+      }
+     }
+    },
+    {
+     "id": "tyVGwheIAfc-04",
+     "expr": "alibi",
+     "pos": "명사",
+     "ko": "알리바이, 현장 부재 증명",
+     "t": 46,
+     "ex": "His alibi was that he was at the movies all night.",
+     "exKo": "그의 알리바이는 밤새 영화관에 있었다는 것이었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "You got yourself an ___.",
+        "a": [
+         "alibi"
+        ]
+       },
+       {
+        "s": "The suspect has a strong ___.",
+        "a": [
+         "alibi"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He had a perfect ___ for the night of the crime.",
+       "opts": [
+        "alibi",
+        "excuse",
+        "evidence"
+       ],
+       "a": "alibi",
+       "why": "alibi: 범행 시간 다른 곳에 있었다는 증명 / excuse: 핑계 / evidence: 증거"
+      }
+     },
+     "note": "'늦은 핑계'처럼 일상에서 농담으로도 써요."
+    }
+   ]
+  },
+  {
+   "vid": "R7F1j46P-_M",
+   "title": "The only thing worse than death | Brooklyn Nine-Nine",
+   "channel": "Brooklyn Nine-Nine",
+   "kind": "short",
+   "category": "코미디",
+   "lengthSec": 59,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 10,
+   "summary": "홀트 서장이 갑자기 칭찬을 늘어놓자 팀원들이 나쁜 소식을 직감하는데, 그 소식은 바로 직장 내 갈등에 관한 필수 HR 세미나였어요.",
+   "words": [
+    {
+     "id": "R7F1j46P-_M-01",
+     "expr": "wrap up",
+     "pos": "동사구",
+     "ko": "마무리하다",
+     "t": 0,
+     "ex": "Let's wrap up the meeting. We're out of time.",
+     "exKo": "회의 마무리합시다. 시간이 없네요.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Before we ___ this briefing, I want to thank you.",
+        "a": [
+         "wrap up"
+        ]
+       },
+       {
+        "s": "We should ___ by five.",
+        "a": [
+         "wrap up"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "OK, let's wrap ___ for today.",
+       "opts": [
+        "up",
+        "out",
+        "off"
+       ],
+       "a": "up",
+       "why": "wrap up: 마무리하다"
+      }
+     },
+     "note": "회의 끝낼 때 Let's wrap up. 한마디면 돼요."
+    },
+    {
+     "id": "R7F1j46P-_M-02",
+     "expr": "shout-out",
+     "pos": "명사",
+     "ko": "(공개적으로) 언급하며 고마움을 전하기",
+     "t": 2,
+     "ex": "Big shout-out to everyone who helped with the event!",
+     "exKo": "행사 도와주신 모든 분께 큰 감사를!",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I wanted to give a few ___ before we finish.",
+        "a": [
+         "shout outs",
+         "shout-outs"
+        ]
+       },
+       {
+        "s": "A ___ to my teammates!",
+        "a": [
+         "shout-out",
+         "shout out"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "I want to give a ___ to our lab manager.",
+       "opts": [
+        "shout-out",
+        "shut-out",
+        "check-out"
+       ],
+       "a": "shout-out",
+       "why": "shout-out: 공개 감사 / shutout: 무득점 경기 / check-out: 체크아웃"
+      }
+     }
+    },
+    {
+     "id": "R7F1j46P-_M-03",
+     "expr": "butter (someone) up",
+     "pos": "동사구",
+     "ko": "(부탁하려고) 비위를 맞추다, 아부하다",
+     "t": 17,
+     "ex": "He's buttering up the professor before asking for an extension.",
+     "exKo": "그는 기한 연장을 부탁하기 전에 교수님 비위를 맞추고 있다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "He's ___ before giving us bad news.",
+        "a": [
+         "buttering us up"
+        ]
+       },
+       {
+        "s": "Stop ___ and just tell me what you want.",
+        "a": [
+         "buttering me up"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "She's being so nice. She must be buttering me ___.",
+       "opts": [
+        "up",
+        "on",
+        "over"
+       ],
+       "a": "up",
+       "why": "butter up: 아부하다"
+      }
+     },
+     "note": "빵에 버터를 바르듯 듣기 좋은 말을 바른다는 이미지예요."
+    },
+    {
+     "id": "R7F1j46P-_M-04",
+     "expr": "mandatory",
+     "pos": "형용사",
+     "ko": "의무적인, 필수의",
+     "t": 44,
+     "ex": "Attendance at the safety training is mandatory.",
+     "exKo": "안전 교육 참석은 필수입니다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Look, it's ___. You have to come.",
+        "a": [
+         "mandatory"
+        ]
+       },
+       {
+        "s": "Is this course ___ or optional?",
+        "a": [
+         "mandatory"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Wearing a helmet is ___ on this site.",
+       "opts": [
+        "mandatory",
+        "optional",
+        "voluntary"
+       ],
+       "a": "mandatory",
+       "why": "mandatory: 의무의 / optional: 선택의 / voluntary: 자발적인"
+      }
+     }
+    },
+    {
+     "id": "R7F1j46P-_M-05",
+     "expr": "up for debate",
+     "pos": "형용사구",
+     "ko": "논의할 여지가 있는",
+     "t": 46,
+     "ex": "The deadline is fixed. It's not up for debate.",
+     "exKo": "마감은 정해졌어. 논의할 문제가 아니야.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "It's mandatory. It's not ___.",
+        "a": [
+         "up for debate"
+        ]
+       },
+       {
+        "s": "The budget is still ___.",
+        "a": [
+         "up for debate"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Whether we move offices is still up ___ debate.",
+       "opts": [
+        "for",
+        "to",
+        "on"
+       ],
+       "a": "for",
+       "why": "up for debate/discussion: 논의 대상인"
+      }
+     },
+     "note": "not up for debate(더 이상 논의 불가)로 단호하게 말할 때 자주 써요."
+    }
+   ]
+  },
+  {
+   "vid": "sjq5rhyteWE",
+   "title": "3 Lessons from the hardest year of my life | Mel Robbins #Shorts",
+   "channel": "Mel Robbins",
+   "kind": "short",
+   "category": "동기부여",
+   "lengthSec": 57,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 11,
+   "summary": "인생에서 가장 힘들었던 해에 배운 세 가지 교훈이에요. 불편함 속에 배움이 있고, 핑계 뒤엔 두려움이 있으며, 변화는 어렵지만 늘 해 볼 가치가 있다는 이야기예요.",
+   "words": [
+    {
+     "id": "sjq5rhyteWE-01",
+     "expr": "friction",
+     "pos": "명사",
+     "ko": "마찰, 갈등",
+     "t": 19,
+     "ex": "There's some friction between the two teams.",
+     "exKo": "두 팀 사이에 약간의 마찰이 있다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "It's moments of ___ and discomfort that teach us the most.",
+        "a": [
+         "friction"
+        ]
+       },
+       {
+        "s": "Too many meetings create ___ in the team.",
+        "a": [
+         "friction"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Moving the deadline caused ___ with the client.",
+       "opts": [
+        "friction",
+        "fiction",
+        "fraction"
+       ],
+       "a": "friction",
+       "why": "friction: 마찰 / fiction: 소설 / fraction: 일부, 분수"
+      }
+     },
+     "note": "물리의 '마찰'이 사람 사이의 '갈등'으로 확장된 말이에요."
+    },
+    {
+     "id": "sjq5rhyteWE-02",
+     "expr": "address",
+     "pos": "동사",
+     "ko": "(문제를) 다루다, 해결하려 하다",
+     "t": 44,
+     "ex": "We need to address this issue before the launch.",
+     "exKo": "출시 전에 이 문제를 해결해야 해요.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "You can ___ any fear with action.",
+        "a": [
+         "address"
+        ]
+       },
+       {
+        "s": "The report ___ three main problems.",
+        "a": [
+         "addresses"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The manager promised to ___ our complaints.",
+       "opts": [
+        "address",
+        "dress",
+        "adapt"
+       ],
+       "a": "address",
+       "why": "address: (문제를) 다루다 / adapt: 적응하다"
+      }
+     },
+     "note": "명사 '주소'로만 알기 쉽지만, 업무 영어에서는 '문제를 다루다' 동사로 정말 많이 써요."
+    },
+    {
+     "id": "sjq5rhyteWE-03",
+     "expr": "be worth it",
+     "pos": "동사구",
+     "ko": "(고생할) 가치가 있다",
+     "t": 54,
+     "ex": "The hike was long, but the view was worth it.",
+     "exKo": "등산은 길었지만 그 경치는 그럴 만한 가치가 있었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Change isn't easy, but it is always ___.",
+        "a": [
+         "worth it"
+        ]
+       },
+       {
+        "s": "Was the expensive course ___?",
+        "a": [
+         "worth it"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "It took years, but it was ___ it.",
+       "opts": [
+        "worth",
+        "worthy",
+        "value"
+       ],
+       "a": "worth",
+       "why": "be worth it: 가치가 있다 / worthy of: ~할 만한"
+      }
+     }
+    },
+    {
+     "id": "sjq5rhyteWE-04",
+     "expr": "be capable of",
+     "pos": "동사구",
+     "ko": "~할 능력이 있다",
+     "t": 56,
+     "ex": "You're capable of much more than you think.",
+     "exKo": "넌 네가 생각하는 것보다 훨씬 많은 걸 해낼 수 있어.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Change is hard, but you're ___ it.",
+        "a": [
+         "capable of"
+        ]
+       },
+       {
+        "s": "This chip is ___ handling huge amounts of data.",
+        "a": [
+         "capable of"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "She is capable ___ leading the project.",
+       "opts": [
+        "of",
+        "to",
+        "for"
+       ],
+       "a": "of",
+       "why": "capable of + 명사/동명사 / able to + 동사원형"
+      }
+     },
+     "note": "capable to로 쓰는 실수가 많아요. 뒤에 동사가 오면 -ing로 써요."
+    }
+   ]
+  },
+  {
+   "vid": "DGGOnrys5Gc",
+   "title": "Two words that will unlock your confidence | Mel Robbins #Shorts",
+   "channel": "Mel Robbins",
+   "kind": "short",
+   "category": "동기부여",
+   "lengthSec": 42,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 12,
+   "summary": "남이 날 어떻게 생각할지는 통제할 수 없으니 '그러라고 해(let them)' 두고, 내가 통제할 수 있는 내 행동에 집중하라는 이야기예요.",
+   "words": [
+    {
+     "id": "DGGOnrys5Gc-01",
+     "expr": "let them",
+     "pos": "구",
+     "ko": "(그 사람들이) 그러라고 둬",
+     "t": 2,
+     "ex": "If they want to gossip, let them.",
+     "exKo": "그 사람들이 뒷말하고 싶으면 그러라고 해.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "___ think what they want.",
+        "a": [
+         "Let them"
+        ]
+       },
+       {
+        "s": "They don't like your idea? ___.",
+        "a": [
+         "Let them"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Let them ___ what they want.",
+       "opts": [
+        "think",
+        "to think",
+        "thinking"
+       ],
+       "a": "think",
+       "why": "let + 사람 + 동사원형"
+      }
+     },
+     "note": "Mel Robbins의 'Let Them Theory'로 유명해진 말이에요."
+    },
+    {
+     "id": "DGGOnrys5Gc-02",
+     "expr": "focus on",
+     "pos": "동사구",
+     "ko": "~에 집중하다",
+     "t": 6,
+     "ex": "Focus on what you can control.",
+     "exKo": "네가 통제할 수 있는 것에 집중해.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "How about you ___ what you think about yourself?",
+        "a": [
+         "focus on"
+        ]
+       },
+       {
+        "s": "I need to ___ my thesis this month.",
+        "a": [
+         "focus on"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Let's focus ___ the most urgent task first.",
+       "opts": [
+        "on",
+        "in",
+        "at"
+       ],
+       "a": "on",
+       "why": "focus on: ~에 집중하다"
+      }
+     }
+    },
+    {
+     "id": "DGGOnrys5Gc-03",
+     "expr": "insecure",
+     "pos": "형용사",
+     "ko": "자신감 없는, 불안한",
+     "t": 16,
+     "ex": "He felt insecure about his English at first.",
+     "exKo": "그는 처음에 자기 영어에 자신이 없었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Trying to control others is just making you ___.",
+        "a": [
+         "insecure"
+        ]
+       },
+       {
+        "s": "She's ___ about her looks.",
+        "a": [
+         "insecure"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Social media can make teenagers feel ___.",
+       "opts": [
+        "insecure",
+        "unsafe",
+        "uncertain"
+       ],
+       "a": "insecure",
+       "why": "insecure: 자신 없는 / unsafe: 위험한 / uncertain: 불확실한"
+      }
+     }
+    },
+    {
+     "id": "DGGOnrys5Gc-04",
+     "expr": "be proud of",
+     "pos": "동사구",
+     "ko": "~을 자랑스러워하다",
+     "t": 25,
+     "ex": "I'm proud of you for not giving up.",
+     "exKo": "포기하지 않은 네가 자랑스러워.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Do something every day that makes you ___ yourself.",
+        "a": [
+         "proud of"
+        ]
+       },
+       {
+        "s": "We're so ___ our team.",
+        "a": [
+         "proud of"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "My parents are proud ___ me.",
+       "opts": [
+        "of",
+        "for",
+        "with"
+       ],
+       "a": "of",
+       "why": "proud of: ~을 자랑스러워하는"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "vid": "pNT_0njLQiU",
+   "title": "Stop Waiting To Feel Better | Mel Robbins #shorts",
+   "channel": "Mel Robbins",
+   "kind": "short",
+   "category": "동기부여",
+   "lengthSec": 97,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 13,
+   "summary": "기분이 나아지길 기다렸다가 움직이는 게 아니라, 슬프고 불안한 채로라도 움직여야 나아진다는 이야기예요.",
+   "words": [
+    {
+     "id": "pNT_0njLQiU-01",
+     "expr": "challenging",
+     "pos": "형용사",
+     "ko": "힘든, 도전적인",
+     "t": 0,
+     "ex": "This semester has been really challenging.",
+     "exKo": "이번 학기는 정말 힘들었어.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "If you're in a very ___ period, keep going.",
+        "a": [
+         "challenging"
+        ]
+       },
+       {
+        "s": "The project was ___ but rewarding.",
+        "a": [
+         "challenging"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "It was a ___ year, but I learned a lot.",
+       "opts": [
+        "challenging",
+        "challenged",
+        "challenge"
+       ],
+       "a": "challenging",
+       "why": "challenging: 힘든(상황) / challenged: 어려움을 겪는(사람)"
+      }
+     },
+     "note": "difficult보다 긍정적으로 들려서 면접이나 자기소개서에서 '힘든 경험'을 말할 때 좋아요."
+    },
+    {
+     "id": "pNT_0njLQiU-02",
+     "expr": "come together",
+     "pos": "동사구",
+     "ko": "(일이) 맞아떨어지다, 잘 되어 가다",
+     "t": 11,
+     "ex": "After months of work, the project is finally coming together.",
+     "exKo": "몇 달간 작업한 끝에 프로젝트가 드디어 모양을 갖춰 가고 있다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Trust that things are about to ___.",
+        "a": [
+         "come together"
+        ]
+       },
+       {
+        "s": "Everything ___ on the last day.",
+        "a": [
+         "came together"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The plan is finally coming ___.",
+       "opts": [
+        "together",
+        "along",
+        "around"
+       ],
+       "a": "together",
+       "why": "come together: 맞아떨어지다 / come along: 진행되다 / come around: 생각을 바꾸다"
+      }
+     }
+    },
+    {
+     "id": "pNT_0njLQiU-03",
+     "expr": "wait for the storm to pass",
+     "pos": "동사구",
+     "ko": "폭풍(힘든 시기)이 지나가길 기다리다",
+     "t": 23,
+     "ex": "Instead of waiting for the storm to pass, learn to work in the rain.",
+     "exKo": "폭풍이 지나가길 기다리는 대신 빗속에서 일하는 법을 배워.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "You're ___ before you step outside.",
+        "a": [
+         "waiting for the storm to pass"
+        ]
+       },
+       {
+        "s": "Sometimes the only option is to ___.",
+        "a": [
+         "wait for the storm to pass"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "We decided to wait for the storm to ___.",
+       "opts": [
+        "pass",
+        "past",
+        "passing"
+       ],
+       "a": "pass",
+       "why": "wait for A to + 동사원형"
+      }
+     },
+     "note": "wait for + 사람/것 + to 동사 형태를 함께 익혀 두세요."
+    },
+    {
+     "id": "pNT_0njLQiU-04",
+     "expr": "irony",
+     "pos": "명사",
+     "ko": "아이러니, 역설",
+     "t": 75,
+     "ex": "The irony is that the fire station burned down.",
+     "exKo": "아이러니하게도 소방서가 불에 탔다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "That's the ___: the day you're waiting for starts today.",
+        "a": [
+         "irony"
+        ]
+       },
+       {
+        "s": "The ___ is that he hates computers but works in IT.",
+        "a": [
+         "irony"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The ___ of the situation made everyone laugh.",
+       "opts": [
+        "irony",
+        "iron",
+        "ivory"
+       ],
+       "a": "irony",
+       "why": "irony: 아이러니 / iron: 철 / ivory: 상아"
+      }
+     }
+    },
+    {
+     "id": "pNT_0njLQiU-05",
+     "expr": "take action",
+     "pos": "동사구",
+     "ko": "행동에 나서다",
+     "t": 81,
+     "ex": "Stop planning and take action.",
+     "exKo": "계획만 하지 말고 행동해.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The day you're waiting for starts when you ___.",
+        "a": [
+         "take action"
+        ]
+       },
+       {
+        "s": "The government must ___ now.",
+        "a": [
+         "take action"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "It's time to ___ action.",
+       "opts": [
+        "take",
+        "do",
+        "make"
+       ],
+       "a": "take",
+       "why": "take action: 행동하다 / do action, make action은 쓰지 않아요"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "vid": "yTotCREiTRU",
+   "title": "Celebrate the ones who DO, not the ones who WIN | Simon Sinek",
+   "channel": "Simon Sinek",
+   "kind": "short",
+   "category": "동기부여",
+   "lengthSec": 55,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 14,
+   "summary": "나이키 창업자 필 나이트가 강연장에서 달리기 하는 사람들을 일으켜 세운 일화예요. 나이키는 이기는 사람이 아니라 '하는 사람'을 응원한다는 이야기예요.",
+   "words": [
+    {
+     "id": "yTotCREiTRU-01",
+     "expr": "rain or shine",
+     "pos": "부사구",
+     "ko": "날씨가 어떻든, 무슨 일이 있어도",
+     "t": 23,
+     "ex": "The market is open every Saturday, rain or shine.",
+     "exKo": "그 시장은 날씨와 상관없이 토요일마다 열린다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "We run three times a week, ___.",
+        "a": [
+         "rain or shine"
+        ]
+       },
+       {
+        "s": "I'll be there at 7, ___.",
+        "a": [
+         "rain or shine"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The game will go ahead rain or ___.",
+       "opts": [
+        "shine",
+        "sun",
+        "snow"
+       ],
+       "a": "shine",
+       "why": "rain or shine: 무슨 일이 있어도"
+      }
+     }
+    },
+    {
+     "id": "yTotCREiTRU-02",
+     "expr": "regardless of",
+     "pos": "전치사구",
+     "ko": "~와 상관없이",
+     "t": 23,
+     "ex": "Everyone is welcome regardless of age.",
+     "exKo": "나이와 상관없이 누구나 환영합니다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "We run ___ the weather.",
+        "a": [
+         "regardless of"
+        ]
+       },
+       {
+        "s": "Inspired companies think from the inside out, ___ their size.",
+        "a": [
+         "regardless of"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "We'll launch on Monday, regardless ___ the reviews.",
+       "opts": [
+        "of",
+        "to",
+        "from"
+       ],
+       "a": "of",
+       "why": "regardless of: ~와 상관없이"
+      }
+     },
+     "note": "irregardless는 틀린 말로 취급돼요."
+    },
+    {
+     "id": "yTotCREiTRU-03",
+     "expr": "cheer (someone) on",
+     "pos": "동사구",
+     "ko": "~을 응원하다",
+     "t": 36,
+     "ex": "My family came to cheer me on at the marathon.",
+     "exKo": "가족이 마라톤에서 나를 응원하러 왔다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "We're the ones standing under the lamppost, ___.",
+        "a": [
+         "cheering you on"
+        ]
+       },
+       {
+        "s": "Thousands of fans ___ at the stadium.",
+        "a": [
+         "cheered the team on",
+         "cheered them on"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Thanks for cheering me ___!",
+       "opts": [
+        "on",
+        "up",
+        "at"
+       ],
+       "a": "on",
+       "why": "cheer on: 응원하다 / cheer up: 기운 내게 하다"
+      }
+     }
+    },
+    {
+     "id": "yTotCREiTRU-04",
+     "expr": "in an instant",
+     "pos": "부사구",
+     "ko": "즉시, 한순간에",
+     "t": 38,
+     "ex": "Everything can change in an instant.",
+     "exKo": "모든 게 한순간에 바뀔 수 있다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "___, you understand what 'Just Do It' means.",
+        "a": [
+         "In an instant"
+        ]
+       },
+       {
+        "s": "The tickets sold out ___.",
+        "a": [
+         "in an instant"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He recognized her ___ an instant.",
+       "opts": [
+        "in",
+        "at",
+        "on"
+       ],
+       "a": "in",
+       "why": "in an instant: 즉시"
+      }
+     }
+    },
+    {
+     "id": "yTotCREiTRU-05",
+     "expr": "have nothing to do with",
+     "pos": "동사구",
+     "ko": "~와 아무 관련이 없다",
+     "t": 41,
+     "ex": "My decision has nothing to do with money.",
+     "exKo": "내 결정은 돈과 아무 관련이 없어.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "It ___ winning.",
+        "a": [
+         "has nothing to do with"
+        ]
+       },
+       {
+        "s": "I ___ the mistake. It wasn't me.",
+        "a": [
+         "had nothing to do with"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "It has everything to do ___ trying.",
+       "opts": [
+        "with",
+        "for",
+        "about"
+       ],
+       "a": "with",
+       "why": "have nothing/everything to do with: ~와 전혀/전부 관련 있다"
+      }
+     },
+     "note": "반대로 have everything to do with는 '전부 ~에 달려 있다'예요. 영상에서 둘을 짝지어 썼어요."
+    }
+   ]
+  },
+  {
+   "vid": "b8qMtEfOjzw",
+   "title": "Be the Idiot | Simon Sinek",
+   "channel": "Simon Sinek",
+   "kind": "short",
+   "category": "동기부여",
+   "lengthSec": 46,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 15,
+   "summary": "이해가 안 되면 바보처럼 보여도 손 들고 다시 설명해 달라고 하라는 이야기예요. 그러면 다른 사람들도 사실 몰랐다는 게 드러나요.",
+   "words": [
+    {
+     "id": "b8qMtEfOjzw-01",
+     "expr": "sit in on",
+     "pos": "동사구",
+     "ko": "(회의·수업을) 참관하다",
+     "t": 7,
+     "ex": "Can I sit in on your lab meeting next week?",
+     "exKo": "다음 주 연구실 회의에 참관해도 될까요?",
+     "drill": {
+      "cloze": [
+       {
+        "s": "They invited me to ___ a meeting.",
+        "a": [
+         "sit in on"
+        ]
+       },
+       {
+        "s": "Students can ___ the class for free.",
+        "a": [
+         "sit in on"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "I was allowed to sit ___ on the interview.",
+       "opts": [
+        "in",
+        "at",
+        "down"
+       ],
+       "a": "in",
+       "why": "sit in on: 참관하다"
+      }
+     },
+     "note": "인턴이나 학부연구생이 회의에 들어가도 되는지 물을 때 딱 맞는 표현이에요."
+    },
+    {
+     "id": "b8qMtEfOjzw-02",
+     "expr": "nod",
+     "pos": "동사",
+     "ko": "고개를 끄덕이다",
+     "t": 13,
+     "ex": "Everyone nodded, but nobody really understood.",
+     "exKo": "모두 고개를 끄덕였지만 실제로 이해한 사람은 없었다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "The executives were sitting there ___.",
+        "a": [
+         "nodding"
+        ]
+       },
+       {
+        "s": "They all would have ___ their heads.",
+        "a": [
+         "nodded"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He ___ to show he agreed.",
+       "opts": [
+        "nodded",
+        "knocked",
+        "noted"
+       ],
+       "a": "nodded",
+       "why": "nod: 끄덕이다 / knock: 두드리다 / note: 적어 두다"
+      }
+     },
+     "note": "이해 못 했는데 고개만 끄덕이는 상황이 이 영상의 핵심이에요."
+    },
+    {
+     "id": "b8qMtEfOjzw-03",
+     "expr": "for fear of",
+     "pos": "전치사구",
+     "ko": "~할까 봐 두려워서",
+     "t": 32,
+     "ex": "I didn't ask, for fear of looking stupid.",
+     "exKo": "바보처럼 보일까 봐 묻지 않았다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "They nodded ___ looking stupid.",
+        "a": [
+         "for fear of"
+        ]
+       },
+       {
+        "s": "She kept quiet ___ upsetting him.",
+        "a": [
+         "for fear of"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "He didn't move for fear ___ waking the baby.",
+       "opts": [
+        "of",
+        "to",
+        "that"
+       ],
+       "a": "of",
+       "why": "for fear of + 명사/동명사"
+      }
+     }
+    },
+    {
+     "id": "b8qMtEfOjzw-04",
+     "expr": "in simple terms",
+     "pos": "부사구",
+     "ko": "쉬운 말로",
+     "t": 42,
+     "ex": "Can you explain it in simple terms?",
+     "exKo": "쉬운 말로 설명해 줄 수 있어요?",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Once I understand it, I can say it ___.",
+        "a": [
+         "in simple terms"
+        ]
+       },
+       {
+        "s": "___, the chip stores data without power.",
+        "a": [
+         "In simple terms"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Please explain the theory in simple ___.",
+       "opts": [
+        "terms",
+        "words",
+        "ways"
+       ],
+       "a": "terms",
+       "why": "in simple terms: 쉬운 말로 / in simple words도 쓰지만 terms가 더 흔해요"
+      }
+     },
+     "note": "어려운 연구를 설명하기 전에 쓰기 좋은 말이에요."
+    }
+   ]
+  },
+  {
+   "vid": "9o4BpgzkCS0",
+   "title": "Sometimes, You Don't Have to Prove Yourself",
+   "channel": "Simon Sinek",
+   "kind": "short",
+   "category": "동기부여",
+   "lengthSec": 49,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 16,
+   "summary": "누군가 기회를 줬다면 이미 검증받은 것이니 스스로를 증명하려 애쓰지 말라는 이야기예요. 신임 임원에게 90일 동안 회의 발언을 금지하는 샤넬의 규칙을 소개해요.",
+   "words": [
+    {
+     "id": "9o4BpgzkCS0-01",
+     "expr": "give (someone) a shot",
+     "pos": "동사구",
+     "ko": "~에게 기회를 주다",
+     "t": 5,
+     "ex": "Thanks for giving me a shot at this role.",
+     "exKo": "이 역할에 기회를 주셔서 감사합니다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "When someone ___ you a shot, you don't have to prove yourself.",
+        "a": [
+         "gives"
+        ]
+       },
+       {
+        "s": "Just ___ me a shot. I won't let you down.",
+        "a": [
+         "give"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "The coach decided to give the rookie a ___.",
+       "opts": [
+        "shot",
+        "shoot",
+        "chance to"
+       ],
+       "a": "shot",
+       "why": "give someone a shot: 기회를 주다"
+      }
+     },
+     "note": "give someone a chance와 같은 뜻이고 더 구어체예요."
+    },
+    {
+     "id": "9o4BpgzkCS0-02",
+     "expr": "open a door for (someone)",
+     "pos": "동사구",
+     "ko": "~에게 기회의 문을 열어 주다",
+     "t": 12,
+     "ex": "My professor opened a lot of doors for me.",
+     "exKo": "교수님이 내게 많은 기회를 열어 주셨다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "If they ___ you, take it.",
+        "a": [
+         "open a door for"
+        ]
+       },
+       {
+        "s": "This internship ___ me.",
+        "a": [
+         "opened a door for",
+         "opened doors for"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Learning English can open doors ___ you.",
+       "opts": [
+        "for",
+        "to",
+        "with"
+       ],
+       "a": "for",
+       "why": "open doors for someone: 기회를 열어 주다"
+      }
+     }
+    },
+    {
+     "id": "9o4BpgzkCS0-03",
+     "expr": "prove yourself",
+     "pos": "동사구",
+     "ko": "자신을 증명하다, 실력을 보여 주다",
+     "t": 14,
+     "ex": "New hires often feel they have to prove themselves.",
+     "exKo": "신입은 자주 스스로를 증명해야 한다고 느낀다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "You don't have to ___.",
+        "a": [
+         "prove yourself"
+        ]
+       },
+       {
+        "s": "He worked late every night to ___.",
+        "a": [
+         "prove himself"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "She wanted to prove ___ to her new team.",
+       "opts": [
+        "herself",
+        "her",
+        "she"
+       ],
+       "a": "herself",
+       "why": "prove oneself: 재귀대명사를 써요"
+      }
+     }
+    },
+    {
+     "id": "9o4BpgzkCS0-04",
+     "expr": "vet",
+     "pos": "동사",
+     "ko": "(사람·자료를) 검증하다, 심사하다",
+     "t": 17,
+     "ex": "All candidates are carefully vetted before the interview.",
+     "exKo": "모든 지원자는 면접 전에 꼼꼼히 검증받는다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "You've already been ___.",
+        "a": [
+         "vetted"
+        ]
+       },
+       {
+        "s": "We need to ___ these sources before citing them.",
+        "a": [
+         "vet"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Every supplier must be ___ by the legal team.",
+       "opts": [
+        "vetted",
+        "vented",
+        "voted"
+       ],
+       "a": "vetted",
+       "why": "vet: 검증하다 / vent: (감정을) 터뜨리다 / vote: 투표하다"
+      }
+     },
+     "note": "채용·투자·자료 확인에서 자주 쓰는 업무 영어예요."
+    }
+   ]
+  },
+  {
+   "vid": "47BoYCFGrJ0",
+   "title": "Matthew McConaughey's 3 Life Principles... Alright, alright, alright | 86th Oscars",
+   "channel": "Oscars",
+   "kind": "short",
+   "category": "동기부여",
+   "lengthSec": 59,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 17,
+   "summary": "매슈 매코너헤이의 아카데미 수상 소감이에요. 우러러볼 대상, 기대할 것, 그리고 쫓아갈 영웅(10년 뒤의 나)이 필요하다는 이야기예요.",
+   "words": [
+    {
+     "id": "47BoYCFGrJ0-01",
+     "expr": "look up to",
+     "pos": "동사구",
+     "ko": "~을 존경하다, 우러러보다",
+     "t": 2,
+     "ex": "I've always looked up to my older sister.",
+     "exKo": "나는 늘 언니를 존경해 왔다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I need something to ___.",
+        "a": [
+         "look up to"
+        ]
+       },
+       {
+        "s": "Kids ___ their teachers.",
+        "a": [
+         "look up to"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Who do you look up ___?",
+       "opts": [
+        "to",
+        "at",
+        "for"
+       ],
+       "a": "to",
+       "why": "look up to: 존경하다 / look up: (사전에서) 찾다"
+      }
+     }
+    },
+    {
+     "id": "47BoYCFGrJ0-02",
+     "expr": "look forward to",
+     "pos": "동사구",
+     "ko": "~을 고대하다",
+     "t": 6,
+     "ex": "I look forward to hearing from you.",
+     "exKo": "연락 기다리겠습니다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I need something to ___.",
+        "a": [
+         "look forward to"
+        ]
+       },
+       {
+        "s": "I'm ___ the trip.",
+        "a": [
+         "looking forward to"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "I'm looking forward to ___ you.",
+       "opts": [
+        "meeting",
+        "meet",
+        "met"
+       ],
+       "a": "meeting",
+       "why": "look forward to + 동명사 (to는 전치사)"
+      }
+     },
+     "note": "메일 끝인사 I look forward to hearing from you.를 통째로 외워 두세요."
+    },
+    {
+     "id": "47BoYCFGrJ0-03",
+     "expr": "be fine with",
+     "pos": "동사구",
+     "ko": "~에 괜찮다, 불만 없다",
+     "t": 41,
+     "ex": "If you want to leave early, I'm fine with that.",
+     "exKo": "일찍 가고 싶으면 난 괜찮아.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I'm never going to be my hero, and that's just ___ me.",
+        "a": [
+         "fine with"
+        ]
+       },
+       {
+        "s": "Are you ___ meeting at 9?",
+        "a": [
+         "fine with"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Any time works. I'm fine ___ it.",
+       "opts": [
+        "with",
+        "for",
+        "by"
+       ],
+       "a": "with",
+       "why": "be fine with: ~에 괜찮다"
+      }
+     }
+    },
+    {
+     "id": "47BoYCFGrJ0-04",
+     "expr": "keep on (doing)",
+     "pos": "동사구",
+     "ko": "계속 ~하다",
+     "t": 45,
+     "ex": "Keep on trying, and you'll get there.",
+     "exKo": "계속 도전하면 언젠간 해낼 거야.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "That keeps me with somebody to ___ chasing.",
+        "a": [
+         "keep on"
+        ]
+       },
+       {
+        "s": "She ___ talking even after the bell rang.",
+        "a": [
+         "kept on"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Don't stop. Just keep on ___.",
+       "opts": [
+        "going",
+        "go",
+        "to go"
+       ],
+       "a": "going",
+       "why": "keep (on) + 동명사"
+      }
+     },
+     "note": "keep doing과 같은 뜻이고, on을 넣으면 '꾸준히'라는 느낌이 조금 더 강해요."
+    }
+   ]
+  },
+  {
+   "vid": "xmQVy2w3FyQ",
+   "title": "A simple strategy for happiness #shorts #tedx",
+   "channel": "TEDx Talks",
+   "kind": "short",
+   "category": "동기부여",
+   "lengthSec": 58,
+   "captions": "auto",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 18,
+   "summary": "돈은 슬픔을 막아 주지만 기쁨을 사 주진 않는다며, 시간을 돈처럼 계획하고 음미해서 '시간 부자'가 되자는 이야기예요.",
+   "words": [
+    {
+     "id": "xmQVy2w3FyQ-01",
+     "expr": "protect against",
+     "pos": "동사구",
+     "ko": "~을 막아 주다, ~으로부터 보호하다",
+     "t": 4,
+     "ex": "Vaccines protect against serious illness.",
+     "exKo": "백신은 심각한 질병을 막아 준다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Money ___ sadness, but doesn't buy joy.",
+        "a": [
+         "protects against"
+        ]
+       },
+       {
+        "s": "This coating ___ corrosion.",
+        "a": [
+         "protects against"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Sunscreen protects your skin ___ UV rays.",
+       "opts": [
+        "against",
+        "for",
+        "with"
+       ],
+       "a": "against",
+       "why": "protect A against/from B"
+      }
+     },
+     "note": "재료·코팅 설명에서 자주 쓰는 말이에요."
+    },
+    {
+     "id": "xmQVy2w3FyQ-02",
+     "expr": "squander",
+     "pos": "동사",
+     "ko": "(시간·돈을) 낭비하다, 허비하다",
+     "t": 23,
+     "ex": "Don't squander your twenties scrolling on your phone.",
+     "exKo": "20대를 휴대폰만 보며 허비하지 마.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "Time is easily spent, ___, stolen, and lost.",
+        "a": [
+         "squandered"
+        ]
+       },
+       {
+        "s": "He ___ his savings on gambling.",
+        "a": [
+         "squandered"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "They ___ a great opportunity.",
+       "opts": [
+        "squandered",
+        "wandered",
+        "squeezed"
+       ],
+       "a": "squandered",
+       "why": "squander: 낭비하다 / wander: 돌아다니다 / squeeze: 짜다"
+      }
+     },
+     "note": "waste보다 '아까운 걸 함부로 날렸다'는 느낌이 강해요."
+    },
+    {
+     "id": "xmQVy2w3FyQ-03",
+     "expr": "savor",
+     "pos": "동사",
+     "ko": "음미하다, 충분히 즐기다",
+     "t": 42,
+     "ex": "Slow down and savor the moment.",
+     "exKo": "천천히, 이 순간을 음미해.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "We can ___ our daily experiences.",
+        "a": [
+         "savor"
+        ]
+       },
+       {
+        "s": "She ___ every bite of the cake.",
+        "a": [
+         "savored"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Take time to ___ your small wins.",
+       "opts": [
+        "savor",
+        "save",
+        "serve"
+       ],
+       "a": "savor",
+       "why": "savor: 음미하다 / save: 저장하다 / serve: 제공하다"
+      }
+     },
+     "note": "영국식 철자는 savour예요."
+    },
+    {
+     "id": "xmQVy2w3FyQ-04",
+     "expr": "hold (someone) accountable",
+     "pos": "동사구",
+     "ko": "~에게 책임을 지우다, 책임지게 하다",
+     "t": 51,
+     "ex": "I asked a friend to hold me accountable for studying every day.",
+     "exKo": "매일 공부하는지 친구에게 확인해 달라고 부탁했다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "We need to start ___ ourselves accountable.",
+        "a": [
+         "holding"
+        ]
+       },
+       {
+        "s": "The company must be ___ accountable for the leak.",
+        "a": [
+         "held"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Managers should hold their teams ___.",
+       "opts": [
+        "accountable",
+        "available",
+        "acceptable"
+       ],
+       "a": "accountable",
+       "why": "hold accountable: 책임을 묻다"
+      }
+     },
+     "note": "습관 만들기에서 'accountability partner(서로 확인해 주는 친구)'로도 자주 나와요."
+    }
+   ]
+  },
+  {
+   "vid": "ZgfgOIaoWiA",
+   "title": "A 3-Step Guide to Believing in Yourself @TED #ted #shorts",
+   "channel": "TED",
+   "kind": "short",
+   "category": "동기부여",
+   "lengthSec": 59,
+   "captions": "manual",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 19,
+   "summary": "할리우드 캐스팅 디렉터의 말에 상처받아 그만둘 생각까지 했지만, 그 말을 오히려 자신을 세우는 힘으로 바꾼 경험을 들려줘요.",
+   "words": [
+    {
+     "id": "ZgfgOIaoWiA-01",
+     "expr": "be meant to (do)",
+     "pos": "동사구",
+     "ko": "~하도록 의도되다, ~하라고 한 것이다",
+     "t": 42,
+     "ex": "The comment was meant to be a joke.",
+     "exKo": "그 말은 농담으로 한 거였어.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "What was ___ break me did not break me.",
+        "a": [
+         "meant to"
+        ]
+       },
+       {
+        "s": "This tool is ___ save time.",
+        "a": [
+         "meant to"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Sorry, I wasn't meant ___ hurt you.",
+       "opts": [
+        "to",
+        "for",
+        "that"
+       ],
+       "a": "to",
+       "why": "be meant to + 동사원형"
+      }
+     }
+    },
+    {
+     "id": "ZgfgOIaoWiA-02",
+     "expr": "think about (doing)",
+     "pos": "동사구",
+     "ko": "~할까 생각하다, ~을 고민하다",
+     "t": 27,
+     "ex": "I'm thinking about applying for a master's program.",
+     "exKo": "석사 과정에 지원할까 생각 중이야.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I was actually ___ quitting.",
+        "a": [
+         "thinking about"
+        ]
+       },
+       {
+        "s": "Have you ___ studying abroad?",
+        "a": [
+         "thought about"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "I'm thinking about ___ my major.",
+       "opts": [
+        "changing",
+        "change",
+        "to change"
+       ],
+       "a": "changing",
+       "why": "think about + 동명사"
+      }
+     }
+    },
+    {
+     "id": "ZgfgOIaoWiA-03",
+     "expr": "take up space",
+     "pos": "동사구",
+     "ko": "(당당하게) 자리를 차지하다, 존재감을 드러내다",
+     "t": 50,
+     "ex": "Don't apologize for taking up space in the meeting.",
+     "exKo": "회의에서 존재감을 드러내는 걸 미안해하지 마.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I gave myself permission to ___ in Hollywood.",
+        "a": [
+         "take up space"
+        ]
+       },
+       {
+        "s": "This old sofa just ___.",
+        "a": [
+         "takes up space"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "You deserve to take ___ space.",
+       "opts": [
+        "up",
+        "on",
+        "over"
+       ],
+       "a": "up",
+       "why": "take up space: 자리를 차지하다"
+      }
+     },
+     "note": "원래는 '공간을 차지하다'예요. 이 영상에서는 '주눅 들지 않고 당당히 있다'는 뜻으로 썼어요."
+    },
+    {
+     "id": "ZgfgOIaoWiA-04",
+     "expr": "no matter what",
+     "pos": "부사구",
+     "ko": "무슨 일이 있어도",
+     "t": 54,
+     "ex": "I'll finish this project no matter what.",
+     "exKo": "무슨 일이 있어도 이 프로젝트를 끝낼 거야.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "I belonged there ___ anybody thought.",
+        "a": [
+         "no matter what"
+        ]
+       },
+       {
+        "s": "We'll support you ___.",
+        "a": [
+         "no matter what"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "No ___ what happens, don't give up.",
+       "opts": [
+        "matter",
+        "mind",
+        "problem"
+       ],
+       "a": "matter",
+       "why": "no matter what: 무슨 일이 있어도"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "vid": "FlqTGJ_T0MM",
+   "title": "An Olympic Champion's Mindset for Overcoming Fear @TED #shorts",
+   "channel": "TED",
+   "kind": "short",
+   "category": "동기부여",
+   "lengthSec": 21,
+   "captions": "manual",
+   "batch": "2회차 · 쇼츠 코미디 10 & 동기부여 10 (11월 15일)",
+   "batchOrder": 2,
+   "order": 20,
+   "summary": "두려움은 변화를 만들라는 초대장이라며, 목소리가 떨려도 맞서 나아가면 그만한 가치가 있다고 말해요.",
+   "words": [
+    {
+     "id": "FlqTGJ_T0MM-01",
+     "expr": "terrified",
+     "pos": "형용사",
+     "ko": "몹시 겁에 질린",
+     "t": 0,
+     "ex": "I was terrified before my first presentation in English.",
+     "exKo": "첫 영어 발표 전에 너무 무서웠다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "That feeling of being ___ is your invitation to create change.",
+        "a": [
+         "terrified"
+        ]
+       },
+       {
+        "s": "She's ___ of spiders.",
+        "a": [
+         "terrified"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "I was ___ of making mistakes.",
+       "opts": [
+        "terrified",
+        "terrific",
+        "territorial"
+       ],
+       "a": "terrified",
+       "why": "terrified: 겁에 질린 / terrific: 끝내주는"
+      }
+     },
+     "note": "scared < frightened < terrified 순으로 강해요."
+    },
+    {
+     "id": "FlqTGJ_T0MM-02",
+     "expr": "brave",
+     "pos": "동사",
+     "ko": "(두려움·위험에) 맞서다",
+     "t": 7,
+     "ex": "Thousands braved the cold to watch the parade.",
+     "exKo": "수천 명이 추위를 무릅쓰고 퍼레이드를 봤다.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "You have to ___ those feelings.",
+        "a": [
+         "brave"
+        ]
+       },
+       {
+        "s": "We ___ the storm to get home.",
+        "a": [
+         "braved"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "Fans ___ the rain to see the concert.",
+       "opts": [
+        "braved",
+        "bravely",
+        "bravery"
+       ],
+       "a": "braved",
+       "why": "brave(동사): 맞서다 / bravely: 용감하게 / bravery: 용기"
+      }
+     },
+     "note": "형용사 '용감한'으로만 알기 쉬운데, 동사로 '무릅쓰다'예요."
+    },
+    {
+     "id": "FlqTGJ_T0MM-03",
+     "expr": "move forward",
+     "pos": "동사구",
+     "ko": "앞으로 나아가다",
+     "t": 8,
+     "ex": "It's time to stop looking back and move forward.",
+     "exKo": "이제 뒤돌아보지 말고 앞으로 나아갈 때야.",
+     "drill": {
+      "cloze": [
+       {
+        "s": "You have to fight to ___.",
+        "a": [
+         "move forward"
+        ]
+       },
+       {
+        "s": "Let's ___ with the plan.",
+        "a": [
+         "move forward"
+        ]
+       }
+      ],
+      "vs": {
+       "s": "After the failure, we decided to move ___.",
+       "opts": [
+        "forward",
+        "foreword",
+        "front"
+       ],
+       "a": "forward",
+       "why": "move forward: 나아가다 / foreword: 서문"
+      }
+     }
+    }
+   ]
   }
  ]
 }
