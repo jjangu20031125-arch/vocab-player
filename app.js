@@ -1980,3 +1980,8 @@ window.vpDeliverFeedback = async (items) => {
   await new Promise((r) => { saveProg(); setTimeout(r, 1500); });
   return n;
 };
+
+// Installable app: register the service worker (skipped on the local mock server's file previews).
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}

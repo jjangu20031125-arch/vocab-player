@@ -48,3 +48,6 @@ Upstash를 연결하지 않으면 진도는 각 기기 브라우저에만 저장
 
 - 쉐도잉: 영상 '🎤 따라 말하기' 또는 단어 창의 같은 버튼. 원문 듣기(영상 구간 재생 / 책은 브라우저 음성) → 녹음 → 내 목소리·이어 듣기. 채점 없음, 녹음은 저장하지 않음.
 - 영작: 연습 → 영작. 문장은 비밀번호로 보호된 진도 저장소에만 저장된다. 사용자가 채팅에서 첨삭을 요청하면 Claude가 PC의 앱 브라우저에서 `vpPendingWriting()`으로 대기 문장을 읽고 `vpDeliverFeedback([{id, corrected, notes, better, used}])`로 결과를 넣는다. 잘못 쓴 표현(`used[id] === false`)은 복습 일정이 앞당겨진다.
+
+## 앱으로 설치
+`manifest.webmanifest`, `icons/`, `sw.js`로 설치형 웹앱(PWA)이 된다. Android Chrome은 메뉴의 '앱 설치' 또는 '홈 화면에 추가', iPhone Safari는 공유 → '홈 화면에 추가'. 서비스 워커는 `/api/`와 YouTube를 건드리지 않고, 책 본문·사전·라이브러리는 한 번 받으면 오프라인에서도 연다. 앱 코드를 크게 바꾸면 `sw.js`의 `VERSION`을 올린다.
